@@ -1,0 +1,177 @@
+
+
+09/03/24	Das Hinzufügen des PiHole Blockers zum installierten Debian 12 Server
+                artete in einer stundenlanger Fehlersuche aus. 
+                Um in Zukunft solche Fehler zu vermeiden sei folgendes bemerkt.
+                - Pihole darf auf gar keinen Fall auf dem Hauptinterface eth0 installiert werden.
+                - Ein einzelnes Interface tun0 erfüllt genau den gleichen Zweck wie eth0
+                - Der stubby daemon darf unter gar keinen Umständen auf den loopback Adapter gebunden werden
+                  (127.0.0.1:53) er muss unter einer anderen Adresse laufen (z.b. 127.0.0.1:5353)
+                - Der DNS Service (Port 53) darf nur auf dem tun0 interface und loopback laufen
+                - Werden stubby oder  dnsmasque im Modus 0.0.0.0 betrieben, machen sie sich gegenseitig 
+                  die Interfaces streitig und einer der beiden Dienst quittiert den Dienst.
+
+11/03/24       Das Timeout für die eigenständige Socks5 Verbindung wurde minimal erhöht. 
+
+               curl --connect-timeout 5 --max-time 7 -i --socks5 172.29.255.1:8080 https://www.google.de                
+                 
+               Mit 2 und 5 Sekunden war timeout Wert etwas zu optimistisch eingestellt. Mal schauen
+               wie sich die abgehende Socks5 Verbindung verhält.
+
+               Machen die Kerle zu jeder vollen Stunde reinemachen ?
+               Immer zur vollen Stunde ? 
+
+               redsocks redirect action none rc:=35 Mon Mar 11 04:59:11 PM GMT 2024
+               rc from curl socks5 is : 7
+               ssh-connection killed and restartet rc:=7 Mon Mar 11 04:59:12 PM GMT 2024
+               rc from curl socks5 is : 7
+               ssh-connection killed and restartet rc:=7 Mon Mar 11 04:59:44 PM GMT 2024
+               rc from curl socks5 is : 7 
+               ssh-connection killed and restartet rc:=7 Mon Mar 11 05:00:16 PM GMT 2024
+               rc from curl socks5 is : 7
+               ssh-connection killed and restartet rc:=7 Mon Mar 11 05:00:48 PM GMT 2024
+
+
+               Ich habe die DNS Server innerhalb von WireGuard auf den Pihole-Server umgestellt. 
+               Die Namensauflösung über Pihole funktioniert einwandfrei jedoch habe ich vergessen
+               das tun0 Interface zu den möglichen ICMP Zielen hinzuzufügen. Ergo gib es keine 
+               ping test auf den DNS Server. 
+
+               Auch die ärgerlichen Verbindungsunterbrüche unter dem OS Android 14 und dem offiziellen 
+               Wireguard Client müssen näher untersucht werden. Habe zu Testzwecken das Telefon neu gestartet 
+               und bekam eine private Class A Adresse bekommen : 10.43.92.202 
+               Werde diese Client Adresse des Telefons im Auge behalten und schauen ob sich diese Adresse ändert.
+               Aufgrund der privaten Adresse werden alle Verbindungen ins Internet über einen Gateway geleitet.
+               Ich hoffe inständig die Verbindung wird mit dem Parameter keepalive wieder neu aufgebaut. 
+               Sollte die bestehende Verbindung aus irgend einem Grund gekippt werden.
+               Da das zugrundliegende Verbindungsprotokoll von WireGuard leider auf UDP basiert, kann ich als
+               Benutzer des Programmes natürlich nicht einsehen ob eine Verbindung zum VPN Server vorliegt oder
+               eben nicht. Ich kann mittels icmp-echo oder auch dig prüfen ob eine VPN Verbindung vorliegt. 
+               Alle Clients von WireGuard (Linux,Windows,Android,Ipad) zeigen das selbe Verhalten. 
+
+               VPN wird aktiviert -> Der Button wird grün 
+ 
+               Und genau hier liegt der Fehler .... da UDP von sich ein verbindungsloses Protokoll ist wird natürlich 
+               nur angezeigt das VPN wurde aktiviert. Ob die VPN Verbindung auch tatsäschlich zum Server verbunden
+               ist, lässt sich nur mittels icmp oder dig festellen ... Und hier fangen die Probleme unter Android 14 
+               und Ipads mit einer SIM Karte an.Die Situation wird noch schlimmer , sollte der WireGuard Server mit
+               3 verbundenen Clients einfach heruntergefahren werden, werden diese 3 verbundenen Clients natürlich 
+               weiterhin die VPN Verbindung weiterhin als aktiv betrachten .... Obwohl es eigentlich gar nicht möglich ist. 
+               Da die VPN Route auf dem benutzten Gerät immer noch aktiv ist, werden alle Zugriffe ins Internet ins
+               leere laufen ... Na ja .... immerhin besser als den VPN Tunnel ohne eine einzige Benachrichtung einfach 
+               zu beenden.
+               
+
+12/03/24       Der Test mit dem Android 14 und dem Parameter keepalive scheint zu funktionieren. Ob die Batterie
+               wegen dieser kleinen Anpassung schneller leer wird, wird sich in der Zukunft zeigen. 
+               Auch wegen dem traceroute Dillema zeichnet sich eine Lösung ab.Windws verwendet für seinen traceroute
+               Befehl die ICMP Nachricht Typ 8 (echo). Dieser Befehl sollte unter Windows auch problemlos funktionieren.
+               Unter Unix wird jedoch für den gleichen Befehl  der UDP Port Bereich 33434 - 33474 verwendet. 
+               Aus diesem Grunde muss in der Firewall folgende Anweisung stehen.
+
+               iptables -I INPUT -p udp --dport 33434:33474 -j REJECT 
+     
+               Sollte auch der ausgehende Verkehr geregelt werden, was zur Zeit noch nicht der Fall, muss folgenden Anweisung
+               ausgeführt werden. 
+
+               iptables -I OUTPUT -p udp --dport 33434:33474 -j ACCEPT               
+
+               Da mit meiner Standard-Rule in der INPUT Tabelle von iptables natürlich DROP steht, konnten die UDP Packete
+               im Bereich 33434 - 33474 natürlich nicht zurückgewiesen werden mit REJECT.
+               Ein Funktionstest unter Windows und Linux war efolgreich.
+
+13/03/24       Eine Ende ist langsam in Sicht.Als eines der alllerletzten Kronjuwelen wird noch ein TOR-Proxy auf dem kleinen
+               Server installiert. 
+
+               apt-get install wget apt-transport-https	
+
+               # Source-List ergänzen
+              
+               deb     [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org bookworm main
+               deb-src [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org bookworm main
+                
+               # Keys installieren
+
+               wget -qO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --dearmor | tee /usr/share/keyrings/tor-archive-keyring.gpg >/dev/null
+
+               # Installieren
+
+               apt install tor deb.torproject.org-keyring                                                             
+
+    
+               Nach dem starten von tor am besten als nicht root user representiert sich das virtuelle Interface (eth0:1) wie folgt
+
+               Nmap scan report for 172.29.255.1
+
+	       22/tcp   open  ssh
+	       443/tcp  open  https
+	       1081/tcp open  pvuniwien
+	       8080/tcp open  http-proxy
+               9050/tcp open  tor-socks
+  
+               Die beiden verfügbaren Proxy Ports 8080 und 9050 können natürlich auch über das VPN benutzt werden !
+               Und natürlich ist nun auch das tun0 Interface per ICMP erreichbar ! Und der TOR service kann individuell 
+               auch nach Bedarf gestartet werden. Aber die beste Lösung von allen wäre natürlich ein eigenes TOR Interface
+               über ein drittes Wireguard Interface zur Verfügung zu stellen. Ob die CPU und der geringe Arbeitsspeicher
+               des virtuellen Servers dies schlussendlich auch mitmachen müsste natürlich mittels Tests ermittelt werden. 
+               Vom Standpunkt der Sicherheit aus wäre eine solche Verbindung wie ein eigenes und unabhängiges Tails System.
+               Dieses Wireguard Interface könnte auf dem UDP Port 53 lauschen und würde einzig und allein Verbindungen zum
+               TCP Port 9050 akzeptieren. Alle übrigen und verbliebenen UDP / TCP oder sogar ICMP Verbindungen unter IP V4 
+               werden geblockt. Der IP Stack 6 wird als einer der letzten Chalanges in Angriff genommen.
+  
+17/03/24       Der umgebaute Firefox Browser funktioniert perfekt mit dem TOR-Metzwerk des Servers.Aber ob der UDP Port 53
+               eine so gute Wahl für ein drittes Wireguard ist, ist langsam zweifelhaft. Da ich mir vorstellen könnte, dass
+               der NTP Port 123 eine besser Wahl darstellen würde, wird dieser als erstes probiert.Wenn das dritte Wireguard 
+               Interface (wg3) scharf geschaltet wird, wird dies auch mit Abstand das best geschützte Interface nau aussen hin
+               darstellen. Alle möglichen Computer-Clients dürfen nur einen einzigen Port zur Kommunikation mit der Aussenwelt 
+               benutzten. Jeder Versuch des Computers ausserhalb dieses genehmigten Ports zu kommunizieren wird durch die 
+               Firewall geblockt. 
+                  
+20/03/24       Es werden nun nur 2 WG Interfaces betrieben.Auf dem Interface Wirguard1 (Port 80) können
+               nur die installierten Proxy benutzt werden.
+
+
+22/03/24       Ich wollte eigentlich noch den kleinen snowflake-proxy auf meinem Server installieren,
+               weil mit 5 TB Datenvolumen habe ich noch sehr viel Luft nach oben.
+               Lange Reder -> Kurzer Sinn : Eine Katastrophe hoch 3	                                      
+               Erst nachdem ich die Quellen selbst übersetzt habe , ging der Server 
+     
+07/04/24       Der snowflake-proxy funkioniert nun ausgezeichnet.Auch die Probleme mit einem 
+               bbc fähigen socks5-server sind nun behoben.Auch der Fehler dass keine ICMP Nachrichten
+               an das entfernte IPSec Netzwerk gesendet werden konnten, ist nun behoben. 
+
+               OUTPUT ICMP DROP IN= OUT=ens192 SRC=172.23.50.254 DST=172.17.1.1 LEN=84 TOS=0x00 PREC=0x00 TTL=64 ID=48015 DF PROTO=ICMP TYPE=8 CODE=0 ID=28469 SEQ=1 
+               OUTPUT ICMP DROP IN= OUT=ens192 SRC=172.23.50.254 DST=172.17.1.1 LEN=84 TOS=0x00 PREC=0x00 TTL=64 ID=48047 DF PROTO=ICMP TYPE=8 CODE=0 ID=28469 SEQ=2 
+
+  
+               Offenbat fehlten 2 Regeln.
+
+     
+12/09/24       Nach etwas längerer Pause geht es nun weiter mit dem optimieren. Speziell der kleine
+               VM Computer mit nur einem Speicherausbau von 1GB Ram ist natürlich geradzu dankbar,über
+               jeden Speicher der gespart werden kann.
+	 
+               Natürlich bekommt diese Feature ein eigenen Schalter 
+
+               /etc/config/cfg/optimize_memory 
+
+                 
+25/09/24       Etwas wurde im ganzen Gerummel sclicht und einfach vergessen.
+               Das Endgerät sollte alle Verbindungen zu IPV6 kappen, oder
+               es besteht das Risiko eines VPN leaks !!!!!
+               Also bitte mit Vorsicht IPV6 aktiviert lassen !!!
+
+   
+28/09/24       Die Verbindugs-Daten werden verlinkt. Dies macht der Wechsel 
+               einer Konfiguration einfacher.
+               
+              
+01/10/24       Optimierung der Kommunikation zwischen redsocks und Fehlererkennung.
+               Das Timeout der curl Anfrage wurde leicht erhöht um den Fehler rc=28 
+               zu vermeiden.
+       
+05/10/24       Das Wireguard client script kann nun auch alle png Grafiken für 
+               die WireGuard Clients erzeugen. Testen aller Verbindungen !!!                   
+
+
+ 
