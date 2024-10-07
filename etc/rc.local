@@ -1,0 +1,70 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+#
+# Do make it works ....
+# create /etc/rc.local
+# chmod +x rc.local
+# systemctl daemon-reload
+# systemctl start rc-local
+# systemctl status rc-local
+
+if [ -f /etc/config/cfg/pihole ]; then
+   pihole disable
+   service pihole-FTL stop
+
+   modprobe tun
+   ip tuntap add dev tun0 mode tun
+   ip addr add 172.29.255.2/32 dev tun0
+   ifconfig tun0 up
+
+   pihole enable
+   service pihole-FTL start
+   systemctl start lighttpd.service
+
+   echo nameserver 127.0.0.1 > /etc/resolv.conf
+else
+   echo nameserver 127.0.0.1 > /etc/resolv.conf
+   echo .....
+fi
+
+
+
+if [ -f /etc/config/cfg/optimize_memory ]; then
+
+   # Das frisst nur Memory
+
+   systemctl stop cron.service
+
+   # Da schauen wir mal ..
+
+   systemctl stop fail2ban.service
+
+   # Zur Fehlersuche unverzichtbar ....
+
+   systemctl stop systemd-journald
+   systemctl stop systemd-journald-audit.socket
+   systemctl stop systemd-journald-dev-log.socket
+   systemctl stop systemd-journald.socket
+
+   # kann aber auch gegen jemanden verwendet werden
+
+   rm -rf /var/log/*
+
+else
+   echo no optimize
+fi
+
+cd /etc/config
+./firewall.sh
+
+exit 0
