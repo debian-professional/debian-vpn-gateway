@@ -173,5 +173,10 @@
 05/10/24       Das Wireguard client script kann nun auch alle png Grafiken für 
                die WireGuard Clients erzeugen. Testen aller Verbindungen !!!                   
 
+06/10/24       Der letzte kleine Fehler mit ICMP ist nun behoben.
+               Ebenfalls ab heute steht das ganze unter der GPL 2.0 Lizenz auf 
+               github.com zur Verfügung.
 
+
+    
  

@@ -48,8 +48,6 @@
 
 version="0.96a"
 figlet firewall $version
-swtor_debug="no"
-fw_debug="yes"
 external_if="ens192"
 
 
@@ -494,7 +492,7 @@ if [ -f ./cfg/swtor_allow_wireguard1 ]; then
       wireguard_private_routing1="no"
    fi
 
-   wireguard1_clients="172.31.255.1-172.31.255.20"
+   wireguard1_clients="172.31.255.2-172.31.255.20"
    wireguard1_do_log="no"
 
 else
@@ -539,7 +537,7 @@ if [ -f ./cfg/swtor_allow_wireguard2 ]; then
       wireguard_private_routing2="no"
    fi
 
-   wireguard2_clients="172.30.255.1-172.30.255.20"
+   wireguard2_clients="172.30.255.2-172.30.255.20"
    wireguard2_do_log="no"
 
 else
@@ -829,7 +827,7 @@ if [ $virtual_iface1 = "yes" ] ; then
          -s $wireguard_subnet1 -d $ipsec_remote  -j ACCEPT
       else
          /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 \
-         -s $wireguard_subnet1 -d $virtual_interface1  -j ACCEPT
+         -s $wireguard_subnet1 -d 0.0.0.0/0  -j ACCEPT
       fi
    fi
 
@@ -839,7 +837,7 @@ if [ $virtual_iface1 = "yes" ] ; then
          -s $wireguard_subnet2 -d $ipsec_remote -j ACCEPT
       else
          /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 \
-         -s $wireguard_subnet2 -d $virtual_interface1  -j ACCEPT
+         -s $wireguard_subnet2 -d 0.0.0.0/0  -j ACCEPT
       fi
    fi
 fi
@@ -848,39 +846,37 @@ fi
 if [ $virtual_iface2 = "yes" ] ; then
    if [ $swtor_allow_wireguard1 = "yes" ] ; then
       if [ $swtor_use_ipsec = "yes" ] ; then
-         /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 \
-         -s $wireguard_subnet1 -d $ipsec_remote  -j ACCEPT
+         /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 -s $wireguard_subnet1 -d $ipsec_remote  -j ACCEPT
       else
-         /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 \
-         -s $wireguard_subnet1 -d $virtual_interface2  -j ACCEPT
-         /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 \
-         -s $wireguard_subnet1 -d $wireguard_subnet1  -j ACCEPT
+         /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 -s $wireguard_subnet1 -d $virtual_interface2  -j ACCEPT
+         /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 -s $wireguard_subnet1 -d $wireguard1_dns -j ACCEPT
+         /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 -s $wireguard_subnet1 -d 0.0.0.0/0  -j ACCEPT
 
       fi
    fi
 
    if [ $swtor_allow_wireguard2 = "yes" ] ; then
       if [ $swtor_use_ipsec = "yes" ] ; then
-         /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 \
-         -s $wireguard_subnet2 -d $ipsec_remote -j ACCEPT
+         /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 -s $wireguard_subnet2 -d $ipsec_remote -j ACCEPT
       else
-         /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 \
-         -s $wireguard_subnet2 -d $virtual_interface2  -j ACCEPT
-         /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 \
-         -s $wireguard_subnet2 -d $wireguard_subnet2  -j ACCEPT
+         /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 -s $wireguard_subnet2 -d $virtual_interface2  -j ACCEPT
+         /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 -s $wireguard_subnet2 -d $wireguard2_dns -j ACCEPT
+         /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 -s $wireguard_subnet2 -d 0.0.0.0/0  -j ACCEPT
       fi
    fi
 fi
 
-
 if [ $using_pihole = "yes" ]; then
-    /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 \
-    -s $pihole_ip -d $ipsec_remote  -j ACCEPT
+    /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 -s $pihole_ip -d $ipsec_remote  -j ACCEPT
     /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 -d $pihole_ip -j ACCEPT
 fi
 
 if [ $swtor_use_ipsec = "yes" ] ; then
    /usr/sbin/iptables -A INPUT  -p icmp --icmp-type 8 -d $virtual_interface1 -j ACCEPT
+fi
+
+if [ $fw_debug = "yes" ] ; then
+   /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 -j LOG  --log-prefix "input icmp type 8"
 fi
 
 /usr/sbin/iptables -A INPUT -p icmp --icmp-type 8 -j DROP
@@ -910,41 +906,36 @@ fi
 # Hier wird definiert .... was das OUTPUT verlassen darf.
 # Bei ICMP wird nur ping (type 8) unterstützt. Der Rest wird geblockt.
 # Unter gar keinen Umständen wird ein Packet mit der Zielrichtung
-# UDP Port 53 diesen Server verlassen.
+# UDP Port 53 diesen Server jemals verlassen.
 # Der Rest ist im Moment noch ziemlich egal ......
 
 if [ $virtual_iface1 = "yes" ] ; then
    if [ $swtor_use_ipsec = "yes" ] ; then
-      /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 0 \
-      -s $virtual_interface1 -d $ipsec_remote -j ACCEPT
+      /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 0 -s $virtual_interface1 -d $ipsec_remote -j ACCEPT
   fi
 fi
 
 if [ $virtual_iface2 = "yes" ] ; then
    if [ $swtor_allow_wireguard1 = "yes" ] ; then
       if [ $swtor_use_ipsec = "yes" ] ; then
-         /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 0 \
-         -s $wireguard_subnet1,$virtual_interface2,$pihole_ip -d $ipsec_remote -j ACCEPT
+         /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 0 -s $wireguard_subnet1,$virtual_interface2,$pihole_ip -d $ipsec_remote -j ACCEPT
       else
-         /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 0 \
-         -s $wireguard_subnet1,$virtual_interface2 -d 0.0.0.0/0 -j ACCEPT
+         /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 0 -s $wireguard1_dns,$wireguard_subnet1,$virtual_interface2 -d 0.0.0.0/0 -j ACCEPT
       fi
    fi
 
    if [ $swtor_allow_wireguard2 = "yes" ] ; then
       if [ $swtor_use_ipsec = "yes" ] ; then
-         /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 0 \
-         -s $wireguard_subnet2,$virtual_interface2,$pihole_ip -d $ipsec_remote -j ACCEPT
+         /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 0 -s $wireguard_subnet2,$virtual_interface2,$pihole_ip -d $ipsec_remote -j ACCEPT
       else
-         /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 0 \
-         -s $wireguard_subnet2,$virtual_interface2 -d 0.0.0.0/0 -j ACCEPT
+         /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 0 -s $wireguard_subnet2,$virtual_interface2 -d 0.0.0.0/0 -j ACCEPT
       fi
    fi
 fi
 
 
-if [ $do_log_icmp = "yes" ] ; then
-   /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 0 -j LOG  --log-prefix "output icmp type 0"
+if [ $fw_debug = "yes" ] ; then
+   /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 0 -j LOG  --log-prefix "output icmp type 0 "
    /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 0 -j DROP
 fi
 
@@ -959,17 +950,14 @@ fi
 
 if [ $swtor_use_ipsec = "yes" ] ; then
     /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 8 -s $virtual_interface1 -d $ipsec_remote -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-fi
-
-if [ $swtor_use_ipsec = "yes" ] ; then
-   /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 8 -s $external_ip -d $ipsec_remote -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+    /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 8 -s $external_ip -d $ipsec_remote -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 fi
 
 /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 8 -s $external_ip -d 0/0 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 
 
-if [ $do_log_icmp = "yes" ] ; then
-   /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 8 -j LOG --log-level warning --log-prefix "OUTPUT ICMP DROP "
+if [ $fw_debug = "yes" ] ; then
+   /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 8 -j LOG --log-level warning --log-prefix "output icmp typ 8"
    /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 8 -j DROP
 fi
 
