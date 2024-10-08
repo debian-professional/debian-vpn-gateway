@@ -8,7 +8,8 @@ wollte. Etwas vorher erschien der Android Release V13 welcher keine IPSec
 Verbindungen über LLT2P mehr unterstützte.
 Bei einem Upgrade von Android Version 12 auf die Version 13 konnte die zwar die
 alte VPN Konfiguration weiter verwendet werden, nicht jedoch bei einem neuen
-Gerät welches bereits mit Android 13 ausgeliefert wurdee. 
+Gerät welches bereits mit Android 13 ausgeliefert wurde.
+ 
 Und so wurde entschieden, die neue Lösung um neue Android Geräte mit Android 13
 an die "alte" USG Firewall zu verbinden, mit so wenig Aufwand wie nur irgendwie
 möglich zu ermöglichen. Im Klartext -> 
@@ -32,16 +33,18 @@ Die von mir vorgeschlagene Lösung war folgendes :
   von wenigen Stunden und wurde auch durch den Kunden ohne Probleme bezahlt.
 
 - Ein vereinfachtes Diagramm zeigt die Verbindungen und ihre Reihenfolge.
-  VPN-Endgerät	       VMWare-Gatay	 Zyxel-USG	Netzwerk 
+  Das VPN Endgerät erstellt eine Wireguard Verbindung auf den Gateway Server
+  mittels dem WireGUard Protokoll.
 
-- Das VPN Endgerät erstellt eine Wireguard VPN auf den Gateway Server
-  VPN-Emdgerätr ------>VMWare-Getway 
+  [VPN-Emdgerät ------>VMWare-Getway] 
 
 - Der Gateway Server hat immer eine aktive IPSec Verbindung zur alten
   Infrastruktur offen und alle Wireguard Clients können direkt auf
-  das Netzwerk des Kunden zugreifen. Hiefür wird zwischen der dem
+  das Netzwerk des Kunden zugreifen. Hiefür wird zwischen dem
   Gateway Server und der alten Firewall das IPSec Protokoll verwendet.
-  VPN-Emdgerätr ------>VMWare-Getway--->Zyxel-USG------>Netzwerk
+
+
+  [VPN-Emdgerätr ------>VMWare-Getway--->Zyxel-USG------>Netzwerk]
 
 - Mein erster rudimentärer Gateway (VmWare) machte eigentlich nichts 
   anders als auf der WirGuardschnittle zu warten und alle Clients über
@@ -68,8 +71,9 @@ Die von mir vorgeschlagene Lösung war folgendes :
   fängt das eigentliche Problem an.Mein eigener ISP Provider ist beim Rennen
   um meine persönlichen Verbindunsdaten natürlich disqualifizert, da alle Daten 
   verschlüsselt sind, egal um welche Art von VPN es sich schlussendlich
-  auch handelt (OpenVPN,WireGUard,SSH). 
-  Aber derjenige der mir mein VPN anbietet ... kannn sehr wohl alle meine
+  auch handelt (OpenVPN,WireGUard,SSH).
+ 
+- Aber derjenige der mir mein VPN anbietet ... kannn sehr wohl alle meine
   persönlichen Verbindungen protokollieren. Traue ich einem Fremdanbieter
   von VPN Services der behauptet er würde keinerlei LOG-Dateien über das
   Verhalten seiner Kunden machen ? Nicht wirklich !!!
