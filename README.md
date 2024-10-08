@@ -74,14 +74,16 @@ Die von mir vorgeschlagene Lösung war folgendes :
   auch handelt (OpenVPN,WireGUard,SSH).
  
 - Aber derjenige der mir mein VPN anbietet ... kannn sehr wohl alle meine
-  persönlichen Verbindungen protokollieren. Traue ich einem Fremdanbieter
-  von VPN Services der behauptet er würde keinerlei LOG-Dateien über das
-  Verhalten seiner Kunden machen ? Nicht wirklich !!!
-  Leider wurden in den letzten Jahren viele VPN Anbieter hierbei überführt
-  wie sie trotz einer "NO-LOG" Policy ihre Kunden trotztdem ausspähten.
-  Den ganz traurigen Negativtekord stellte hier wohl die Firma Avast auf, 
-  welche die zahlendenden VPN Kunden auspionierte und diese gesammelten
-  Daten der Kunden gleich nochmals für viel Geld weiterverkaufte .....
+  persönlichen Verbindungen protokollieren. Traue ich einem beliebigen
+  Fremdanbieter von VPN Services der behauptet er würde keinerlei
+  LOG-Dateien über das Verhalten seiner Kunden machen ? Nicht wirklich !!!
+
+- Leider wurden in den letzten Jahren viele namhafte VPN Anbieter hierbei
+  überführt wie sie trotz einer "NO-LOG" Policy ihre Kunden trotzdem
+  ausspähten. Den ganz traurigen Negativtekord stellte hier wohl die
+  Firma Avast auf,welche einerseits das Verhalten der zahlendenden
+  VPN Kunden protkollerte und diese gesammelten Daten der Kunden 
+  nochmals für viel Geld weiterverkaufte .....
  
 - Bleibt wohl als einzige echte Alternative wohl nur eine eigener Server
   zu betreiben.
