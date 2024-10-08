@@ -24,26 +24,24 @@ Die von mir vorgeschlagene Lösung war folgendes :
 Die allerste rudimentäre Version dieser Scripte lief bereits innerhalb von wenigen Stunden und wurde 
 auch durch den Kunden ohne über die Kosten wie üblicherweise zu meckern bezahlt.
 
+   VPN-Endgerät		VMWare-Gatay		Zyxel-USG	Netzwerk des Kunden
 
-   VPN Endgerät 				VMWare-Gateway 				Zywall USG       Netzwerk des Kunden			
-
-
-   z.B. ein Tablet 
+   z.B. ein Table
    oder ein Computer 
 
-   1. Das Endgerät erstellt einen 
-   Wireguard VPN auf den Gateway Server 
- 
-   -------------------------------------------->
+   1. Das Endgerät erstellt eine Wireguard VPN auf den Gateway Server
 
+                  WG
+	   	-------->
 
-   Der Gateway Server hat immer eine aktive 
-   IPSec Verbindung zur alten Infrastruktur offen
-   und alle Wireguard Clients können direkt auf
-   das Netzwerk des Kunden zugreifen. 
+   2. Der Gateway Server hat immer eine aktive IPSec Verbindung zur alten Infrastruktur offen
+      und alle Wireguard Clients können direkt auf das Netzwerk des Kunden zugreifen. Hiefür 
+      wird das IPSec Protkoll verwendet.
 
-                                                               --------------------------------------------------->
-
+                                       IPSec
+ 				     ------------>
+                                                           LAN
+                                                       ------------->
 
    Mein rudimentärer Gateway (VmWare) machte eigentlich nichts anders als auf der WirGuardschnittle zu warten und alle 
    Clients über eine IPSec Verbindung mit dem Netzwerk des Kunden zu verbinden. Der Kunde war sehr zufrieden und er war begeistert wie 
@@ -70,7 +68,7 @@ auch durch den Kunden ohne über die Kosten wie üblicherweise zu meckern bezahl
  
     3.) Bleibt wohl als einzige Alternative nur eine eigener Server zu betreiben, der möglichst von eine paar Leuten benutzt wird
         um die eigenen Verbindungsdaten zu schützten vor der Überwachung des VM-Anbieters der sich auf keinen Fall im gleichen
-        Land befinden sollte, wo ich imich selbst befinde.
+        Land befinden sollte, wo ich mich selbst befinde.
 
 
 
