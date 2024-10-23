@@ -44,7 +44,7 @@ Die von mir vorgeschlagene Lösung war folgendes :
   Gateway Server und der alten Firewall das IPSec Protokoll verwendet.
 
 
-  [VPN-Emdgerätr ------>VMWare-Getway--->Zyxel-USG------>Netzwerk]
+  [VPN-Emdgerät ------>VMWare-Getway--->Zyxel-USG------>Netzwerk]
 
 - Mein erster rudimentärer Gateway (VmWare) machte eigentlich nichts 
   anders als auf der WirGuardschnittle zu warten und alle Clients über
@@ -79,14 +79,39 @@ Die von mir vorgeschlagene Lösung war folgendes :
   LOG-Dateien über das Verhalten seiner Kunden machen ? Nicht wirklich !!!
 
 - Leider wurden in den letzten Jahren viele namhafte VPN Anbieter hierbei
-  überführt wie sie trotz einer "NO-LOG" Policy ihre Kunden trotzdem
-  ausspähten. Den ganz traurigen Negativtekord stellte hier wohl die
-  Firma Avast auf,welche einerseits das Verhalten der zahlendenden
-  VPN Kunden protkollerte und diese gesammelten Daten der Kunden 
-  nochmals für viel Geld weiterverkaufte .....
+  überführt wie sie trotz einer verpsochenen "NO-LOG" Policy ihre Kunden 
+  trotzdem ausspähten. Den ganz traurigen Negativtekord stellte hier wohl 
+  die Firma Avast auf,welche einerseits das Verhalten der zahlendenden
+  VPN Kunden protkollerte und diese gesammelten Daten der Kunden gleich 
+  nochmals für viel Geld weiterverkaufte ..... Schweinepriester !
  
-- Bleibt wohl als einzige echte Alternative wohl nur eine eigener Server
+- Bleibt wohl als einzige echte Alternative wohl nur einen eigenen Server
   zu betreiben.
+
+Mein Server für den Privat Gebrauch ist wie folgt definiert.
+
+- 1 GB RAM (Nicht gerade sehr berauschend aber ausreichend)
+- 2 TB Datenvolumen (Dies erlaubt auch den Betrieb als Snowflake-Proxy)
+- Virtualisiert unter VMWare
+- 1 x fixe IP (natürlich auch mit IP V6 falls erwünscht ) 
+- Installation Debian 12 
+
+Im Gegensatz zum einfachen Gateway (Prototyp) des Kunden sollte 
+mein eigener Server natürlich schon viele erhebliche Verbesserungen 
+aufweisen. Die da wären ----
+
+- Alle Parameter der scripts sind über Dateien steuerbar
+- Die ganze DNS Kommunikation ist verschlüsselt 
+- Die Firewall des Prototypen war wirklich sehr einfach gehalten
+- Automatische Erzeugung der QR Codes für Tablets und Smartphones
+- Optimierung des Speicherbedarfs und der Sicherheits der Clients
+
+
+
+
+
+
+
 
 
  
