@@ -91,6 +91,7 @@ Die von mir vorgeschlagene Lösung war folgendes :
 Mein Server für den Privat Gebrauch ist wie folgt definiert.
 
 - 1 GB RAM (Nicht gerade sehr berauschend aber ausreichend)
+- 20 GB SSD
 - 2 TB Datenvolumen (Dies erlaubt auch den Betrieb als Snowflake-Proxy)
 - Virtualisiert unter VMWare
 - 1 x fixe IP (natürlich auch mit IP V6 falls erwünscht ) 
@@ -104,9 +105,50 @@ aufweisen. Die da wären ----
 - Die ganze DNS Kommunikation ist verschlüsselt 
 - Die Firewall des Prototypen war wirklich sehr einfach gehalten
 - Automatische Erzeugung der QR Codes für Tablets und Smartphones
-- Optimierung des Speicherbedarfs und der Sicherheits der Clients
+- Optimierung des Speicherbedarfs und die Sicherheits der Clients
+
+1.0 Grundinstallation Debian 12 
+
+Da die Grundinstallation bei den meisten VPS Anbietern generell über
+vorgefertigte Schablonen erledigt wird,möchte ich keine grossen
+Worte darüber verlieren.
+
+1.1 Absicherung des SSH Daemons 
+
+Da die allemeisten VPS Server egal von welchem Anbieter sowieso nur über 
+SSH verwaltet werden, sollte eines der ersten Augemerke auf der Sicherheit
+in der Konfiguration des SSH Deamons liegen.
+Bei meinen eigenen Anbieter war sogar eine SSH-Anmeldung über den user root möglich !
+Und natürlich war ebenfalls der Login über Passwort möglich. 
+Eine kleine Änderung der Datei /etc/ssh/sshd_config
+
+LogLevel QUIET
+PermitRootLogin no
+AllowUsers gugus1 gugus2 gugus3 
+PasswordAuthentication no
+
+kann wahre Wunder bewirken.Im obigen Beispiel sind 3 Benutzer aufgeführt, jedoch 
+nur einer dieser Benutzer ist in der Gruppe sudoers !
+
+Um die lästigen Einbruchs-Versuche russicher und chinesicher Hacker zu elemenieren, 
+könnte man natürlich auch den Standard Port 22 auf etwas anderes legen.
 
 
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+ 
 
 
 
