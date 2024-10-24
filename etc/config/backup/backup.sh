@@ -57,6 +57,16 @@ if [ -f /etc/config/cfg/virtual_iface ]; then
    tar cvzf tmp/interfaces.tar.gz /etc/network/interfaces > /dev/null 2>&1
 fi
 
+# Snowflake-Proxy
+if [ -f /etc/config/cfg/swtor_snowflake ]; then
+   tar cvzf tmp/snowflake-proxy-service.tar.gz /lib/systemd/snowflake-proxy.service > /dev/null 2>&1
+fi
+
+#TOR
+if [ -f /etc/config/cfg/swtor_tor ]; then
+   tar cvzf tmp/tor.tar.gz /etc/tor > /dev/null 2>&1
+fi
+
 # Nice to have inside the backup
 
 tar cvzf tmp/nice_to_have.tar.gz /etc/apt /etc/motd > /dev/null 2>&1
@@ -70,11 +80,10 @@ if [ -f /etc/config/backup/backup-files ]; then
 fi
 
 # And at the end we backup the tmp folder
-# with the hostname
+# with the hostname of the server
 
-backupfile="$(hostname).tar.gz"
+backupfile="$(hostname)-$(date '+%Y-%m-%d-%H-%M').tar.gz"
 tar cvzf $backupfile /etc/config/backup/tmp > /dev/null 2>&1
-
 
 cd /etc/config/backup/tmp
 rm * > /dev/null 2>&1

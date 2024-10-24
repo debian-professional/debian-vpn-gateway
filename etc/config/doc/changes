@@ -8,7 +8,7 @@
                 - Der stubby daemon darf unter gar keinen Umständen auf den loopback Adapter gebunden werden
                   (127.0.0.1:53) er muss unter einer anderen Adresse laufen (z.b. 127.0.0.1:5353)
                 - Der DNS Service (Port 53) darf nur auf dem tun0 interface und loopback laufen
-                - Werden stubby oder  dnsmasque im Modus 0.0.0.0 betrieben, machen sie sich gegenseitig 
+                - Werden stubby oder dnsmasque im Modus 0.0.0.0 betrieben, machen sie sich gegenseitig 
                   die Interfaces streitig und einer der beiden Dienst quittiert den Dienst.
 
 11/03/24       Das Timeout für die eigenständige Socks5 Verbindung wurde minimal erhöht. 
@@ -33,7 +33,7 @@
 
 
                Ich habe die DNS Server innerhalb von WireGuard auf den Pihole-Server umgestellt. 
-               Die Namensauflösung über Pihole funktioniert einwandfrei jedoch habe ich vergessen
+               Die Namensauflösung über Pihole funktioniert nun einwandfrei jedoch habe ich vergessen
                das tun0 Interface zu den möglichen ICMP Zielen hinzuzufügen. Ergo gib es keine 
                ping test auf den DNS Server. 
 
@@ -97,7 +97,6 @@
                # Installieren
 
                apt install tor deb.torproject.org-keyring                                                             
-
     
                Nach dem starten von tor am besten als nicht root user representiert sich das virtuelle Interface (eth0:1) wie folgt
 
@@ -105,7 +104,7 @@
 
 	       22/tcp   open  ssh
 	       443/tcp  open  https
-	       1081/tcp open  pvuniwien
+	       1081/tcp open  vpnproxx
 	       8080/tcp open  http-proxy
                9050/tcp open  tor-socks
   
@@ -113,11 +112,11 @@
                Und natürlich ist nun auch das tun0 Interface per ICMP erreichbar ! Und der TOR service kann individuell 
                auch nach Bedarf gestartet werden. Aber die beste Lösung von allen wäre natürlich ein eigenes TOR Interface
                über ein drittes Wireguard Interface zur Verfügung zu stellen. Ob die CPU und der geringe Arbeitsspeicher
-               des virtuellen Servers dies schlussendlich auch mitmachen müsste natürlich mittels Tests ermittelt werden. 
+               des virtuellen Servers dies schlussendlich auch zulassen, müsste natürlich mittels Tests ermittelt werden. 
                Vom Standpunkt der Sicherheit aus wäre eine solche Verbindung wie ein eigenes und unabhängiges Tails System.
                Dieses Wireguard Interface könnte auf dem UDP Port 53 lauschen und würde einzig und allein Verbindungen zum
                TCP Port 9050 akzeptieren. Alle übrigen und verbliebenen UDP / TCP oder sogar ICMP Verbindungen unter IP V4 
-               werden geblockt. Der IP Stack 6 wird als einer der letzten Chalanges in Angriff genommen.
+               werden einfach geblockt. Der IP Stack 6 wird als einer der letzten Chalanges in Angriff genommen.
   
 17/03/24       Der umgebaute Firefox Browser funktioniert perfekt mit dem TOR-Metzwerk des Servers.Aber ob der UDP Port 53
                eine so gute Wahl für ein drittes Wireguard ist, ist langsam zweifelhaft. Da ich mir vorstellen könnte, dass
@@ -130,21 +129,20 @@
 20/03/24       Es werden nun nur 2 WG Interfaces betrieben.Auf dem Interface Wirguard1 (Port 80) können
                nur die installierten Proxy benutzt werden.
 
-
 22/03/24       Ich wollte eigentlich noch den kleinen snowflake-proxy auf meinem Server installieren,
-               weil mit 5 TB Datenvolumen habe ich noch sehr viel Luft nach oben.
+               weil mit 2 TB Datenvolumen habe ich noch sehr viel Luft nach oben.
                Lange Reder -> Kurzer Sinn : Eine Katastrophe hoch 3	                                      
-               Erst nachdem ich die Quellen selbst übersetzt habe , ging der Server 
+               Erst nachdem ich die Quellen des Proxy selbst übersetzt habe , ging der Server
+               Der aktuelle Release aus Debian 12 wurde wohl zur Zeit der Neandertaler übersetzt. 
      
 07/04/24       Der snowflake-proxy funkioniert nun ausgezeichnet.Auch die Probleme mit einem 
-               bbc fähigen socks5-server sind nun behoben.Auch der Fehler dass keine ICMP Nachrichten
+               bbc fähigen socks5-server sind nun endlich behoben.Auch der Fehler dass keine ICMP Nachrichten
                an das entfernte IPSec Netzwerk gesendet werden konnten, ist nun behoben. 
 
                OUTPUT ICMP DROP IN= OUT=ens192 SRC=172.23.50.254 DST=172.17.1.1 LEN=84 TOS=0x00 PREC=0x00 TTL=64 ID=48015 DF PROTO=ICMP TYPE=8 CODE=0 ID=28469 SEQ=1 
                OUTPUT ICMP DROP IN= OUT=ens192 SRC=172.23.50.254 DST=172.17.1.1 LEN=84 TOS=0x00 PREC=0x00 TTL=64 ID=48047 DF PROTO=ICMP TYPE=8 CODE=0 ID=28469 SEQ=2 
 
-  
-               Offenbat fehlten 2 Regeln.
+               Offenbar fehlten 2 Regeln.
 
      
 12/09/24       Nach etwas längerer Pause geht es nun weiter mit dem optimieren. Speziell der kleine
@@ -161,11 +159,9 @@
                es besteht das Risiko eines VPN leaks !!!!!
                Also bitte mit Vorsicht IPV6 aktiviert lassen !!!
 
-   
 28/09/24       Die Verbindugs-Daten werden verlinkt. Dies macht der Wechsel 
-               einer Konfiguration einfacher.
-               
-              
+               einer Konfiguration enorm einfacher.
+                             
 01/10/24       Optimierung der Kommunikation zwischen redsocks und Fehlererkennung.
                Das Timeout der curl Anfrage wurde leicht erhöht um den Fehler rc=28 
                zu vermeiden.
@@ -173,10 +169,10 @@
 05/10/24       Das Wireguard client script kann nun auch alle png Grafiken für 
                die WireGuard Clients erzeugen. Testen aller Verbindungen !!!                   
 
-06/10/24       Der letzte kleine Fehler mit ICMP ist nun behoben.
+06/10/24       Der letzte kleine Fehler mit ICMP ist nun ebenfalls behoben.
                Ebenfalls ab heute steht das ganze unter der GPL 2.0 Lizenz auf 
                github.com zur Verfügung.
 
-
+21/10/24       Backup script hinzugefügt /etc/config/backup
     
  

@@ -103,7 +103,7 @@ aufweisen. Die da wären ----
 
 - Alle Parameter der scripts sind über Dateien steuerbar
 - Die ganze DNS Kommunikation ist verschlüsselt 
-- Die Firewall des Prototypen war wirklich sehr einfach gehalten
+- Die Firewall des Prototypen war wirklich sehr einfach gestrickt
 - Automatische Erzeugung der QR Codes für Tablets und Smartphones
 - Optimierung des Speicherbedarfs und die Sicherheit der VPN-Clients
 
@@ -144,8 +144,16 @@ Zum Beispiel auf :
 
 Warnung : 
 Alle Änderungen an der Datei /etc/ssh/sshd_config sind mit aller grösster Vorsicht
-vorzunehmen. Sollte euch auch nur ein kleiner Fehler unterlaufen habt ihr euch
-selber sehr erfolgreich vom eigenen Server ausgesperrt !
+vorzunehmen. Sollte euch auch nur ein einziger kleiner Fehler unterlaufen habt ihr 
+euch selber sehr erfolgreich vom eigenen Server ausgesperrt !
+
+Ich würde nach der Änderung folgendes machen.
+
+systemctl restart ssh
+exit 
+
+Und gleich wieder neu verbinden zum Server über SSH.
+
 
 
 
