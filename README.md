@@ -22,7 +22,7 @@ Die von mir vorgeschlagene Lösung war folgendes :
   1GB RAM und 2TB Datenvolumen können heute bereits für weniger als 5 Euro
   pro Monat betrieben werden. (Das gilt ntürlich nur für Länder ausserhalb 
   der Schweiz .... ;-) und in der Schweiz werden für solche kleinen VPS mit 
-  vergleichbaren Daten rund 20 Franken oder mehr verlangt, und diese Kosten
+  vergleichbaren Daten rund 25 Franken oder mehr verlangt, und diese Kosten
   hätte ich meinem Kunden niemals verkaufen können. 
 
 - Ich sollte den Server unterhalten und im Hintergrund die IPSec Verbindung 
@@ -62,7 +62,7 @@ Die von mir vorgeschlagene Lösung war folgendes :
   mich nicht gerne durch einen speicherhungrigen Provider aushorchen
   der wie zum Bespiel in der Schweiz üblich alle meine Verbindungs-Daten 
   für lange 6 Monnate speichert. Gleiches gilt hierbei auch für die 
-  Schweizer Regierung welche Zugriff auf diese Daten von mir gesammelten
+  Schweizer Regierung welche Zugriff auf diese von mir gesammelten
   Daten erhalten kann bei Bedarf.
 
 - Viele Benutzer des Internets denken in gleichen Sphären wie ich und
@@ -82,7 +82,7 @@ Die von mir vorgeschlagene Lösung war folgendes :
   überführt wie sie trotz einer verpsochenen "NO-LOG" Policy ihre Kunden 
   trotzdem ausspähten. Den ganz traurigen Negativtekord stellte hier wohl 
   die Firma Avast auf,welche einerseits das Verhalten der zahlendenden
-  VPN Kunden protkollerte und diese gesammelten Daten der Kunden gleich 
+  VPN Kunden protkollierte und diese gesammelten Daten der Kunden gleich 
   nochmals für viel Geld weiterverkaufte ..... Schweinepriester !
  
 - Bleibt wohl als einzige echte Alternative wohl nur einen eigenen Server
@@ -111,21 +111,25 @@ aufweisen. Die da wären ----
 
 Da die Grundinstallation bei den meisten VPS Anbietern generell über
 vorgefertigte Schablonen erledigt wird,möchte ich keine grossen
-Worte darüber verlieren.
+Worte darüber verlieren.Die Unterschiede betreffend den verschieden
+Anbieter sind schlicht und ergreifen einfach zu gross.
 
 1.1 Absicherung des SSH Daemons 
 
 Da die allemeisten VPS Server egal von welchem Anbieter sowieso nur über 
 SSH verwaltet werden, sollte eines der ersten Augemerke auf der Sicherheit
-in der Konfiguration des SSH Deamons liegen.
+und in der Konfiguration des SSH Deamons liegen.
 Bei meinen eigenen Anbieter war sogar eine SSH-Anmeldung über den user root möglich !
 Und natürlich war ebenfalls der Login über Passwort möglich. 
 Eine kleine Änderung der Datei /etc/ssh/sshd_config
 
+---
+AddressFamily inet
 LogLevel QUIET
 PermitRootLogin no
 AllowUsers gugus1 gugus2 gugus3 
 PasswordAuthentication no
+---
 
 kann wahre Wunder bewirken.Im obigen Beispiel sind 3 Benutzer aufgeführt, jedoch 
 nur einer dieser Benutzer ist in der Gruppe sudoers !
@@ -133,11 +137,15 @@ nur einer dieser Benutzer ist in der Gruppe sudoers !
 Um die lästigen Einbruchs-Versuche russicher und chinesicher Hacker zu elemenieren, 
 könnte man natürlich auch den Standard Port 22 auf etwas anderes legen.
 
+---
+Port 22
+---
 
+Zum Beispiel :
 
-
-
-
+---
+Port 443
+---
 
 
 
