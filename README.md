@@ -105,12 +105,12 @@ aufweisen. Die da wären ----
 - Die ganze DNS Kommunikation ist verschlüsselt 
 - Die Firewall des Prototypen war wirklich sehr einfach gehalten
 - Automatische Erzeugung der QR Codes für Tablets und Smartphones
-- Optimierung des Speicherbedarfs und die Sicherheits der Clients
+- Optimierung des Speicherbedarfs und die Sicherheit der VPN-Clients
 
 1.0 Grundinstallation Debian 12 
 
 Da die Grundinstallation bei den meisten VPS Anbietern generell über
-vorgefertigte Schablonen erledigt wird,möchte ich keine grossen
+vorgefertigte Schablonen erledigt wird,möchte ich hier keine grossen
 Worte darüber verlieren.Die Unterschiede betreffend den verschieden
 Anbieter sind schlicht und ergreifen einfach zu gross.
 
@@ -132,14 +132,21 @@ Eine kleine Änderung der Datei /etc/ssh/sshd_config
 kann wahre Wunder bewirken.Im obigen Beispiel sind 3 Benutzer aufgeführt, jedoch 
 nur einer dieser Benutzer ist in der Gruppe sudoers !
 
-Um die lästigen Einbruchs-Versuche russicher und chinesicher Hacker zu elemenieren, 
-könnte man natürlich auch gleich den Standard Port 22 auf etwas anderes legen.
+Um die mehr als lästigen Einbruchs-Versuche russicher und chinesicher Juniorhacker 
+zu elemenieren, könnte man natürlich auch gleich den Standard Port 22 auf etwas
+anderes legen.
 
 - Port 22
 
 Zum Beispiel auf :
 
 - Port 443
+
+Warnung : 
+Alle Änderungen an der Datei /etc/ssh/sshd_config sind mit aller grösster Vorsicht
+vorzunehmen. Sollte euch auch nur ein kleiner Fehler unterlaufen habt ihr euch
+selber sehr erfolgreich vom eigenen Server ausgesperrt !
+
 
 
 
