@@ -123,28 +123,24 @@ Bei meinen eigenen Anbieter war sogar eine SSH-Anmeldung über den user root mö
 Und natürlich war ebenfalls der Login über Passwort möglich. 
 Eine kleine Änderung der Datei /etc/ssh/sshd_config
 
-...
-AddressFamily inet
-LogLevel QUIET
-PermitRootLogin no
-AllowUsers gugus1 gugus2 gugus3 
-PasswordAuthentication no
-...
+- AddressFamily inet
+- LogLevel QUIET
+- PermitRootLogin no
+- AllowUsers gugus1 gugus2 gugus3 
+- PasswordAuthentication no
 
 kann wahre Wunder bewirken.Im obigen Beispiel sind 3 Benutzer aufgeführt, jedoch 
 nur einer dieser Benutzer ist in der Gruppe sudoers !
 
 Um die lästigen Einbruchs-Versuche russicher und chinesicher Hacker zu elemenieren, 
 könnte man natürlich auch gleich den Standard Port 22 auf etwas anderes legen.
-...
-Port 22
-...
+
+- Port 22
 
 Zum Beispiel auf :
 
-...
-Port 443
-...
+- Port 443
+
 
 
 
