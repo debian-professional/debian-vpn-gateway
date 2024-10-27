@@ -26,8 +26,8 @@ Die von mir vorgeschlagene Lösung war folgendes :
   hätte ich meinem Kunden niemals verkaufen können. 
 
 - Ich sollte den Server unterhalten und im Hintergrund die IPSec Verbindung 
-  zur bestehenden USG Firewall herstellen. Die mein etwas schottischer Kunde
-  einfach nicht ersetzen wollte.
+  zur bestehenden USG Firewall herstellen. Die mein Kunde einfach nicht 
+  ersetzen wollte.
 
 - Die allerste sehr rudimentäre Version dieser Scripte lief bereits innerhalb
   von wenigen Stunden und wurde auch durch den Kunden ohne Probleme bezahlt.
@@ -105,6 +105,8 @@ aufweisen. Die da wären ----
 - Die ganze DNS Kommunikation ist verschlüsselt 
 - Die Firewall des Prototypen war wirklich sehr einfach gestrickt
 - Automatische Erzeugung der QR Codes für Tablets und Smartphones
+- Alle Schnittstellen werden dort erzeugt wo sie hingehören und werden
+  nicht innerhalb von Scripten dynamisch erzeugt.
 - Optimierung des Speicherbedarfs und die Sicherheit der VPN-Clients
 
 1.0 Grundinstallation Debian 12 
@@ -147,12 +149,24 @@ Alle Änderungen an der Datei /etc/ssh/sshd_config sind mit aller grösster Vors
 vorzunehmen. Sollte euch auch nur ein einziger kleiner Fehler unterlaufen habt ihr 
 euch selber sehr erfolgreich vom eigenen Server ausgesperrt !
 
-Ich würde nach der Änderung folgendes machen.
+Ich würde nach der Änderung dieser Datei folgendes machen.
 
 systemctl restart ssh
 exit 
 
 Und gleich wieder neu verbinden zum Server über SSH.
+Sollte es klappen habt ihr euch nicht selbst in den 
+Fuss geschossen. Sollte es nicht klappen, viel 
+Vergnügen beim Ändern des kleinen Maleurs .-)
+
+
+1.11 Absicherung von DNS
+
+Ich verwende im privaten Rahmem seit vielen Jahren
+auf meinen Workstations und Servern den Stuppy Resolver.
+
+
+
 
 
 
