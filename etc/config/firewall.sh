@@ -7,10 +7,10 @@
 # Speicher 	  : 1 GB oder 2GB (hängt vom Modell ab)                       #
 # Festplatte 	  : 20 oder 40 GB (hängt vom Modell ab)                       #
 # Interface       : 1 x GB eth0                                               #
-# Volumen         : 2TB oder 5TB (genau ... hängt vom Modell ab)              #
+# Volumen         : 2TB oder 5TB (hängt vom Modell ab)                        #
 #                                                                             #
 #                                                                             #
-# Version 0.96a                                                               #
+# Version 0.96b                                                               #
 # - IPSec kann nun alle Filter passieren ohne Fehler sofern es benutzt wird   #
 # - Virtuelle Interfaces und alle VPN Bereiche werden im Script gesetzt.      #
 # - Es kann bei Bedarf eine weitere Wireguard Instanz wg1 gestartet werden.   #
@@ -46,7 +46,7 @@
 # wg0           lauscht auf UDP Port 80 und behinhaltet den Netzwerk-Range 172.255.31.0/24
 # wg1           lauscht auf UDP Port 443 und beinhaltet den Netzwerk-Range 172.255.30.0/24
 
-version="0.96a"
+version="0.96b"
 figlet firewall $version
 external_if="ens192"
 
@@ -129,6 +129,7 @@ if [ -f /etc/config/cfg/swtor_tor ]; then
    if [ -f /usr/sbin/tor ]; then
       using_tor="yes"
       tor_port=9050
+      tor_user=$(cat /etc/config/cfg/swtor_tor_user)
    else
       echo tor ist  nicht installiert !
       using_tor="no"
@@ -1550,14 +1551,14 @@ fi
 if [ $using_tor = "yes" ] ; then
    echo [ip-tables : start tor and tornode3ip.sh script]
 
-   systemctl start tor > /dev/null
+   # Da steckt zur Zeit der Wurm drin ......
+   # systemctl start tor > /dev/null
 
-   echo [ip-tables : tor is now active ]
    cd /etc/config/scripts
 
    killall tornode3ip.sh > /dev/null 2>&1
 
-   ./tornode3ip.sh > /dev/null 2>&1 &
+   ./tornode3ip.sh $tor_user > /dev/null 2>&1 &
    echo [ip-tables : tornode3ip.sh ]
 
 fi
