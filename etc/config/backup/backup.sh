@@ -62,6 +62,11 @@ if [ -f /etc/config/cfg/swtor_snowflake ]; then
    tar cvzf tmp/snowflake-proxy-service.tar.gz /usr/lib/systemd/system/snowflake-proxy.service > /dev/null 2>&1
 fi
 
+# redsocks
+if [ -f /etc/redsocks.conf ]; then
+   tar cvzf tmp/redsocks.tar.gz /etc/redsocks.conf  /etc/redsocks  > /dev/null 2>&1
+fi
+
 #TOR
 if [ -f /etc/config/cfg/swtor_tor ]; then
    tar cvzf tmp/tor.tar.gz /etc/tor > /dev/null 2>&1

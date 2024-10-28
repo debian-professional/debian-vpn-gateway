@@ -179,5 +179,16 @@
 27/10/24       Fehler im Backup für den snowflake-proxy service (pfad ungültig) 
                und ebenso beim aktivierten Tor-Deamon
 
+28/10/24       Neues Updates .... Neue Fehler 
+               Offenbar vertragen sich der Schalter OPTIMIZE_MEMORY und 
+               2-3 kleine services nicht richtig. Hiervon sind die folgende
+               Dienste betroffen 
+
+               - tor 
+               - pihole und Webserver
+       
+               Die redsocks Konfiguration /etc/redsocks.conf wurde ebenfalls 
+               nicht im Backup gesichert (fixed)
+        
                
- 
+  
