@@ -76,7 +76,7 @@
 
                iptables -I OUTPUT -p udp --dport 33434:33474 -j ACCEPT               
 
-               Da mit meiner Standard-Rule in der INPUT Tabelle von iptables natürlich DROP steht, konnten die UDP Packete
+               Da in meiner Standard-Rule in der INPUT Tabelle von iptables natürlich DROP steht, konnten die UDP Packete
                im Bereich 33434 - 33474 natürlich nicht zurückgewiesen werden mit REJECT.
                Ein Funktionstest unter Windows und Linux war efolgreich.
 
@@ -189,6 +189,10 @@
        
                Die redsocks Konfiguration /etc/redsocks.conf wurde ebenfalls 
                nicht im Backup gesichert (fixed)
-        
-               
+                       
+  
+29/10/24      Auch der tor-service lässt sich nach einem Update mittels
+              systemctl start tor nicht mehr zun starten überreden
+
+
   
