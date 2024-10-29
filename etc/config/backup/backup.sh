@@ -2,6 +2,9 @@
 
 # delete old files
 
+cd /etc/config/backup
+rm *.tar.gz > /dev/null 2>&1
+
 cd /etc/config/backup/tmp
 rm -rf *  > /dev/null 2>&1
 cd /etc/config/backup
