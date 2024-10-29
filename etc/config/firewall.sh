@@ -129,9 +129,16 @@ if [ -f /etc/config/cfg/swtor_tor ]; then
    if [ -f /usr/sbin/tor ]; then
       using_tor="yes"
       tor_port=9050
-      tor_user=$(cat /etc/config/cfg/swtor_tor_user)
+
+      if [ -f /etc/config/cfg/swtor_tor_user ]; then
+          tor_user=$(cat /etc/config/cfg/swtor_tor_user)
+      else
+          echo tor user ist nicht definiert !
+          using_tor="no"
+          exit 1
+      fi
    else
-      echo tor ist  nicht installiert !
+      echo tor ist nicht installiert !
       using_tor="no"
       exit 1
    fi
