@@ -192,9 +192,11 @@
                        
   
 29/10/24      Auch der tor-service lässt sich nach einem Update mittels
-              systemctl start tor nicht mehr zun starten überreden.
+              "systemctl start tor" nicht mehr zum starten überreden.
               Als einfachste Behelfslösung einfach nicht die gelieferten 
               Scripte verwenden !
 
-
+              Hauptserver 02 -> Wechsel auf auf Nummer 03      
   
+              Funktionstest mittels git 
+ 
