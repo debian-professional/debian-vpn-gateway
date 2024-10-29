@@ -109,12 +109,27 @@ aufweisen. Die da wären ----
   nicht innerhalb von Scripten dynamisch erzeugt.
 - Optimierung des Speicherbedarfs und die Sicherheit der VPN-Clients
 
-1.0 Grundinstallation Debian 12 
+1.00 Grundinstallation Debian 12 
 
 Da die Grundinstallation bei den meisten VPS Anbietern generell über
 vorgefertigte Schablonen erledigt wird,möchte ich hier keine grossen
 Worte darüber verlieren.Die Unterschiede betreffend den verschieden
 Anbieter sind schlicht und ergreifen einfach zu gross.
+
+1.01 Lokale Benutzer anlegen
+
+Um nicht alles über den Benutzer root erledigen zu müssen, werden 
+gleich zu Beginn 2 Administrations-Konten erzeugt. Bei der 
+Installation bei meinem Hosting Anbieter fehlte das Packet 
+sudo komplett und musste als einer der ersten Schritte gleich 
+nachinstalliert werden (inkl. aller Updates natürlich). 
+
+apt-get update 
+apt-get upgrade
+apt-get install sudo
+
+
+
 
 1.1 Absicherung des SSH Daemons 
 
