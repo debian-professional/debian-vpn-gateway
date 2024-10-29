@@ -154,7 +154,7 @@
                /etc/config/cfg/optimize_memory 
 
                  
-25/09/24       Etwas wurde im ganzen Gerummel sclicht und einfach vergessen.
+25/09/24       Etwas wurde im ganzen Gerummel schlicht und einfach vergessen.
                Das Endgerät sollte alle Verbindungen zu IPV6 kappen, oder
                es besteht das Risiko eines VPN leaks !!!!!
                Also bitte mit Vorsicht IPV6 aktiviert lassen !!!
@@ -192,7 +192,8 @@
                        
   
 29/10/24      Auch der tor-service lässt sich nach einem Update mittels
-              systemctl start tor nicht mehr zun starten überreden
+              systemctl start tor nicht mehr zun starten überreden.
+              Als Behelfslösung einfach nicht die gelieferten Scripte verwenden !
 
 
   

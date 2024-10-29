@@ -40,7 +40,7 @@ if [ -e /etc/config/cfg/wireguard_interface1 -o -e /etc/config/cfg/wireguard_int
 fi
 
 # stubby
-tar cvzf tmp/stubby.tar.gz /etc/stubby  > /dev/null 2>&1
+tar cvzf tmp/stubby.tar.gz /etc/stubby > /dev/null 2>&1
 
 # Pihole
 if [ -f /etc/config/cfg/pihole ]; then
@@ -67,7 +67,7 @@ if [ -f /etc/redsocks.conf ]; then
    tar cvzf tmp/redsocks.tar.gz /etc/redsocks.conf  /etc/redsocks  > /dev/null 2>&1
 fi
 
-#TOR
+# TOR
 if [ -f /etc/config/cfg/swtor_tor ]; then
    tar cvzf tmp/tor.tar.gz /etc/tor > /dev/null 2>&1
 fi
@@ -89,6 +89,9 @@ fi
 
 backupfile="$(hostname)-$(date '+%Y-%m-%d-%H-%M').tar.gz"
 tar cvzf $backupfile /etc/config/backup/tmp > /dev/null 2>&1
+
+# Move out ...
+mv $backup /home/source/backup > /dev/null 2>&1
 
 cd /etc/config/backup/tmp
 rm * > /dev/null 2>&1
