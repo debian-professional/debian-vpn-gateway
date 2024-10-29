@@ -123,13 +123,11 @@ gleich zu Beginn 2 Administrations-Konten erzeugt. Bei der
 Installation bei meinem Hosting Anbieter fehlte das Packet 
 sudo komplett und musste als einer der ersten Schritte gleich 
 nachinstalliert werden (inkl. aller Updates natürlich). 
-
+---
 apt-get update 
 apt-get upgrade
 apt-get install sudo
-
-
-
+---
 
 1.1 Absicherung des SSH Daemons 
 
