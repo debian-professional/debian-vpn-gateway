@@ -30,6 +30,29 @@ für jemanden aus Deutschland, aber leider sind die Hosting Preise teilweise
 Debian 12 Systemes an.  
 - Oftmals kann der Kunde zwischen verschieden Virtualisierungslösungen
 auswählen (VmWare / HyperV ).  
+- Die teilweisen grossen Unterschiede zwischen den verschiedenen  
+Anbietern bei der Installation von Debian 12 sind einfach zu gross  
+als das wir sie hier behandeln könnten.
+
+### Welche Leistungsmerkmale könnte ein solcher Server haben ? 
+
+- CPU 1.6 GHz  
+- Arbeitsspeicher 1 GB oder 2GB RAM  
+- SSD mit 20 GB  
+- 1 Fixe IP V4 mit einer 1GB Schnitstelle  
+- 2 oder 4TB Datevolumen  
+- Zugang zur Konsole eures Server, sollten irgendwie alle Stricke  
+reissen und ihr habt euch selbst ausgesperrt.  
+- Kosten zwischen 3-6 Euro pro Monat  
+
+
+
+
+
+
+
+
+
  
 
 
