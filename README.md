@@ -5,9 +5,10 @@
 Liebt ihr eure digitale Privtsphäre ebenso wie ich ? 
 Habt Ihr es auch satt auf Schritt und Tritt von eurem
 eigenen Provider (ISP) und ebenso von eurer Regierung 
+und all den grossen Firmen wie Google / Facebook und Twitter 
 ausspioniert zu werden als wärt ihr Kriminelle ?
 
-Sollte eure Antwort "Ja" sein, seit ihr hier richtig.
+Sollte eure Antwort ein "Ja" sein, seit ihr hier richtig.
 
 ### Was wird alles benötigt ? 
 
