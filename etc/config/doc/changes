@@ -198,5 +198,10 @@
 
               Hauptserver 02 -> Wechsel auf auf Nummer 03      
   
-              Funktionstest mittels git 
- 
+              Funktionstest mittels git
+              tor-service funktioniert !
+  
+12/11/24     Eines der letzten Überbleibsel vom alten Prototypen wurde 
+             enfternt. Nun wird auch der Name der externen WAN Schnittstelle 
+             über das cfg Verzeichniss eingelesen.
+

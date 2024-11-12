@@ -10,7 +10,7 @@
 # Volumen         : 2TB oder 5TB (hängt vom Modell ab)                        #
 #                                                                             #
 #                                                                             #
-# Version 0.96b                                                               #
+# Version 0.96c                                                               #
 # - IPSec kann nun alle Filter passieren ohne Fehler sofern es benutzt wird   #
 # - Virtuelle Interfaces und alle VPN Bereiche werden im Script gesetzt.      #
 # - Es kann bei Bedarf eine weitere Wireguard Instanz wg1 gestartet werden.   #
@@ -46,10 +46,22 @@
 # wg0           lauscht auf UDP Port 80 und behinhaltet den Netzwerk-Range 172.255.31.0/24
 # wg1           lauscht auf UDP Port 443 und beinhaltet den Netzwerk-Range 172.255.30.0/24
 
-version="0.96b"
+version="0.96c"
 figlet firewall $version
-external_if="ens192"
 
+if [ -f /etc/config/cfg/eth0.ip ]; then
+   external_ip=$(cat ./cfg/eth0.ip)
+else
+   echo Definition der der WAN IP Adresse fehlt !
+   exit 1
+fi
+
+if [ -f /etc/config/cfg/eth0.name ]; then
+   external_if=$(cat ./cfg/eth0.name)
+else
+   echo Definition des Namens der WAN IP Adresse fehlt !
+   exit 1
+fi
 
 if [ -f /etc/config/cfg/redirect_wg0 ]; then
    redirect_wg0_to_socks5="yes"
@@ -113,7 +125,6 @@ else
    redirect_wg0_to_socks5="no"
 fi
 
-
 if [ -f /etc/config/cfg/swtor_snowflake ]; then
    if [ -f /usr/bin/snowflake-proxy ]; then
       using_snowflake="yes"
@@ -164,8 +175,6 @@ else
    wireguard2_dns=172.30.255.1
 
 fi
-
-external_ip=$(cat ./cfg/eth0.ip)
 
 if [ -f /etc/config/cfg/optimize_memory ]; then
    do_log="no"
