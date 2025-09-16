@@ -28,6 +28,7 @@ find /etc/config/cfg > backup-files
 find /etc/config/cfg01 >> backup-files
 find /etc/config/cfg02 >> backup-files
 find /etc/config/cfg03 >> backup-files
+find /etc/config/cfg04 >> backup-files
 find /etc/config/backup >> backup-files
 
 tar cvzf tmp/configuration.tar.gz --exclude=/etc/config/backup/tmp $(cat /etc/config/backup/backup-files) > /dev/null 2>&1
