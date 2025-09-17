@@ -210,6 +210,8 @@
              Die Benutzung des verschlüsselten DNS Dienstes wird mittels 
              einem eigenen Schalter (/etc/config/stubby) gesteuert.
 
-
+             Auch ein kompletter Debian Upgrade auf Version 13 (trixie)
+             ist nun im Petto. 
+ 
  
 
