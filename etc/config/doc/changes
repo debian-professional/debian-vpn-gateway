@@ -205,3 +205,11 @@
              enfternt. Nun wird auch der Name der externen WAN Schnittstelle 
              über das cfg Verzeichniss eingelesen.
 
+17/09/25     Nach einer etwas längerern Pause machen wir wieder weiter
+
+             Die Benutzung des verschlüsselten DNS Dienstes wird mittels 
+             einem eigenen Schalter (/etc/config/stubby) gesteuert.
+
+
+ 
+
