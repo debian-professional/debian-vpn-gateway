@@ -214,5 +214,7 @@
              ist nun im Petto. 
  
 18/09/25     Testen der automatischen aktivierung beim starten der VM.
-               
+             Die Interfaces für die WirGuardVerbindungen werden nun 
+             über DNS Adressiert, sofern ein DNS vorhanden ist. 
+                
 
