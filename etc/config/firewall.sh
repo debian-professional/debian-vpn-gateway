@@ -240,7 +240,7 @@ if [ -f ./cfg/swtor_allow_local_ssh ]; then
    # So kann dieser doch sehr nützlicherweise Port gleich 2x benutzt werden.
    # Unbedingt beachten : Ultra extreme Firewalls werden niemals eine Verbindung von
    # einem Client auf den UDP Port 443 zulassen, da gemäss RFC nur TCP als
-   # Transportprotokoll für den zugelassen https Verker vorgesehen wurde.
+   # Transportprotokoll für den zugelassen https Verkehr vorgesehen wurde.
    # ist ! Sollte dieses Port geblock werden bietet sich Port 123 gerdazu an.
 
    if [ -f ./cfg/swtor_ssh_port2 ]; then

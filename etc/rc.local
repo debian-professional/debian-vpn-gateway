@@ -18,6 +18,8 @@
 # systemctl start rc-local
 # systemctl status rc-local
 
+# exit 0
+
 if [ -f /etc/config/cfg/pihole ]; then
    pihole disable
    service pihole-FTL stop
@@ -33,10 +35,15 @@ if [ -f /etc/config/cfg/pihole ]; then
 
    echo nameserver 127.0.0.1 > /etc/resolv.conf
 else
-   echo nameserver 127.0.0.1 > /etc/resolv.conf
-   echo .....
-fi
 
+   if [ -f /etc/config/cfg/stubby ]; then
+      echo nameserver 127.0.0.1 > /etc/resolv.conf
+      echo .....
+   else
+      echo not changing dns
+      echo .....
+   fi
+fi
 
 
 if [ -f /etc/config/cfg/optimize_memory ]; then
@@ -51,10 +58,14 @@ if [ -f /etc/config/cfg/optimize_memory ]; then
 
    # Zur Fehlersuche unverzichtbar ....
 
+   systemctl stop rsyslog.service
+   systemctl stop syslog.socket
+
    systemctl stop systemd-journald
    systemctl stop systemd-journald-audit.socket
    systemctl stop systemd-journald-dev-log.socket
    systemctl stop systemd-journald.socket
+   systemctl stop ufw
 
    # kann aber auch gegen jemanden verwendet werden
 
@@ -63,6 +74,48 @@ if [ -f /etc/config/cfg/optimize_memory ]; then
 else
    echo no optimize
 fi
+
+# Folgende Variablen müssen gesetzt sein damit das Feature gesetzt ist !!
+# /etc/config/cfg/nvpn /etc/config/cfg/nvpn_country /etc/config/cfg/nvpn_token
+# und naürlch auch das entsprechende binary selbst !!!!
+
+if [ -f /etc/config/cfg/nvpn ]; then
+   if [ -f /etc/config/cfg/swtor_snowflake ]; then
+      echo Fehler innerhalb der aktuellen Konfiguration !!!
+      echo Entweder wird nur nvpn oder nur snowflake aktiviert !
+      echo Aber unter gar keinen Umständen beide Optionen !
+      exit 1
+   fi
+fi
+
+if [ -f /etc/config/cfg/nvpn ]; then
+   if [ -f /etc/config/cfg/nvpn_country ]; then
+      if [ -f /etc/config/cfg/nvpn_token ]; then
+         if [ -f /usr/bin/nordvpn ]; then
+
+            rm /etc/config/vpn.sh > /dev/null 2>&1
+
+            token=$(cat /etc/config/cfg/nvpn_token)
+            country=$(cat /etc/config/cfg/nvpn_country)
+
+            echo nordvpn login --token $token >> /etc/config/vpn.sh
+            echo nordvpn whitelist add port 22 >> /etc/config/vpn.sh
+            echo nordvpn whitelist add port 80 >> /etc/config/vpn.sh
+            echo nordvpn whitelist add port 443 >> /etc/config/vpn.sh
+
+            echo nordvpn connect $country >> /etc/config/vpn.sh
+
+            chmod +x /etc/config/vpn.sh > /dev/null 2>&1
+
+         else
+             if [ -f /etc/config/vpn.sh ]; then
+                rm /etc/config/vpn.sh > /dev/null 2>&1
+             fi
+         fi
+      fi
+   fi
+fi
+
 
 cd /etc/config
 ./firewall.sh
