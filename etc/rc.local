@@ -1,14 +1,10 @@
-#!/bin/sh -e
-#
-# rc.local
-#
-# This script is executed at the end of each multiuser runlevel.
-# Make sure that the script will "exit 0" on success or any other
-# value on error.
-#
-# In order to enable or disable this script just change the execution
-# bits.
-#
+#!/bin/bash
+###############################################################################
+# Firewall Script : rc.loclal                                                 #
+# Beschreibung    : Schützen eines privaten VPS                               #
+# OS              : Debian 13 trixie                                          #
+###############################################################################
+
 # By default this script does nothing.
 #
 # Do make it works ....
@@ -78,6 +74,7 @@ fi
 # Folgende Variablen müssen gesetzt sein damit das Feature gesetzt ist !!
 # /etc/config/cfg/nvpn /etc/config/cfg/nvpn_country /etc/config/cfg/nvpn_token
 # und naürlch auch das entsprechende binary selbst !!!!
+#
 
 if [ -f /etc/config/cfg/nvpn ]; then
    if [ -f /etc/config/cfg/swtor_snowflake ]; then
@@ -98,12 +95,21 @@ if [ -f /etc/config/cfg/nvpn ]; then
             token=$(cat /etc/config/cfg/nvpn_token)
             country=$(cat /etc/config/cfg/nvpn_country)
 
-            echo nordvpn login --token $token >> /etc/config/vpn.sh
-            echo nordvpn whitelist add port 22 >> /etc/config/vpn.sh
-            echo nordvpn whitelist add port 80 >> /etc/config/vpn.sh
-            echo nordvpn whitelist add port 443 >> /etc/config/vpn.sh
+            echo "#!/bin/bash" >> /etc/config/vpn.sh
+            echo /usr/bin/nordvpn login --token $token >> /etc/config/vpn.sh
+            echo /usr/bin/nordvpn whitelist add port 22 >> /etc/config/vpn.sh
+            echo /usr/bin/nordvpn whitelist add port 80 >> /etc/config/vpn.sh
+            echo /usr/bin/nordvpn whitelist add port 443 >> /etc/config/vpn.sh
 
-            echo nordvpn connect $country >> /etc/config/vpn.sh
+            # Sample allowlist with UDP
+            # nordvpn allowlist add ports 3000 5000 protocol UDP
+            #
+            # Port Range from firewall.sh
+            # /usr/sbin/iptables -A FORWARD -p udp --dport 32768:60999 -j ACCEPT
+            # /usr/sbin/iptables -A INPUT -p udp --dport 32768:60999 -j ACCEPT
+
+
+            echo /usr/bin/nordvpn connect $country >> /etc/config/vpn.sh
 
             chmod +x /etc/config/vpn.sh > /dev/null 2>&1
 
