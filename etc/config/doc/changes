@@ -174,8 +174,7 @@
                github.com zur Verfügung.
 
 21/10/24       Backup script hinzugefügt /etc/config/backup
-    
- 
+     
 27/10/24       Fehler im Backup für den snowflake-proxy service (pfad ungültig) 
                und ebenso beim aktivierten Tor-Deamon
 
@@ -205,9 +204,14 @@
              enfternt. Nun wird auch der Name der externen WAN Schnittstelle 
              über das cfg Verzeichniss eingelesen.
 
-17/09/25     Nach einer etwas längerern Pause machen wir wieder weiter
+12/11/24     Eines der letzten Überbleibsel vom alten Prototypen wurde 
+             enfternt. Nun wird auch der Name der externen WAN Schnittstelle 
+             über das cfg Verzeichniss eingelesen.
 
-             Die Benutzung des verschlüsselten DNS Dienstes wird mittels 
+16/09/25     Remote SSH Verbindungen müssen neu definiert werden .... 
+             Sprich sie müssen bezahlt werden
+
+17/09/25     Die Benutzung des verschlüsselten DNS Dienstes wird mittels 
              einem eigenen Schalter (/etc/config/stubby) gesteuert.
 
              Auch ein kompletter Debian Upgrade auf Version 13 (trixie)
@@ -217,4 +221,5 @@
              Die Interfaces für die WirGuardVerbindungen werden nun 
              über DNS Adressiert, sofern ein DNS vorhanden ist. 
                 
-
+19/09/25     Die Wireguard Interfaces werden nun ebenfalls mit 
+             DNS-Namen betrieben
