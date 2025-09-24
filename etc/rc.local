@@ -14,8 +14,6 @@
 # systemctl start rc-local
 # systemctl status rc-local
 
-# exit 0
-
 if [ -f /etc/config/cfg/pihole ]; then
    pihole disable
    service pihole-FTL stop
@@ -96,6 +94,7 @@ if [ -f /etc/config/cfg/nvpn ]; then
             country=$(cat /etc/config/cfg/nvpn_country)
 
             echo "#!/bin/bash" >> /etc/config/vpn.sh
+            echo               >>  /etc/config/vpn.sh
             echo /usr/bin/nordvpn login --token $token >> /etc/config/vpn.sh
             echo /usr/bin/nordvpn whitelist add port 22 >> /etc/config/vpn.sh
             echo /usr/bin/nordvpn whitelist add port 80 >> /etc/config/vpn.sh
@@ -127,3 +126,4 @@ cd /etc/config
 ./firewall.sh
 
 exit 0
+
