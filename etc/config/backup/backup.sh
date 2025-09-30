@@ -24,12 +24,25 @@ find /home | grep .bash_logout >> backup-files
 
 tar cvzf tmp/user-files.tar.gz $(cat /etc/config/backup/backup-files) > /dev/null 2>&1
 
+
+
 find /etc/config/cfg > backup-files
-find /etc/config/cfg01 >> backup-files
-find /etc/config/cfg02 >> backup-files
-find /etc/config/cfg03 >> backup-files
-find /etc/config/cfg04 >> backup-files
-find /etc/config/backup >> backup-files
+
+if [ -d /etc/config/cfg01 ]; then
+   find /etc/config/cfg01 >> backup-files
+fi
+
+if [ -d /etc/config/cfg02 ]; then
+   find /etc/config/cfg02 >> backup-files
+fi
+
+if [ -d /etc/config/cfg03 ]; then
+   find /etc/config/cfg03 >> backup-files
+fi
+
+if [ -d /etc/config/cfg04 ]; then
+   find /etc/config/cfg04 >> backup-files
+fi
 
 tar cvzf tmp/configuration.tar.gz --exclude=/etc/config/backup/tmp $(cat /etc/config/backup/backup-files) > /dev/null 2>&1
 
