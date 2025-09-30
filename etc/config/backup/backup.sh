@@ -57,7 +57,9 @@ if [ -e /etc/config/cfg/wireguard_interface1 -o -e /etc/config/cfg/wireguard_int
 fi
 
 # stubby
-tar cvzf tmp/stubby.tar.gz /etc/stubby > /dev/null 2>&1
+if [ -f /etc/config/cfg/stubby ] ; then
+   tar cvzf tmp/stubby.tar.gz /etc/stubby > /dev/null 2>&1
+fi
 
 # Pihole
 if [ -f /etc/config/cfg/pihole ]; then
