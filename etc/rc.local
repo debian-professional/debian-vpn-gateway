@@ -14,6 +14,12 @@
 # systemctl start rc-local
 # systemctl status rc-local
 
+
+if [ -f /etc/rc.local2 ]; then
+   cd /etc
+   ./rc.local2
+fi
+
 if [ -f /etc/config/cfg/pihole ]; then
    pihole disable
    service pihole-FTL stop
