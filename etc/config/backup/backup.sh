@@ -72,9 +72,8 @@ if [ -f /etc/config/cfg/ipsec ]; then
 fi
 
 # Virtual Interfaces
-if [ -f /etc/config/cfg/virtual_iface ]; then
-   tar cvzf tmp/interfaces.tar.gz /etc/network/interfaces > /dev/null 2>&1
-fi
+
+tar cvzf tmp/interfaces.tar.gz /etc/network/interfaces > /dev/null 2>&1
 
 # Snowflake-Proxy
 if [ -f /etc/config/cfg/swtor_snowflake ]; then
