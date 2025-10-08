@@ -14,6 +14,7 @@
 # systemctl start rc-local
 # systemctl status rc-local
 
+# exit 0
 
 if [ -f /etc/rc.local2 ]; then
    cd /etc
@@ -50,26 +51,27 @@ if [ -f /etc/config/cfg/optimize_memory ]; then
 
    # Das frisst nur Memory
 
-   systemctl stop cron.service
+   systemctl stop cron.service > /dev/null 2>&1
 
    # Da schauen wir mal ..
 
-   systemctl stop fail2ban.service
+   systemctl stop fail2ban.service > /dev/null 2>&1
 
    # Zur Fehlersuche unverzichtbar ....
 
-   systemctl stop rsyslog.service
-   systemctl stop syslog.socket
+   systemctl stop rsyslog.service > /dev/null 2>&1
+   systemctl stop syslog.socket > /dev/null 2>&1
 
-   systemctl stop systemd-journald
-   systemctl stop systemd-journald-audit.socket
-   systemctl stop systemd-journald-dev-log.socket
-   systemctl stop systemd-journald.socket
-   systemctl stop ufw
+   systemctl stop systemd-journald > /dev/null 2>&1
+   systemctl stop systemd-journald-audit.socket > /dev/null 2>&1
+   systemctl stop systemd-journald-dev-log.socket > /dev/null 2>&1
+   systemctl stop systemd-journald.socket > /dev/null 2>&1
+   systemctl stop ufw > /dev/null 2>&1
 
    # kann aber auch gegen jemanden verwendet werden
 
-   rm -rf /var/log/*
+   rm -rf /var/log/* > /dev/null 2>&1
+
 
 else
    echo no optimize
