@@ -34,10 +34,10 @@
 
                Ich habe die DNS Server innerhalb von WireGuard auf den Pihole-Server umgestellt. 
                Die Namensauflösung über Pihole funktioniert nun einwandfrei jedoch habe ich vergessen
-               das tun0 Interface zu den möglichen ICMP Zielen hinzuzufügen. Ergo gib es keine 
+               das tun0 Interface zu den möglichen ICMP Zielen hinzuzufügen. Ergo gib es keinen 
                ping test auf den DNS Server. 
 
-               Auch die ärgerlichen Verbindungsunterbrüche unter dem OS Android 14 und dem offiziellen 
+               Auch die sehr ärgerlichen Verbindungsunterbrüche unter dem OS Android 14 und dem offiziellen 
                Wireguard Client müssen näher untersucht werden. Habe zu Testzwecken das Telefon neu gestartet 
                und bekam eine private Class A Adresse bekommen : 10.43.92.202 
                Werde diese Client Adresse des Telefons im Auge behalten und schauen ob sich diese Adresse ändert.
@@ -197,29 +197,42 @@
 
               Hauptserver 02 -> Wechsel auf auf Nummer 03      
   
-              Funktionstest mittels git
-              tor-service funktioniert !
+              Funktionstest mittels git pull und der tor-service funktioniert !
   
 12/11/24     Eines der letzten Überbleibsel vom alten Prototypen wurde 
              enfternt. Nun wird auch der Name der externen WAN Schnittstelle 
              über das cfg Verzeichniss eingelesen.
 
-12/11/24     Eines der letzten Überbleibsel vom alten Prototypen wurde 
-             enfternt. Nun wird auch der Name der externen WAN Schnittstelle 
-             über das cfg Verzeichniss eingelesen.
-
 16/09/25     Remote SSH Verbindungen müssen neu definiert werden .... 
-             Sprich sie müssen bezahlt werden
+             Sprich sie müssen bezahlt werden.
 
 17/09/25     Die Benutzung des verschlüsselten DNS Dienstes wird mittels 
              einem eigenen Schalter (/etc/config/stubby) gesteuert.
 
-             Auch ein kompletter Debian Upgrade auf Version 13 (trixie)
-             ist nun im Petto. 
+             Auch ein kompletter Debian Upgrade von Version 12 auf Version 13 
+             (trixie) ist nun im Petto. 
  
 18/09/25     Testen der automatischen aktivierung beim starten der VM.
              Die Interfaces für die WirGuardVerbindungen werden nun 
-             über DNS Adressiert, sofern ein DNS vorhanden ist. 
+             über DNS Adressiert, sofern ein DNS vorhanden ist.
+             Leider müssen natürlich auch alle config Dateien von 
+             WireGuard neu eingelesen und angepasst werden. 
                 
-19/09/25     Die Wireguard Interfaces werden nun ebenfalls mit 
+01/10/25     Der bis anhin voll funktionierende BBC-Account über 
+             einen externen socks5 Server und einen lokalen redsocks 
+             Server funktioniert nicht mehr. 
+             Nach tagelangen Funktionstests habe ich die Konfiguration
+             auf NordVPN umgestellt -> Und alles funktioniert wieder wie 
+             es sollte !
+              
+02/10/25     Die Wireguard Interfaces werden nun ebenfalls mit 
              DNS-Namen betrieben
+
+
+04/10/25     Update Probleme beim Wechsel von Debian 12 auf die Version 13.
+             Auch die Aktivierung des VPN's über rc.local funktioniert nicht.
+
+ 
+
+
+
