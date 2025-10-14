@@ -1,5 +1,13 @@
 # Debian12-VPN-Gateway
 
+
+## Wie entstand diese Scriptsammlung ?
+
+Ein ehemmaliger Kunde von mir, wollte seine seit 
+über 12 Jahren im Einsatz stehende Firewall vom Typ 
+Neanderthal Version USG 100 auf keinen
+Fall tauschen. 
+
 ## Wozu dient diese Scriptsammlung ?
 
 Liebt ihr eure digitale Privtsphäre ebenso wie ich ? 
