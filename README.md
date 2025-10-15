@@ -3,9 +3,9 @@
 ## Wie entstand diese Scriptsammlung ?
 
 Ein ehemaliger Kunde von mir, wollte seine seit 
-über 12 Jahren im Einsatz stehende Firewall vom Typ 
-Neanderthal Version USG 100 auf keinen
-Fall tauschen. 
+bereits über 12 Jahren im Einsatz stehende Firewall vom Typ 
+Neandertal Asbach Uralt Version USG 100 auf keinen
+Fall tauschen.
 
 ## Wozu dient diese Scriptsammlung ?
 
@@ -19,7 +19,7 @@ Sollte eure Antwort ein "Ja" sein, seit ihr hier richtig.
 
 ### Was wird alles benötigt ? 
 
-- Einen virtuellen Private Server (VPS) der unter Debian 12 laufen kann.  
+- Einen virtuellen Private Server (VPS) der unter Debian 12 oder 13 laufen kann.  
 - Die kleinsten VPS kosten oftmals nicht mehr als 5 Euro im Monat.   
 - Erfahrungen in der Handhabung der Kommandozeile von Linux.  
 
