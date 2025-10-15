@@ -5,7 +5,11 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-cd /etc/config
+if [ -d /etc/config ]; then
+   cd /etc/config
+else
+   mkdir /etc/config
+fi
 
 # directorys
 
