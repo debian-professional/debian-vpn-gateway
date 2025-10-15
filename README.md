@@ -2,7 +2,7 @@
 
 ## Wie entstand diese Scriptsammlung ?
 
-Ein ehemmaliger Kunde von mir, wollte seine seit 
+Ein ehemaliger Kunde von mir, wollte seine seit 
 über 12 Jahren im Einsatz stehende Firewall vom Typ 
 Neanderthal Version USG 100 auf keinen
 Fall tauschen. 
