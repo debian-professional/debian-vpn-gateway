@@ -212,7 +212,7 @@
              Auch ein kompletter Debian Upgrade von Version 12 auf Version 13 
              (trixie) ist nun im Petto. 
  
-18/09/25     Testen der automatischen aktivierung beim starten der VM.
+18/09/25     Testen der automatischen Aktivierung beim starten der VM.
              Die Interfaces für die WirGuardVerbindungen werden nun 
              über DNS Adressiert, sofern ein DNS vorhanden ist.
              Leider müssen natürlich auch alle config Dateien von 
@@ -228,11 +228,14 @@
 02/10/25     Die Wireguard Interfaces werden nun ebenfalls mit 
              DNS-Namen betrieben
 
-
 04/10/25     Update Probleme beim Wechsel von Debian 12 auf die Version 13.
              Auch die Aktivierung des VPN's über rc.local funktioniert nicht.
 
- 
+15/10/25     Umbenennung des aktuellen github Accounts und des Projekts auf
 
+             https://github.com/debian-professional/debian-vpn-gateway
+
+             Account : debian-professional 
+             Projekt : debian-vpn-gateway 
 
 
