@@ -231,6 +231,12 @@
 04/10/25     Update Probleme beim Wechsel von Debian 12 auf die Version 13.
              Auch die Aktivierung des VPN's über rc.local funktioniert nicht.
 
+10/10/25     Die Webseite Britbox würde eigentlich schon funktionieren über 
+             eine eigenständige IP in England, damit wäre aber die ganze
+             Anonymität welche der VPN Dienst bietet, einfach verschwunden.
+             Der einfache Workaround um DRM geschützte Inhalte abzuspielen
+             funktiomniert einwanfrei. (Thanks to pg fron l .-) ) 
+	
 15/10/25     Umbenennung des aktuellen github Accounts und des Projekts auf
 
              https://github.com/debian-professional/debian-vpn-gateway
