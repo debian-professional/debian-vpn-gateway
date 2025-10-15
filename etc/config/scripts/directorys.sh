@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd /etc/config
+
 # directorys
 
 ln -s /home/source/debian-vpn-gateway/etc/config/backup backup
@@ -14,3 +16,6 @@ ln -s /home/source/debian-vpn-gateway/etc/config/get-nordvpn.sh get-nordvpn.sh
 ln -s /home/source/debian-vpn-gateway/etc/config/get-pi-hole.sh get-pihole.sh
 ln -s /home/source/debian-vpn-gateway/etc/config/off.sh off.sh
 
+cd /etc
+
+ln -s /home/source/debian-vpn-gateway/etc/rc.local rc.local
