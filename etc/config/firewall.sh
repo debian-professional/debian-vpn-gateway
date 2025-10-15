@@ -46,6 +46,11 @@
 # wg0           lauscht auf UDP Port 80 und behinhaltet den Netzwerk-Range 172.255.31.0/24
 # wg1           lauscht auf UDP Port 443 und beinhaltet den Netzwerk-Range 172.255.30.0/24
 
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root"
+   exit 1
+fi
+
 version="0.96d"
 figlet firewall $version
 
