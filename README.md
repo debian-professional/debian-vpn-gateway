@@ -1,5 +1,4 @@
-# Debian12-VPN-Gateway
-
+# debian-vpn-gateway
 
 ## Wie entstand diese Scriptsammlung ?
 
