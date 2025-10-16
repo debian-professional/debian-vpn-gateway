@@ -1,4 +1,7 @@
 
 ~/debian-vpn-gateway/etc/config/backup/swt*
+~/debian-vpn-gateway/etc/config/backup/config
+~/debian-vpn-gateway/etc/config/backup/passwd
+
 
 
