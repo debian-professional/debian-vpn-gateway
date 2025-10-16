@@ -88,15 +88,6 @@ fi
 #
 
 if [ -f /etc/config/cfg/nvpn ]; then
-   if [ -f /etc/config/cfg/swtor_snowflake ]; then
-      echo Fehler innerhalb der aktuellen Konfiguration !!!
-      echo Entweder wird nur nvpn oder nur snowflake aktiviert !
-      echo Aber unter gar keinen Umständen beide Optionen !
-      exit 1
-   fi
-fi
-
-if [ -f /etc/config/cfg/nvpn ]; then
    if [ -f /etc/config/cfg/nvpn_country ]; then
       if [ -f /etc/config/cfg/nvpn_token ]; then
          if [ -f /usr/bin/nordvpn ]; then
@@ -113,13 +104,20 @@ if [ -f /etc/config/cfg/nvpn ]; then
             echo /usr/bin/nordvpn whitelist add port 80 >> /etc/config/vpn.sh
             echo /usr/bin/nordvpn whitelist add port 443 >> /etc/config/vpn.sh
 
-            # Sample allowlist with UDP
-            # nordvpn allowlist add ports 3000 5000 protocol UDP
-            #
-            # Port Range from firewall.sh
-            # /usr/sbin/iptables -A FORWARD -p udp --dport 32768:60999 -j ACCEPT
-            # /usr/sbin/iptables -A INPUT -p udp --dport 32768:60999 -j ACCEPT
+            # Startport und Endport für Snowflake-Proxy
+            # nordvpn allowlist add port 32768 protocol UDP
+            # nordvpn allowlist add port 60999 protocol UDP
 
+            if [ -f /etc/config/cfg/swtor_snowflake ]; then
+
+		i=32768
+		while [ $i -ne 60999 ]
+		      do
+                      i=$(($i+1))
+                      /usr/bin/nordvpn whitelist add port $i protocol UDP
+                      echo $i
+                done
+            fi
 
             echo /usr/bin/nordvpn connect $country >> /etc/config/vpn.sh
 
