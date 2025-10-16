@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root"
+   exit 1
+fi
+
 # delete old files
 
 cd /etc/config/backup
@@ -24,8 +29,6 @@ find /home | grep .bash_logout >> backup-files
 
 tar cvzf tmp/user-files.tar.gz $(cat /etc/config/backup/backup-files) > /dev/null 2>&1
 
-
-
 find /etc/config/cfg > backup-files
 
 if [ -d /etc/config/cfg01 ]; then
@@ -36,12 +39,12 @@ if [ -d /etc/config/cfg02 ]; then
    find /etc/config/cfg02 >> backup-files
 fi
 
-if [ -d /etc/config/cfg03 ]; then
-   find /etc/config/cfg03 >> backup-files
-fi
-
 if [ -d /etc/config/cfg04 ]; then
    find /etc/config/cfg04 >> backup-files
+fi
+
+if [ -d /etc/config/cfg05 ]; then
+   find /etc/config/cfg05 >> backup-files
 fi
 
 tar cvzf tmp/configuration.tar.gz --exclude=/etc/config/backup/tmp $(cat /etc/config/backup/backup-files) > /dev/null 2>&1
