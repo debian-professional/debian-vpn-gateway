@@ -185,6 +185,7 @@ if [ -f /etc/config/cfg/optimize_memory ]; then
    do_log="no"
    do_log_icmp="no"
    swtor_debug="no"
+   fw_debug="no"
 else
    swtor_debug="yes"
    fw_debug="yes"
