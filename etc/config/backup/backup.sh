@@ -93,7 +93,7 @@ if [ -f /etc/config/cfg/swtor_tor ]; then
    tar cvzf tmp/tor.tar.gz /etc/tor > /dev/null 2>&1
 fi
 
-# Nice to have inside the backup
+# Nice to have files inside of the backup
 
 tar cvzf tmp/nice_to_have.tar.gz /etc/apt /etc/resolv.conf /etc/hosts /etc/hostname /etc/motd /etc/sudoers \
 /home/source/debian-vpn-configuration/.git/config /home/source/debian-vpn-gateway/.git/config > /dev/null 2>&1
@@ -118,6 +118,16 @@ mv $backup /home/source/backup > /dev/null 2>&1
 cd /etc/config/backup/tmp
 rm * > /dev/null 2>&1
 cd ..
+
+gpg --batch --passphrase-file passwd -c $(echo $backupfile)
+
+rm $backupfile > /dev/null 2>&1
+mv *.gpg $(cat config).gpg
+chown source:source *.gpg
+
+# move backup-file to configuration directory
+
+mv *.gpg /home/source/debian-vpn-configuration/
 
 exit 0
 
