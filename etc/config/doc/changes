@@ -245,3 +245,7 @@
              Projekt : debian-vpn-gateway 
 
 
+16/10/25     Die aktuelle Uhrzeit welche über ssh angezeigt wird, sollte natürlich
+             mit dem Server-Standort übereinstimmen.
+
+ 	
