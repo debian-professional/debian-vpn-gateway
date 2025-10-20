@@ -51,7 +51,7 @@
 
                VPN wird aktiviert -> Der Button wird grün 
  
-               Und genau hier liegt der Fehler .... da UDP von sich ein verbindungsloses Protokoll ist wird natürlich 
+               Und genau hier liegt der Fehler .... da UDP von sich aus ein verbindungsloses Protokoll ist wird natürlich 
                nur angezeigt das VPN wurde aktiviert. Ob die VPN Verbindung auch tatsäschlich zum Server verbunden
                ist, lässt sich nur mittels icmp oder dig festellen ... Und hier fangen die Probleme unter Android 14 
                und Ipads mit einer SIM Karte an.Die Situation wird noch schlimmer , sollte der WireGuard Server mit
@@ -251,3 +251,12 @@
              Das snowflake-proxy packet wurde aktualisiert:
              snowflake-proxy 2.11.0
 
+20/10/25     Der Nordvpn Dienst verhindert mit folgendem Eintrag
+
+	     5	DROP       tcp  --  anywhere             172.16.0.0/12        tcp dpt:domain /* nordvpn */
+	     6	DROP       udp  --  anywhere             172.16.0.0/12        udp dpt:domain /* nordvpn */
+
+             Natürlich eine sinnvolle DNS Auflösung für die verbundenem Clients über Wireguard.
+ 
+
+	
