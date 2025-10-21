@@ -68,6 +68,13 @@ else
    exit 1
 fi
 
+
+if [ -f /etc/config/cfg/nvpn ]; then
+   nvpn="yes"
+else
+   nvpn="no"
+fi
+
 if [ -f /etc/config/cfg/redirect_wg0 ]; then
    redirect_wg0_to_socks5="yes"
    if [ -f /etc/config/cfg/redirect_port ]; then
@@ -1428,10 +1435,18 @@ if [ $swtor_allow_wireguard1 = "yes" ] ; then
 
    if [ $wireguard_private_routing1 = "no" ] ; then
 
-      # Standard : /usr/sbin/iptables -t nat -A POSTROUTING -s $wireguard_subnet1 -d 0.0.0.0/0  -j SNAT --to $external_ip
+      if [ $nvpn = "no" ] ; then
 
-      /usr/sbin/iptables -t nat -A POSTROUTING -s $wireguard_subnet1 -d 0.0.0.0/0  -j SNAT --to $external_ip
+         # Standard : /usr/sbin/iptables -t nat -A POSTROUTING -s $wireguard_subnet1 -d 0.0.0.0/0  -j SNAT --to $external_ip
 
+         /usr/sbin/iptables -t nat -A POSTROUTING -s $wireguard_subnet1 -d 0.0.0.0/0  -j SNAT --to $external_ip
+
+      else
+
+         # Erst wenn der Tunnel steht wird die Umleitung scharf
+
+         echo POSTROUTING not ready
+      fi
    fi
 
    if [ $wireguard_private_routing1 = "yes" ] ; then
@@ -1463,10 +1478,18 @@ if [ $swtor_allow_wireguard2 = "yes" ] ; then
 
    if [ $wireguard_private_routing2 = "no" ] ; then
 
-      # Standard : /usr/sbin/iptables -t nat -A POSTROUTING -s $wireguard_subnet2 -d 0.0.0.0/0  -j SNAT --to $external_ip
+      if [ $nvpn = "no" ] ; then
 
-      /usr/sbin/iptables -t nat -A POSTROUTING -s $wireguard_subnet2 -d 0.0.0.0/0  -j SNAT --to $external_ip
+         # Standard : /usr/sbin/iptables -t nat -A POSTROUTING -s $wireguard_subnet2 -d 0.0.0.0/0  -j SNAT --to $external_ip
 
+         /usr/sbin/iptables -t nat -A POSTROUTING -s $wireguard_subnet2 -d 0.0.0.0/0  -j SNAT --to $external_ip
+
+      else
+
+         # Erst wenn der Tunnel steht wird die Umleitung scharf
+
+         echo POSTROUTING not ready
+      fi
    fi
 
    if [ $wireguard_private_routing2 = "yes" ] ; then

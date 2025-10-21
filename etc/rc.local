@@ -108,11 +108,17 @@ if [ -f /etc/config/cfg/nvpn ]; then
 
             echo "#!/bin/bash" >> /etc/config/vpn.sh
             echo               >>  /etc/config/vpn.sh
-            echo /usr/bin/nordvpn login --token $token >> /etc/config/vpn.sh
-            echo /usr/bin/nordvpn whitelist add port 22 >> /etc/config/vpn.sh
-            echo /usr/bin/nordvpn whitelist add port 80 >> /etc/config/vpn.sh
+            echo /usr/bin/nordvpn login --token $token   >> /etc/config/vpn.sh
+            echo /usr/bin/nordvpn whitelist add port 22  >> /etc/config/vpn.sh
+            echo /usr/bin/nordvpn whitelist add port 80  >> /etc/config/vpn.sh
             echo /usr/bin/nordvpn whitelist add port 443 >> /etc/config/vpn.sh
+            # echo /usr/bin/nordvpn allowlist add subnet 172.31.255.0/24 >> /etc/config/vpn.sh
+            # echo /usr/bin/nordvpn allowlist add subnet 172.30.255.0/24 >> /etc/config/vpn.sh
+            # echo /usr/bin/nordvpn allowlist add subnet 127.0.0.1/24    >> /etc/config/vpn.sh
             echo /usr/bin/nordvpn connect $country >> /etc/config/vpn.sh
+            # echo                                   >>  /etc/config/vpn.sh
+            # echo /usr/sbin/iptables -D OUTPUT 6    >> /etc/config/vpn.sh
+            # echo /usr/sbin/iptables -D OUTPUT 5    >> /etc/config/vpn.sh
 
             chmod +x /etc/config/vpn.sh > /dev/null 2>&1
 
