@@ -1446,7 +1446,8 @@ if [ $swtor_allow_wireguard1 = "yes" ] ; then
 
          # Erst wenn der Tunnel steht wird die Umleitung scharf
 
-         echo POSTROUTING not ready
+         echo [vpn-service : is active]
+
       fi
    fi
 
@@ -1489,7 +1490,8 @@ if [ $swtor_allow_wireguard2 = "yes" ] ; then
 
          # Erst wenn der Tunnel steht wird die Umleitung scharf
 
-         echo POSTROUTING not ready
+         echo [vpn-service : is active]
+
       fi
    fi
 
@@ -1512,6 +1514,10 @@ if [ $redirect01_wg0_to_socks5 = "yes" ] ; then
 
    killall -u $redirect01_user_socks5 > /dev/null 2>&1
    killall ssh-v.sh > /dev/null 2>&1
+
+   echo ssh-v.sh and arguments
+   echo $redirect01_user_socks5
+   echo $redirect01_command
 
    ./ssh-v.sh $(echo $redirect01_user_socks5 $redirect01_command) > /etc/config/scripts/ssh.log 2>&1 &
 
