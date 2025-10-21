@@ -53,7 +53,7 @@
  
                Und genau hier liegt der Fehler .... da UDP von sich aus ein verbindungsloses Protokoll ist wird natürlich 
                nur angezeigt das VPN wurde aktiviert. Ob die VPN Verbindung auch tatsäschlich zum Server verbunden
-               ist, lässt sich nur mittels icmp oder dig festellen ... Und hier fangen die Probleme unter Android 14 
+               ist, lässt sich nur mittels icmp oder auch dig festellen ... Und hier fangen die Probleme unter Android 14 
                und Ipads mit einer SIM Karte an.Die Situation wird noch schlimmer , sollte der WireGuard Server mit
                3 verbundenen Clients einfach heruntergefahren werden, werden diese 3 verbundenen Clients natürlich 
                weiterhin die VPN Verbindung weiterhin als aktiv betrachten .... Obwohl es eigentlich gar nicht möglich ist. 
@@ -251,12 +251,31 @@
              Das snowflake-proxy packet wurde aktualisiert:
              snowflake-proxy 2.11.0
 
-20/10/25     Der Nordvpn Dienst verhindert mit folgendem Eintrag
+20/10/25     Der Nordvpn Dienst verhindert mit folgendem Eintrag eine sinnvolle Benutzung des DNS 
+             Dienstes und auch den lokalen Socks5 Server unbenutzbar.
 
 	     5	DROP       tcp  --  anywhere             172.16.0.0/12        tcp dpt:domain /* nordvpn */
 	     6	DROP       udp  --  anywhere             172.16.0.0/12        udp dpt:domain /* nordvpn */
 
-             Natürlich eine sinnvolle DNS Auflösung für die verbundenem Clients über Wireguard.
+             So ist eine sinnvolle Benutzung nicht möglich.
+             Da NordVPN ebenfalls mit Wireguard arbeitet, machen wir die Umleitungen über SSH.
+             Ürspünglich war nur eine Umleitung des WG0 Interfaces über einen lokalen Socks5 Server
+             möglich.Neu wird auch eine Umleitung des Interfaces WG1 möglich sein.
+             Um eine Unterscheidung zu ermöglichen, werden die ursprünglichen Parameter wie 
+             folgt umbenennt.
+
+             redirect01_command
+	     redirect01_port
+             redirect01_user_socks5 
+             redirect01_wg0
+
+             redirect02_command
+             redirect02_port
+             redirect02_user_socks5 
+             redirect02_wg1
+ 
+               
+   
  
 
 	
