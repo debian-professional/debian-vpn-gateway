@@ -269,11 +269,6 @@
              redirect01_user_socks5 
              redirect01_wg0
 
-             redirect02_command
-             redirect02_port
-             redirect02_user_socks5 
-             redirect02_wg1
- 
                
    
  
