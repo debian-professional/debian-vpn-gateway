@@ -17,17 +17,18 @@
 # - Der Start der VPN Vebindung und auch der Start von Wireguard wird hier    #
 #   im Skript erledigt.                                                       #
 # - Das gesamte Handling liegt nun hier im Skript und nicht mehr in           #
-#   verschiedenen Skripten die von Hand augerufen werden müssen.              #
+#   verschiedenen Skripten die von Hand aufgerufen werden müssen.             #
 # - Weitere Optimierungen am Skript wie einlesen aller Variablen über das     #
 #   cfg Verzeichniss erleichtern das komplette Handling mit Updates           #
 # - Support für 3 virtuelle Ethernet Interfaces (eth0) hinzugefügt            #
-# - Die Umleitung von normalen http und https Verkehr ist möglich über einen  #
-#   externen Socks5 Server.Sehr sinvoll wenn zum Beispiel die BBC behauptet,  #
-#   meine verwendete externe IP Adresse  wäre nicht in der UK registriert.    #
+# - Die Umleitung von normalen http und https Verkehr ist nun möglich über    #
+#   einen externen Socks5 Server.Sehr sinvoll wenn zum Beispiel die BBC       #
+#   behauptet,meine verwendete externe IP Adresse wäre nicht in der UK        #
+#   registriert.                                                              #
 # - Der ganze Konfiguration mittels dem WireGuard VPN und auch der IPSec      #
 #   Verbindung inkl. der Umleitung von normalen http und https Verkehr auf    #
-#   den externen Socks5 Server macht diese Script zu einenm regelrechten      #
-#   Bijou der besonderen Art.                                                 #
+#   den externen Socks5 Server macht dieses kleine  Script zu einenm          #
+#   regelrechten Bijou der besonderen Art.                                    #
 ###############################################################################
 
 
@@ -75,28 +76,28 @@ else
    nvpn="no"
 fi
 
-if [ -f /etc/config/cfg/redirect_wg0 ]; then
-   redirect_wg0_to_socks5="yes"
-   if [ -f /etc/config/cfg/redirect_port ]; then
-      redirect_wg0=$(cat /etc/config/cfg/redirect_port)
+if [ -f /etc/config/cfg/redirect01_wg0 ]; then
+   redirect01_wg0_to_socks5="yes"
+   if [ -f /etc/config/cfg/redirect01_port ]; then
+      redirect01_wg0=$(cat /etc/config/cfg/redirect01_port)
    else
-      redirect_wg0_to_socks5="no"
+      redirect0_wg01_to_socks5="no"
       echo Definition des redirect-ports fehlt in der Konfiguration !
       exit 1
    fi
 
-   if [ -f /etc/config/cfg/redirect_user_socks5 ]; then
-      redirect_user_socks5=$(cat /etc/config/cfg/redirect_user_socks5)
+   if [ -f /etc/config/cfg/redirect01_user_socks5 ]; then
+      redirect01_user_socks5=$(cat /etc/config/cfg/redirect01_user_socks5)
    else
-      redirect_wg0_to_socks5="no"
+      redirect01_wg0_to_socks5="no"
       echo Definition des redirect-users fehlt in der Konfiguration !
       exit 1
    fi
 
-   if [ -f /etc/config/cfg/redirect_command ]; then
-      redirect_command=$(cat /etc/config/cfg/redirect_command)
+   if [ -f /etc/config/cfg/redirect01_command ]; then
+      redirect01_command=$(cat /etc/config/cfg/redirect01_command)
    else
-      redirect_wg0_to_socks5="no"
+      redirect01_wg0_to_socks5="no"
       echo Definition des redirect-command fehlt in der Konfiguration !
       exit 1
    fi
@@ -104,7 +105,7 @@ if [ -f /etc/config/cfg/redirect_wg0 ]; then
    if [ -f /usr/bin/curl ]; then
       echo > /dev/null
    else
-      redirect_wg0_to_socks5="no"
+      redirect01_wg0_to_socks5="no"
       echo curl ist nicht installiert !
       exit 1
    fi
@@ -128,13 +129,13 @@ if [ -f /etc/config/cfg/redirect_wg0 ]; then
    if [ -f /usr/bin/killall ]; then
       echo > /dev/null
    else
-      redirect_wg0_to_socks5="no"
+      redirect0_wg0_to_socks5="no"
       echo killall ist nicht installiert !
       exit 1
    fi
 
 else
-   redirect_wg0_to_socks5="no"
+   redirect01_wg0_to_socks5="no"
 fi
 
 if [ -f /etc/config/cfg/swtor_snowflake ]; then
