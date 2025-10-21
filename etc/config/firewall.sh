@@ -10,7 +10,7 @@
 # Volumen         : 2TB oder 5TB (hängt vom Modell ab)                        #
 #                                                                             #
 #                                                                             #
-# Version 0.96d                                                               #
+# Version 0.97d                                                               #
 # - IPSec kann nun alle Filter passieren ohne Fehler sofern es benutzt wird   #
 # - Virtuelle Interfaces und alle VPN Bereiche werden im Script gesetzt.      #
 # - Es kann bei Bedarf eine weitere Wireguard Instanz wg1 gestartet werden.   #
@@ -52,7 +52,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-version="0.96d"
+version="0.97d"
 figlet firewall $version
 
 if [ -f /etc/config/cfg/eth0.ip ]; then
@@ -113,7 +113,7 @@ if [ -f /etc/config/cfg/redirect01_wg0 ]; then
    if [ -f /usr/bin/sshpass ]; then
       echo > /dev/null
    else
-      redirect_wg0_to_socks5="no"
+      redirect01_wg0_to_socks5="no"
       echo sshpass ist nicht installiert !
       exit 1
    fi
@@ -121,7 +121,7 @@ if [ -f /etc/config/cfg/redirect01_wg0 ]; then
    if [ -f /usr/sbin/redsocks ]; then
       echo > /dev/null
    else
-      redirect_wg0_to_socks5="no"
+      redirect01_wg0_to_socks5="no"
       echo redsocks ist nicht installiert !
       exit 1
    fi
@@ -129,7 +129,7 @@ if [ -f /etc/config/cfg/redirect01_wg0 ]; then
    if [ -f /usr/bin/killall ]; then
       echo > /dev/null
    else
-      redirect0_wg0_to_socks5="no"
+      redirect02_wg0_to_socks5="no"
       echo killall ist nicht installiert !
       exit 1
    fi
@@ -529,8 +529,8 @@ if [ -f ./cfg/swtor_allow_wireguard1 ]; then
 else
    swtor_allow_wireguard1="no"
 
-   if [ $redirect_wg0_to_socks5 = "yes" ] ; then
-      echo redirect_wg0_to_socks funktioniert nur mit aktivertem  WireGuard1 !
+   if [ $redirect01_wg0_to_socks5 = "yes" ] ; then
+      echo redirect01_wg0_to_socks funktioniert nur mit aktivertem  WireGuard1 !
       echo RTFM !
       exit 1
    fi
@@ -1015,16 +1015,16 @@ fi
 /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 29 -j DROP
 /usr/sbin/iptables -A OUTPUT -p icmp --icmp-type 30 -j DROP
 
-if [ $redirect_wg0_to_socks5 = "yes" ] ; then
+if [ $redirect01_wg0_to_socks5 = "yes" ] ; then
 
     # Unser lokales Testscript vom Localhost muss umgeleitet werden
     # curl --interface 127.0.0.1 https://www.heise.de
 
     /usr/sbin/iptables -t nat -A OUTPUT -d 193.99.144.85 -p tcp \
-    --dport 80 -j DNAT --to-destination $redirect_wg0
+    --dport 80 -j DNAT --to-destination $redirect01_wg0
 
     /usr/sbin/iptables -t nat -A OUTPUT -d 193.99.144.85 -p tcp \
-    --dport 443 -j DNAT --to-destination $redirect_wg0
+    --dport 443 -j DNAT --to-destination $redirect01_wg0
 
 fi
 
@@ -1034,15 +1034,15 @@ fi
 
 # Genau hier findet die grosse Show statt. Beim verlassen des Tunnels werden
 # alle Packete an dieser Stelle landen. Und genau hier werden alle Packete die
-# eigentlich über die Schnittstelle eth0 den Rechner direkt verlassen sollten,
-# mit etwas Magie verunstaltet.
+# eigentlich über die Schnittstelle eth0 oder das VPN den Rechner direkt 
+# verlassen sollten,mit etwas Magie verunstaltet.
 
 
-if [ $redirect_wg0_to_socks5 = "yes" ] ; then
+if [ $redirect01_wg0_to_socks5 = "yes" ] ; then
 
 
-   # Alles was für das entfernte Netzwerk über IPSec bestimmt ist, wird direkt in
-   # die nächste Kette geleitet. Keine Magie für diese Packete
+   # Alles was für ein entferntes Netzwerk über IPSec bestimmt ist, wird direkt in
+   # die nächste Kette geleitet. Keine Magie für diese Packete notwendi !
 
    if [ $swtor_use_ipsec = "yes" ] ; then
       if [ $virtual_iface1 = "yes" ] ; then
@@ -1103,71 +1103,71 @@ if [ $redirect_wg0_to_socks5 = "yes" ] ; then
    # Hier leiten wir den gesamten Port 80 und 443 auf den lokalen Port 1081 um.
 
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p tcp \
-   --dport 80 -j DNAT --to-destination $redirect_wg0
+   --dport 80 -j DNAT --to-destination $redirect01_wg0
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p udp \
-   --dport 80 -j DNAT --to-destination $redirect_wg0
+   --dport 80 -j DNAT --to-destination $redirect01_wg0
 
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p tcp \
-   --dport 443 -j DNAT --to-destination $redirect_wg0
+   --dport 443 -j DNAT --to-destination $redirect01_wg0
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p udp \
-   --dport 443 -j DNAT --to-destination $redirect_wg0
+   --dport 443 -j DNAT --to-destination $redirect01_wg0
 
    # An dieser Stelle werden die wohl wichtigsten Ports unter dem Bereich 1024 umgleitet.
 
    # Port 25 und 110 die unverschlüsselten Urgesteine der SMTP Kommunikation
 
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p tcp \
-   --dport 25 -j DNAT --to-destination $redirect_wg0
+   --dport 25 -j DNAT --to-destination $redirect01_wg0
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p tcp \
-   --dport 110 -j DNAT --to-destination $redirect_wg0
+   --dport 110 -j DNAT --to-destination $redirect01_wg0
 
    # Heute werden wir wohl diese beiden Ports brauchen
 
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p tcp \
-   --dport 465 -j DNAT --to-destination $redirect_wg0
+   --dport 465 -j DNAT --to-destination $redirect01_wg0
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p tcp \
-   --dport 587  -j DNAT --to-destination $redirect_wg0
+   --dport 587  -j DNAT --to-destination $redirect01_wg0
 
    # IMAP
 
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p tcp \
-   --dport 143 -j DNAT --to-destination $redirect_wg0
+   --dport 143 -j DNAT --to-destination $redirect01_wg0
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p tcp \
-   --dport 993 -j DNAT --to-destination $redirect_wg0
+   --dport 993 -j DNAT --to-destination $redirect01_wg0
 
    # POP3S
 
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p tcp \
-   --dport 995 -j DNAT --to-destination $redirect_wg0
+   --dport 995 -j DNAT --to-destination $redirect01_wg0
 
    # DNS over TLS
 
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p tcp \
-   --dport 853 -j DNAT --to-destination $redirect_wg0
+   --dport 853 -j DNAT --to-destination $redirect01_wg0
 
    # FTPS
 
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p tcp \
-   --dport 989 -j DNAT --to-destination $redirect_wg0
+   --dport 989 -j DNAT --to-destination $redirect01_wg0
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p tcp \
-   --dport 990 -j DNAT --to-destination $redirect_wg0
+   --dport 990 -j DNAT --to-destination $redirect01_wg0
 
    # Android Chrome Browser / WhatsApp
    # [ 1467.758443] WG0 OUTPUT TCP DPT=5228 WINDOW=65535 RES=0x00 SYN URGP=0
    # [ 1468.228390] WG0 OUTPUT TCP DPT=5222 WINDOW=65535 RES=0x00 SYN URGP=0
 
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p tcp \
-   --dport 5222 -j DNAT --to-destination $redirect_wg0
+   --dport 5222 -j DNAT --to-destination $redirect01_wg0
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p tcp \
-   --dport 5228 -j DNAT --to-destination $redirect_wg0
+   --dport 5228 -j DNAT --to-destination $redirect01_wg0
 
    # NTP
 
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p udp \
-   --dport 123 -j DNAT --to-destination $redirect_wg0
+   --dport 123 -j DNAT --to-destination $redirect01_wg0
 
    # Da wir noch nicht genau wissen, welcher der beiden TCP auf Socks5 Comverter
-   # unter Debian 12 nun eigentlich besser läuft, beginnen wir mal mit dem redsocks converter
+   # unter Debian 13 nun eigentlich besser läuft, beginnen wir mal mit dem redsocks converter
    # Gewisse Webseiten wie zum Beispiel google laufen auch in der aktuellen Konfiguration nicht
    # wirklich richtig. Ich vermute es müssen noch vereinzelne Ports umgeleitet werden.
    # Um zu wissen, was genau über den Kanal läuft, loggen wir mal zur Sicherheit alles.
@@ -1211,7 +1211,7 @@ if [ $swtor_allow_wireguard1 = "yes" ] ; then
    /usr/sbin/iptables -A FORWARD -m iprange --src-range $wireguard1_clients -d 192.168.0.0/16 -j REJECT
 
 
-   if [ $redirect_wg0_to_socks5 = "yes" ] ; then
+   if [ $redirect01_wg0_to_socks5 = "yes" ] ; then
 
       /usr/sbin/iptables -A FORWARD -m iprange --src-range $wireguard1_clients -p tcp \
       --dport 22  -j ACCEPT
@@ -1502,7 +1502,7 @@ if [ $swtor_allow_wireguard2 = "yes" ] ; then
 fi
 
 
-if [ $redirect_wg0_to_socks5 = "yes" ] ; then
+if [ $redirect01_wg0_to_socks5 = "yes" ] ; then
    if [ $virtual_iface2 = "yes" ] ; then
 
    cd /etc/config/scripts
@@ -1510,10 +1510,10 @@ if [ $redirect_wg0_to_socks5 = "yes" ] ; then
    # Bevor wir dieses Script starten ... sollten alle Instanzen
    # der Scripts im Zusammenhang mit redirect auch wirklich beendet werden.
 
-   killall -u $redirect_user_socks5 > /dev/null 2>&1
+   killall -u $redirect01_user_socks5 > /dev/null 2>&1
    killall ssh-v.sh > /dev/null 2>&1
 
-   ./ssh-v.sh $(echo $redirect_user_socks5 $redirect_command) > /etc/config/scripts/ssh.log 2>&1 &
+   ./ssh-v.sh $(echo $redirect01_user_socks5 $redirect01_command) > /etc/config/scripts/ssh.log 2>&1 &
 
    fi
 fi
