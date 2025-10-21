@@ -1514,14 +1514,7 @@ if [ $redirect01_wg0_to_socks5 = "yes" ] ; then
    if [ $nvpn = "yes" ]; then
       killall -u $redirect01_user_socks5 > /dev/null 2>&1
       killall ssh-v.sh > /dev/null 2>&1
-
-      # ./ssh-v.sh $(echo $redirect01_user_socks5 $redirect01_command) > /etc/config/scripts/ssh.log 2>&1 &
-
-      echo ssh-v-to-start :  $(echo $redirect01_user_socks5 $redirect01_command) > /etc/config/scripts/ssh-v-to-start.log
-
-   else
-      ./ssh-v.sh $(echo $redirect01_user_socks5 $redirect01_command) nach /etc/config/scripts/ssh.log und error nach ausggabe und Hintergrund
-
+      ./ssh-v.sh $(echo $redirect01_user_socks5 $redirect01_command) > /etc/config/scripts/ssh.log 2>&1 &
    fi
 
    fi
