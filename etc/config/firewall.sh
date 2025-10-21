@@ -598,17 +598,19 @@ fi
 #/sbin/sysctl -w net.ipv6.conf.all.autoconf=0 > /dev/null 2>&1
 #/sbin/sysctl -w net.ipv6.conf.default.disable_ipv6=1 > /dev/null 2>&1
 
-
-echo [ip-tables  :  reset tables]
-/usr/sbin/iptables -P INPUT ACCEPT
-/usr/sbin/iptables -P FORWARD ACCEPT
-/usr/sbin/iptables -P OUTPUT ACCEPT
-/usr/sbin/iptables -t nat -F
-/usr/sbin/iptables -t mangle -F
-/usr/sbin/iptables -F
-/usr/sbin/iptables -X
-echo [ip-tables  :  reset is made]
-
+if [ $nvpn = "no" ]; then
+   echo [ip-tables  :  reset tables]
+   /usr/sbin/iptables -P INPUT ACCEPT
+   /usr/sbin/iptables -P FORWARD ACCEPT
+   /usr/sbin/iptables -P OUTPUT ACCEPT
+   /usr/sbin/iptables -t nat -F
+   /usr/sbin/iptables -t mangle -F
+   /usr/sbin/iptables -F
+   /usr/sbin/iptables -X
+   echo [ip-tables  :  reset is made]
+else
+   echo [ip-tables  :  no reset tables -> vpn is active ]
+fi
 
 echo [ip-tables : calculate used networks ]
 
@@ -705,13 +707,11 @@ fi
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags SYN,FIN SYN,FIN -j DROP \
 -m comment --comment "chain 01/07 block packets with bogus tcp flags"
 
-
 if [ $fw_debug = "yes" ] ; then
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,RST FIN,RST -j LOG  --log-prefix "chain01/08 "
 fi
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,RST FIN,RST -j DROP \
 -m comment --comment "chain 01/08 block packets with bogus tcp flags"
-
 
 if [ $fw_debug = "yes" ] ; then
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,ACK FIN -j LOG  --log-prefix "chain01/09 "
@@ -719,13 +719,11 @@ fi
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,ACK FIN -j DROP \
 -m comment --comment "chain 01/09 block packets with bogus tcp flags"
 
-
 if [ $fw_debug = "yes" ] ; then
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,URG URG -j LOG  --log-prefix "chain01/10 "
 fi
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,URG URG -j DROP \
 -m comment --comment "chain 01/10 block packets with bogus tcp flags"
-
 
 if [ $fw_debug = "yes" ] ; then
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,FIN FIN -j LOG  --log-prefix "chain01/11 "
@@ -1446,7 +1444,7 @@ if [ $swtor_allow_wireguard1 = "yes" ] ; then
 
          # Erst wenn der Tunnel steht wird die Umleitung scharf
 
-         echo [vpn-service : is active]
+         echo [ip-tables : VPN is active ]
 
       fi
    fi
@@ -1490,7 +1488,7 @@ if [ $swtor_allow_wireguard2 = "yes" ] ; then
 
          # Erst wenn der Tunnel steht wird die Umleitung scharf
 
-         echo [vpn-service : is active]
+         echo [ip-tables : VPN is active ]
 
       fi
    fi
@@ -1511,15 +1509,20 @@ if [ $redirect01_wg0_to_socks5 = "yes" ] ; then
 
    # Bevor wir dieses Script starten ... sollten alle Instanzen
    # der Scripts im Zusammenhang mit redirect auch wirklich beendet werden.
+   # Warnung : Ist der VPN aktiv -> wird das Script ssh-v nicht gestartet !
 
-   killall -u $redirect01_user_socks5 > /dev/null 2>&1
-   killall ssh-v.sh > /dev/null 2>&1
+   if [ $nvpn = "yes" ]; then
+      killall -u $redirect01_user_socks5 > /dev/null 2>&1
+      killall ssh-v.sh > /dev/null 2>&1
 
-   echo ssh-v.sh and arguments
-   echo $redirect01_user_socks5
-   echo $redirect01_command
+      # ./ssh-v.sh $(echo $redirect01_user_socks5 $redirect01_command) > /etc/config/scripts/ssh.log 2>&1 &
 
-   ./ssh-v.sh $(echo $redirect01_user_socks5 $redirect01_command) > /etc/config/scripts/ssh.log 2>&1 &
+      echo ssh-v-to-start :  $(echo $redirect01_user_socks5 $redirect01_command) > /etc/config/scripts/ssh-v-to-start.log
+
+   else
+      ./ssh-v.sh $(echo $redirect01_user_socks5 $redirect01_command) nach /etc/config/scripts/ssh.log und error nach ausggabe und Hintergrund
+
+   fi
 
    fi
 fi

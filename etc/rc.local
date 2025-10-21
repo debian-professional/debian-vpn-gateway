@@ -118,9 +118,9 @@ if [ -f /etc/config/cfg/nvpn ]; then
 
             echo /usr/bin/nordvpn connect $country >> /etc/config/vpn.sh
 
-            # echo                                   >>  /etc/config/vpn.sh
-            # echo /usr/sbin/iptables -D OUTPUT 6    >> /etc/config/vpn.sh
-            # echo /usr/sbin/iptables -D OUTPUT 5    >> /etc/config/vpn.sh
+            echo                                   >>  /etc/config/vpn.sh
+            echo /usr/sbin/iptables -D OUTPUT 6    >> /etc/config/vpn.sh
+            echo /usr/sbin/iptables -D OUTPUT 5    >> /etc/config/vpn.sh
 
             chmod +x /etc/config/vpn.sh > /dev/null 2>&1
 
