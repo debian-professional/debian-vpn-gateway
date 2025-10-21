@@ -21,6 +21,8 @@ rm ~/p7 > /dev/null 2>&1
 rm ~/p8 > /dev/null 2>&1
 rm ~/p9 > /dev/null 2>&1
 rm ~/p10 > /dev/null 2>&1
+rm ~/p11 > /dev/null 2>&1
+
 
 if [ -f /etc/config/cfg/nvpn ]; then
    ssh $p4 $p5 $p6 $p7 $p8 $p9 ${p10}
