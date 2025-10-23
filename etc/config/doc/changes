@@ -269,7 +269,8 @@
              redirect01_user_socks5 
              redirect01_wg0
 
-               
+22/10/25     Der Pfad für den Backup-Pfad des snowflake-proxys war falsch.
+	               
    
  
 

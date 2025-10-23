@@ -80,7 +80,7 @@ tar cvzf tmp/interfaces.tar.gz /etc/network/interfaces > /dev/null 2>&1
 
 # Snowflake-Proxy
 if [ -f /etc/config/cfg/swtor_snowflake ]; then
-   tar cvzf tmp/snowflake-proxy-service.tar.gz /usr/lib/systemd/system/snowflake-proxy.service > /dev/null 2>&1
+   tar cvzf tmp/snowflake-proxy-service.tar.gz /lib/systemd/system/snowflake-proxy.service  > /dev/null 2>&1
 fi
 
 # redsocks
