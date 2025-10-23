@@ -97,6 +97,15 @@ if [ -f /etc/config/cfg/nvpn ]; then
 fi
 
 if [ -f /etc/config/cfg/nvpn ]; then
+   if [ -f /etc/config/cfg/gateway]; then
+      echo Fehler innerhalb der aktuellen Konfiguration !!!
+      echo Entweder wird nur nvpn oder nur gateway !
+      echo Aber unter gar keinen Umständen beide Optionen !
+      exit 1
+   fi
+fi
+
+if [ -f /etc/config/cfg/nvpn ]; then
    if [ -f /etc/config/cfg/nvpn_country ]; then
       if [ -f /etc/config/cfg/nvpn_token ]; then
          if [ -f /usr/bin/nordvpn ]; then
