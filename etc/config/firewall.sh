@@ -609,7 +609,7 @@ if [ $nvpn = "no" ]; then
    /usr/sbin/iptables -X
    echo [ip-tables  :  reset is made]
 else
-   echo [ip-tables  :  no reset tables -> vpn is active ]
+   echo [ip-tables  :  no reset tables ]
 fi
 
 echo [ip-tables : calculate used networks ]

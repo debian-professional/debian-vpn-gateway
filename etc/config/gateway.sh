@@ -20,19 +20,42 @@ if [ -f /etc/config/cfg/gateway ]; then
          user=$(printf '%s\n' "$LINE"| awk '{print $1}')
 
          if [ $line_number = "1" ]; then
+
+            rm /home/$user/*.log > /dev/null 2>&1
+
+            # Start Script
+
             rm /home/$user/connect-ssh.sh > /dev/null 2>&1
             echo "#!/bin/bash" >  /home/$user/connect-ssh.sh
             echo               >> /home/$user/connect-ssh.sh
             chmod +x /home/$user/connect-ssh.sh
             chown $user:$user /home/$user/connect-ssh.sh
-         fi
-         country=$(printf '%s\n' "$LINE"| awk '{print $2}')
 
+            # Controll Script
+
+            rm /home/$user/controll-0$line_number.sh > /dev/null 2>&1
+            echo "#!/bin/bash" >  /home/$user/controll-0$line_number.sh
+            echo               >> /home/$user/controll-0$line_number.sh
+            cat /etc/config/controll >> /home/$user/controll-0$line_number.sh
+            chmod +x /home/$user/controll-0$line_number.sh
+
+            chown $user:$user /home/$user/controll-0$line_number.sh
+         else
+            rm /home/$user/controll-0$line_number.sh > /dev/null 2>&1
+            echo "#!/bin/bash" >  /home/$user/controll-0$line_number.sh
+            echo               >> /home/$user/controll-0$line_number.sh
+            cat /etc/config/controll >> /home/$user/controll-0$line_number.sh
+            chmod +x /home/$user/controll-0$line_number.sh
+            chown $user:$user /home/$user/controll-0$line_number.sh
+         fi
+
+         country=$(printf '%s\n' "$LINE"| awk '{print $2}')
          internal_network=$(printf '%s\n' "$LINE"| awk '{print $3}')
          proxy_port=$(printf '%s\n' "$LINE"| awk '{print $4}')
          redsocks_port=$(printf '%s\n' "$LINE"| awk '{print $5}')
          ssh_user=$(printf '%s\n' "$LINE"| awk '{print $6}')
          dns_server=$(printf '%s\n' "$LINE"| awk '{print $7}')
+         searching=$(printf '%s\n' "$LINE"| awk '{print $8}')
          ssh_port="22"
          dns_port="53"
          tor_port="9050"
@@ -57,6 +80,12 @@ if [ -f /etc/config/cfg/gateway ]; then
          service_07_port="3389"
 
          echo "ssh -p 22 -A42NC -D "$proxy_port $ssh_user "&" >> /home/$user/connect-ssh.sh
+         arg01=$(echo $searching)
+         arg02=$(echo "ssh -p 22 -A42NC -D "$proxy_port $ssh_user)
+         arg03=$(echo /home/$user/controll-0$line_number.log)
+
+
+         sudo --user=$user /home/$user/controll-0$line_number.sh $arg01 $arg02 > $arg03 2>&1 &
 
          # Port 22 SSH weiterleiten
 
@@ -165,8 +194,10 @@ if [ -f /etc/config/cfg/gateway ]; then
    done < "$INFILE"
 
    echo [gateway       :  we are done here ]
+
    redsocks -c /etc/redsocks.conf
    sudo --user=$user /home/$user/connect-ssh.sh
+
    exit 0
 else
    exit 0
