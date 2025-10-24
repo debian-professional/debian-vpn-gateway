@@ -150,5 +150,12 @@ fi
 cd /etc/config
 ./firewall.sh
 
+
+# Egal wie auch immer ... das VPN will er mir einfach
+# auf Teufel komm raus einfach nicht starten !
+# if [ -f /etc/config/cfg/nvpn ]; then
+#   ./vpn.sh
+# fi
+
 exit 0
 
