@@ -24,6 +24,8 @@ ln -s /home/source/debian-vpn-gateway/etc/config/firewall.sh firewall.sh
 ln -s /home/source/debian-vpn-gateway/etc/config/get-nordvpn.sh get-nordvpn.sh
 ln -s /home/source/debian-vpn-gateway/etc/config/get-pi-hole.sh get-pihole.sh
 ln -s /home/source/debian-vpn-gateway/etc/config/off.sh off.sh
+ln -s /home/source/debian-vpn-gateway/etc/config/gateway.sh gateway.sh
+
 
 cd /etc
 

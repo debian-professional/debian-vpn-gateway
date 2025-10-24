@@ -105,6 +105,10 @@ if [ -f /etc/config/cfg/nvpn ]; then
    fi
 fi
 
+if [ -f /etc/config/cfg/gateway ]; then
+   rm /etc/snowflake/* > /dev/null 2>&1 
+fi
+
 if [ -f /etc/config/cfg/nvpn ]; then
    if [ -f /etc/config/cfg/nvpn_country ]; then
       if [ -f /etc/config/cfg/nvpn_token ]; then

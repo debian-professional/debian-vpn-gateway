@@ -257,7 +257,7 @@
 	     5	DROP       tcp  --  anywhere             172.16.0.0/12        tcp dpt:domain /* nordvpn */
 	     6	DROP       udp  --  anywhere             172.16.0.0/12        udp dpt:domain /* nordvpn */
 
-             So ist eine sinnvolle Benutzung nicht möglich.
+             So ist eine sinnvolle Benutzung einfach nicht möglich.
              Da NordVPN ebenfalls mit Wireguard arbeitet, machen wir die Umleitungen über SSH.
              Ürspünglich war nur eine Umleitung des WG0 Interfaces über einen lokalen Socks5 Server
              möglich.Neu wird auch eine Umleitung des Interfaces WG1 möglich sein.
@@ -271,7 +271,20 @@
 
 22/10/25     Der Pfad für den Backup-Pfad des snowflake-proxys war falsch.
 	               
-   
+24/10/25     Der ganze Update-Prozess von Debian 12 auf Debian 13 ist beinahe 
+             abgeschlossen. Auf dem virtuellen Interface eth0:1 sind nun wieder wie
+             vorher 3 Proxy-Server (Ports 1080-1082) und 3 Redsocks Eintiegspunkte 
+             (Ports 8080-8082). Gekrönt wird das ganze mit einem TOR-Port (9050)
+             welcher ebenfalls über das VPN benutzbar ist. 
+
+	     1080/tcp open  socks
+             1081/tcp open  pvuniwien
+             1082/tcp open  amt-esd-prot
+             8080/tcp open  http-proxy
+             8081/tcp open  blackice-icecap
+             8082/tcp open  blackice-alerts
+             9050/tcp open  tor-socks
+                
  
 
 	

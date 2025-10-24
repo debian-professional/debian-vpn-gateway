@@ -37,9 +37,9 @@
 # eth0:0	Das virtuelle Interface dient als Endpunkt zur Kommunikation mittels IPSec mit
 #               dem remote verbundenen Netzwerk.
 # eth0:1        Dieses virtuelle Interface wird zum Bereistellen eines nicht öffentlichen SSH-Zugangs
-#               verwendet und ebenso als Socks5 Server auf dem Port 8080.Der redsocks-redirector welcher normale
+#               verwendet und ebenso als Socks5 Server auf dem Port 1080.Der redsocks-redirector welcher normale
 #               Webverbindungen in socks5 konforme Verbindungen übersetzt, arbeitet auf dem lokalten Port
-#               1081.Der dazu optionale tor-service läuft auf Port 9050.
+#               2089.Der dazu optionale tor-service läuft auf Port 9050.
 # eth0:2        Wird zum jetzigen Zeitpunkt noch nicht verwendet.
 # tun0          Dieses Interface wird hauptsächlich für Pihole verwendet.(172.29.255.2)
 #               Der DNS Resolver und die Weboberfläche werden mit diesem Interface verbunden
@@ -442,7 +442,7 @@ if [ -f ./cfg/ipsec ]; then
    swtor_use_ipsec="yes"
    ipsec down $ipsec_connection > /dev/null 2>&1
 
-   # Ohne diesen einen Routeneintrag wüsste unser eigerner Server nicht wie er das entfernte Netz
+   # Ohne diesen einen Routeneintrag wüsste unser eigener Server nicht wie er das entfernte Netz
    # erreichen kann.
 
    route add -net $ipsec_remote gw $external_ip > /dev/null 2>&1
@@ -932,8 +932,8 @@ fi
 /usr/sbin/iptables -A INPUT -p icmp --icmp-type 29 -j DROP
 /usr/sbin/iptables -A INPUT -p icmp --icmp-type 30 -j DROP
 
-# Hier wird definiert .... was das OUTPUT verlassen darf.
-# Bei ICMP wird nur ping (type 8) unterstützt. Der Rest wird geblockt.
+# Hier wird genau definiert .... was de OUTPUT Kette verlassen darf.
+# Bein ICMP-Prorkoll  wird einzig nur ping (type 8) unterstützt. Der Rest wird geblockt.
 # Unter gar keinen Umständen wird ein Packet mit der Zielrichtung
 # UDP Port 53 diesen Server jemals verlassen.
 # Der Rest ist im Moment noch ziemlich egal ......
@@ -1032,7 +1032,7 @@ fi
 
 # Genau hier findet die grosse Show statt. Beim verlassen des Tunnels werden
 # alle Packete an dieser Stelle landen. Und genau hier werden alle Packete die
-# eigentlich über die Schnittstelle eth0 oder das VPN den Rechner direkt 
+# eigentlich über die Schnittstelle eth0 oder das VPN den Rechner direkt
 # verlassen sollten,mit etwas Magie verunstaltet.
 
 
@@ -1614,3 +1614,6 @@ fi
 if [ $using_snowflake = "yes" ] ; then
    systemctl start snowflake-proxy > /dev/null 2>&1
 fi
+
+cd /etc/config/
+./gateway.sh
