@@ -148,7 +148,7 @@ fi
 
 
 cd /etc/config
-# ./firewall.sh
+./firewall.sh
 
 exit 0
 
