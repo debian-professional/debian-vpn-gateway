@@ -84,8 +84,8 @@ if [ -f /etc/config/cfg/gateway ]; then
          arg02=$(echo "ssh -p 22 -A42NC -D "$proxy_port $ssh_user)
          arg03=$(echo /home/$user/controll-0$line_number.log)
 
-
          sudo --user=$user /home/$user/controll-0$line_number.sh $arg01 $arg02 > $arg03 2>&1 &
+         sudo --user=$user chown user:user $arg03 2>&1
 
          # Port 22 SSH weiterleiten
 
