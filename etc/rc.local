@@ -44,6 +44,13 @@ else
 
    if [ -f /etc/config/cfg/stubby ]; then
       echo nameserver 127.0.0.1 > /etc/resolv.conf
+      if [ -f /etc/config/cfg/nvpn ]; then
+         cp /etc/resolv.conf resolv.backup > /dev/null 2>&1
+      else
+         if [ -f /etc/resolv.backup ]; then
+            rm /etc/resolv.backup > /dev/null 2>&1
+         fi
+      fi
       echo .....
    else
       echo not changing dns
@@ -97,6 +104,14 @@ if [ -f /etc/config/cfg/nvpn ]; then
 fi
 
 if [ -f /etc/config/cfg/nvpn ]; then
+   if [ -f /usr/bin/nordvpn ]; then
+      echo nordvpn binary does exist ....
+   else
+      echo nordvpn binary does not exist ....
+   fi
+fi
+
+if [ -f /etc/config/cfg/nvpn ]; then
    if [ -f /etc/config/cfg/gateway]; then
       echo Fehler innerhalb der aktuellen Konfiguration !!!
       echo Entweder wird nur nvpn oder nur gateway !
@@ -106,7 +121,7 @@ if [ -f /etc/config/cfg/nvpn ]; then
 fi
 
 if [ -f /etc/config/cfg/gateway ]; then
-   rm /etc/snowflake/* > /dev/null 2>&1 
+   rm /etc/snowflake/* > /dev/null 2>&1
 fi
 
 if [ -f /etc/config/cfg/nvpn ]; then
@@ -118,6 +133,8 @@ if [ -f /etc/config/cfg/nvpn ]; then
 
             token=$(cat /etc/config/cfg/nvpn_token)
             country=$(cat /etc/config/cfg/nvpn_country)
+
+            resolver=$(echo  ">" "/etc/resolv.conf")
 
             echo "#!/bin/bash" >> /etc/config/vpn.sh
             echo               >>  /etc/config/vpn.sh
@@ -131,9 +148,10 @@ if [ -f /etc/config/cfg/nvpn ]; then
 
             echo /usr/bin/nordvpn connect $country >> /etc/config/vpn.sh
 
-            echo                                   >>  /etc/config/vpn.sh
+            echo                                   >> /etc/config/vpn.sh
             echo /usr/sbin/iptables -D OUTPUT 6    >> /etc/config/vpn.sh
             echo /usr/sbin/iptables -D OUTPUT 5    >> /etc/config/vpn.sh
+            echo nameserver 127.0.0.1 $resolver    >> /etc/config/vpn.sh
 
             chmod +x /etc/config/vpn.sh > /dev/null 2>&1
 

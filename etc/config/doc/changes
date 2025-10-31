@@ -286,5 +286,7 @@
              9050/tcp open  tor-socks
                 
  
-
+31/10/25     Der DNS Server wird  bei aktiviertem VPN wird ebenfalls verändert. 
+             Der VPN Status wird nun überwacht und bei Befarf neu gestartet. 
+             Der Redsocks Server erfuhr ebenfalls ein paar Optimierungen.
 	

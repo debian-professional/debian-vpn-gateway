@@ -195,8 +195,17 @@ if [ -f /etc/config/cfg/gateway ]; then
 
    echo [gateway       :  we are done here ]
 
+   if [ -f /etc/config/cfg/gateway ]; then
+      rm /etc/redsocks/redsocks.log > /dev/null 2>&1
+   fi
+
    redsocks -c /etc/redsocks.conf
    sudo --user=$user /home/$user/connect-ssh.sh
+
+   # Neustart stubby
+
+   systemctl stop stubby
+   systemctl start stubby
 
    exit 0
 else
