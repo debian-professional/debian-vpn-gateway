@@ -2,7 +2,7 @@
 
 # einmaliges starten
 
-vpncsh=$(ps axu | grep vpnc.sh | awk '{print $2}')
+vpncsh=$(ps aux | grep vpnc.sh | grep -v grep | awk '{print $2}')
 
 if [ -z "$vpncsh" ] ; then 
 
