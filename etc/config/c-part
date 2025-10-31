@@ -1,0 +1,15 @@
+
+
+# einmaliges starten
+
+vpncsh=$(ps axu | grep vpnc.sh | awk '{print $2}')
+
+if [ -z "$vpncsh" ] ; then 
+
+   cd /etc/config
+
+   ./vpnc.sh > /dev/null 2>&1 &
+
+else 
+   echo vpnc.sh is allready running
+fi

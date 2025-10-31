@@ -1612,6 +1612,11 @@ if [ $using_tor = "yes" ] ; then
 fi
 
 if [ $using_snowflake = "yes" ] ; then
+
+   if [ -f /etc/snowflake/snowflake.log ]; then
+      rm /etc/snowflake/snowflake.log > /dev/null 2>&1
+   fi
+
    systemctl start snowflake-proxy > /dev/null 2>&1
 fi
 
