@@ -5,11 +5,9 @@
 vpncsh=$(ps aux | grep vpnc.sh | grep -v grep | awk '{print $2}')
 
 if [ -z "$vpncsh" ] ; then 
-
    cd /etc/config
-
+   echo starting vpnc.sh
    ./vpnc.sh > /dev/null 2>&1 &
-
 else 
    echo vpnc.sh is allready running
 fi
