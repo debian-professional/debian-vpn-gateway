@@ -14,7 +14,9 @@ if [ -f /etc/config/cfg/nvpn ]; then
      if [ "$rc0" == "0" ] ; then
         echo VPN is Connected .....
      else
-        echo VPN is not Connected
+        echo VPN is not Connected anymore ...
+        cd /etc/config
+        ./vpn.sh
      fi
    done
 fi
