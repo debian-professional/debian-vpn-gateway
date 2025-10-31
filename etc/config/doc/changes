@@ -289,4 +289,6 @@
 31/10/25     Der DNS Server wird  bei aktiviertem VPN wird ebenfalls verändert. 
              Der VPN Status wird nun überwacht und bei Befarf neu gestartet. 
              Der Redsocks Server erfuhr ebenfalls ein paar Optimierungen.
-	
+             Neu wird beim aktivieren des VPN's der lokale DNS bereits
+             laufende Stubby Service verwendet, anstelle des externen
+             DNS Servers des VPN Anbieters.	
