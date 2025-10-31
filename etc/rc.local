@@ -45,7 +45,7 @@ else
    if [ -f /etc/config/cfg/stubby ]; then
       echo nameserver 127.0.0.1 > /etc/resolv.conf
       if [ -f /etc/config/cfg/nvpn ]; then
-         cp /etc/resolv.conf resolv.backup > /dev/null 2>&1
+         cp /etc/resolv.conf /etc/resolv.backup > /dev/null 2>&1
       else
          if [ -f /etc/resolv.backup ]; then
             rm /etc/resolv.backup > /dev/null 2>&1
@@ -134,8 +134,6 @@ if [ -f /etc/config/cfg/nvpn ]; then
             token=$(cat /etc/config/cfg/nvpn_token)
             country=$(cat /etc/config/cfg/nvpn_country)
 
-            resolver=$(echo  ">" "/etc/resolv.conf")
-
             echo "#!/bin/bash" >> /etc/config/vpn.sh
             echo               >>  /etc/config/vpn.sh
             echo /usr/bin/nordvpn login --token $token   >> /etc/config/vpn.sh
@@ -151,7 +149,8 @@ if [ -f /etc/config/cfg/nvpn ]; then
             echo                                   >> /etc/config/vpn.sh
             echo /usr/sbin/iptables -D OUTPUT 6    >> /etc/config/vpn.sh
             echo /usr/sbin/iptables -D OUTPUT 5    >> /etc/config/vpn.sh
-            echo nameserver 127.0.0.1 $resolver    >> /etc/config/vpn.sh
+
+            cp /etc/resolv.backup /etc/resolv.conf >> /etc/config/vpn.sh
 
             chmod +x /etc/config/vpn.sh > /dev/null 2>&1
 
