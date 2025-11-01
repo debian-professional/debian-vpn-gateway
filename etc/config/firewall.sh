@@ -1616,9 +1616,14 @@ if [ $using_snowflake = "yes" ] ; then
    if [ -f /etc/snowflake/snowflake.log ]; then
       rm /etc/snowflake/snowflake.log > /dev/null 2>&1
    fi
-
    systemctl start snowflake-proxy > /dev/null 2>&1
+else
+   if [ -f /etc/snowflake/snowflake.log ]; then
+      rm /etc/snowflake/snowflake.log > /dev/null 2>&1
+   fi
 fi
 
-cd /etc/config/
-./gateway.sh
+if [ -f /etc/config/cfg/gateway ]; then
+   cd /etc/config/
+   ./gateway.sh
+fi

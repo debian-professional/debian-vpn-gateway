@@ -11,284 +11,285 @@
                 - Werden stubby oder dnsmasque im Modus 0.0.0.0 betrieben, machen sie sich gegenseitig 
                   die Interfaces streitig und einer der beiden Dienst quittiert den Dienst.
 
-11/03/24       Das Timeout für die eigenständige Socks5 Verbindung wurde minimal erhöht. 
+11/03/24	Das Timeout für die eigenständige Socks5 Verbindung wurde minimal erhöht. 
 
-               curl --connect-timeout 5 --max-time 7 -i --socks5 172.29.255.1:8080 https://www.google.de                
+                curl --connect-timeout 5 --max-time 7 -i --socks5 172.29.255.1:8080 https://www.google.de                
                  
-               Mit 2 und 5 Sekunden war timeout Wert etwas zu optimistisch eingestellt. Mal schauen
-               wie sich die abgehende Socks5 Verbindung verhält.
+                Mit 2 und 5 Sekunden war timeout Wert etwas zu optimistisch eingestellt. Mal schauen
+                wie sich die abgehende Socks5 Verbindung verhält.
 
-               Machen die Kerle zu jeder vollen Stunde reinemachen ?
-               Immer zur vollen Stunde ? 
+                Machen die Kerle zu jeder vollen Stunde reinemachen ?
+                Immer zur vollen Stunde ? 
 
-               redsocks redirect action none rc:=35 Mon Mar 11 04:59:11 PM GMT 2024
-               rc from curl socks5 is : 7
-               ssh-connection killed and restartet rc:=7 Mon Mar 11 04:59:12 PM GMT 2024
-               rc from curl socks5 is : 7
-               ssh-connection killed and restartet rc:=7 Mon Mar 11 04:59:44 PM GMT 2024
-               rc from curl socks5 is : 7 
-               ssh-connection killed and restartet rc:=7 Mon Mar 11 05:00:16 PM GMT 2024
-               rc from curl socks5 is : 7
-               ssh-connection killed and restartet rc:=7 Mon Mar 11 05:00:48 PM GMT 2024
+                redsocks redirect action none rc:=35 Mon Mar 11 04:59:11 PM GMT 2024
+                rc from curl socks5 is : 7
+                ssh-connection killed and restartet rc:=7 Mon Mar 11 04:59:12 PM GMT 2024
+                rc from curl socks5 is : 7
+                ssh-connection killed and restartet rc:=7 Mon Mar 11 04:59:44 PM GMT 2024
+                rc from curl socks5 is : 7 
+                ssh-connection killed and restartet rc:=7 Mon Mar 11 05:00:16 PM GMT 2024
+                rc from curl socks5 is : 7
+                ssh-connection killed and restartet rc:=7 Mon Mar 11 05:00:48 PM GMT 2024
 
 
-               Ich habe die DNS Server innerhalb von WireGuard auf den Pihole-Server umgestellt. 
-               Die Namensauflösung über Pihole funktioniert nun einwandfrei jedoch habe ich vergessen
-               das tun0 Interface zu den möglichen ICMP Zielen hinzuzufügen. Ergo gib es keinen 
-               ping test auf den DNS Server. 
+                Ich habe die DNS Server innerhalb von WireGuard auf den Pihole-Server umgestellt. 
+                Die Namensauflösung über Pihole funktioniert nun einwandfrei jedoch habe ich vergessen
+                das tun0 Interface zu den möglichen ICMP Zielen hinzuzufügen. Ergo gib es keinen 
+                ping test auf den DNS Server. 
 
-               Auch die sehr ärgerlichen Verbindungsunterbrüche unter dem OS Android 14 und dem offiziellen 
-               Wireguard Client müssen näher untersucht werden. Habe zu Testzwecken das Telefon neu gestartet 
-               und bekam eine private Class A Adresse bekommen : 10.43.92.202 
-               Werde diese Client Adresse des Telefons im Auge behalten und schauen ob sich diese Adresse ändert.
-               Aufgrund der privaten Adresse werden alle Verbindungen ins Internet über einen Gateway geleitet.
-               Ich hoffe inständig die Verbindung wird mit dem Parameter keepalive wieder neu aufgebaut. 
-               Sollte die bestehende Verbindung aus irgend einem Grund gekippt werden.
-               Da das zugrundliegende Verbindungsprotokoll von WireGuard leider auf UDP basiert, kann ich als
-               Benutzer des Programmes natürlich nicht einsehen ob eine Verbindung zum VPN Server vorliegt oder
-               eben nicht. Ich kann mittels icmp-echo oder auch dig prüfen ob eine VPN Verbindung vorliegt. 
-               Alle Clients von WireGuard (Linux,Windows,Android,Ipad) zeigen das selbe Verhalten. 
+                Auch die sehr ärgerlichen Verbindungsunterbrüche unter dem OS Android 14 und dem offiziellen 
+                Wireguard Client müssen näher untersucht werden. Habe zu Testzwecken das Telefon neu gestartet 
+                und bekam eine private Class A Adresse bekommen : 10.43.92.202 
+                Werde diese Client Adresse des Telefons im Auge behalten und schauen ob sich diese Adresse ändert.
+                Aufgrund der privaten Adresse werden alle Verbindungen ins Internet über einen Gateway geleitet.
+                Ich hoffe inständig die Verbindung wird mit dem Parameter keepalive wieder neu aufgebaut. 
+                Sollte die bestehende Verbindung aus irgend einem Grund gekippt werden.
+                Da das zugrundliegende Verbindungsprotokoll von WireGuard leider auf UDP basiert, kann ich als
+                Benutzer des Programmes natürlich nicht einsehen ob eine Verbindung zum VPN Server vorliegt oder
+                eben nicht. Ich kann mittels icmp-echo oder auch dig prüfen ob eine VPN Verbindung vorliegt. 
+                Alle zur Zeit aktiven Clients von WireGuard (Linux,Windows,Android,Ipad) zeigen das selbe Verhalten. 
 
-               VPN wird aktiviert -> Der Button wird grün 
+                VPN wird aktiviert -> Der Button wird grün 
  
-               Und genau hier liegt der Fehler .... da UDP von sich aus ein verbindungsloses Protokoll ist wird natürlich 
-               nur angezeigt das VPN wurde aktiviert. Ob die VPN Verbindung auch tatsäschlich zum Server verbunden
-               ist, lässt sich nur mittels icmp oder auch dig festellen ... Und hier fangen die Probleme unter Android 14 
-               und Ipads mit einer SIM Karte an.Die Situation wird noch schlimmer , sollte der WireGuard Server mit
-               3 verbundenen Clients einfach heruntergefahren werden, werden diese 3 verbundenen Clients natürlich 
-               weiterhin die VPN Verbindung weiterhin als aktiv betrachten .... Obwohl es eigentlich gar nicht möglich ist. 
-               Da die VPN Route auf dem benutzten Gerät immer noch aktiv ist, werden alle Zugriffe ins Internet ins
-               leere laufen ... Na ja .... immerhin besser als den VPN Tunnel ohne eine einzige Benachrichtung einfach 
-               zu beenden.
+                Und genau hier liegt der Fehler .... da UDP von sich aus ein verbindungsloses Protokoll ist wird natürlich 
+                nur angezeigt das VPN wurde aktiviert. Ob die VPN Verbindung auch tatsäschlich zum Server verbunden
+                ist, lässt sich nur mittels icmp oder auch dig festellen ... Und genau hier fangen die Probleme unter 
+		Android 14 und Ipads mit einer SIM Karte an.Die Situation wird noch schlimmer,sollte der WireGuard Server
+		mit 3 verbundenen Clients einfach heruntergefahren werden,werden diese 3 verbundenen Clients natürlich
+                weiterhin die VPN Verbindung weiterhin als aktiv betrachten .... Obwohl es eigentlich gar nicht möglich ist. 
+                Da die VPN Route auf dem benutzten Gerät immer noch aktiv ist, werden alle Zugriffe ins Internet ins
+                leere laufen ... Na ja .... immerhin besser als den VPN Tunnel ohne eine einzige Benachrichtung einfach 
+                zu beenden.
                
 
-12/03/24       Der Test mit dem Android 14 und dem Parameter keepalive scheint zu funktionieren. Ob die Batterie
-               wegen dieser kleinen Anpassung schneller leer wird, wird sich in der Zukunft zeigen. 
-               Auch wegen dem traceroute Dillema zeichnet sich eine Lösung ab.Windws verwendet für seinen traceroute
-               Befehl die ICMP Nachricht Typ 8 (echo). Dieser Befehl sollte unter Windows auch problemlos funktionieren.
-               Unter Unix wird jedoch für den gleichen Befehl  der UDP Port Bereich 33434 - 33474 verwendet. 
-               Aus diesem Grunde muss in der Firewall folgende Anweisung stehen.
+12/03/24        Der Test mit dem Android 14 und dem Parameter keepalive scheint zu funktionieren. Ob die Batterie
+                wegen dieser kleinen Anpassung schneller leer wird, wird sich in der Zukunft zeigen. 
+                Auch wegen dem traceroute Dillema zeichnet sich eine Lösung ab.Windws verwendet für seinen traceroute
+                Befehl die ICMP Nachricht Typ 8 (echo). Dieser Befehl sollte unter Windows auch problemlos funktionieren.
+                Unter Unix wird jedoch für den gleichen Befehl  der UDP Port Bereich 33434 - 33474 verwendet. 
+                Aus diesem Grunde muss in der iptables Firewall folgende Anweisung stehen.
 
-               iptables -I INPUT -p udp --dport 33434:33474 -j REJECT 
-     
-               Sollte auch der ausgehende Verkehr geregelt werden, was zur Zeit noch nicht der Fall, muss folgenden Anweisung
-               ausgeführt werden. 
+                iptables -I INPUT -p udp --dport 33434:33474 -j REJECT  
 
-               iptables -I OUTPUT -p udp --dport 33434:33474 -j ACCEPT               
+		Sollte auch der ausgehende Verkehr geregelt werden, was zur Zeit noch nicht der Fall, muss folgenden Anweisung
+                ausgeführt werden. 
 
-               Da in meiner Standard-Rule in der INPUT Tabelle von iptables natürlich DROP steht, konnten die UDP Packete
-               im Bereich 33434 - 33474 natürlich nicht zurückgewiesen werden mit REJECT.
-               Ein Funktionstest unter Windows und Linux war efolgreich.
+                iptables -I OUTPUT -p udp --dport 33434:33474 -j ACCEPT               
 
-13/03/24       Eine Ende ist langsam in Sicht.Als eines der alllerletzten Kronjuwelen wird noch ein TOR-Proxy auf dem kleinen
-               Server installiert. 
+                Da in meiner Standard-Rule in der INPUT Tabelle von iptables natürlich DROP steht, konnten die UDP Packete
+                im Bereich 33434 - 33474 natürlich nicht zurückgewiesen werden mit REJECT.
+                Ein Funktionstest unter Windows und Linux war efolgreich.
 
-               apt-get install wget apt-transport-https	
+13/03/24        Eine Ende ist langsam in Sicht.Als eines der alllerletzten Kronjuwelen wird noch ein TOR-Proxy auf dem kleinen
+                Server installiert. 
 
-               # Source-List ergänzen
+                apt-get install wget apt-transport-https	
+
+               	# Source-List ergänzen
               
-               deb     [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org bookworm main
-               deb-src [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org bookworm main
+                deb     [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org bookworm main
+                deb-src [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org bookworm main
                 
-               # Keys installieren
+               	# Keys installieren
 
-               wget -qO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --dearmor | tee /usr/share/keyrings/tor-archive-keyring.gpg >/dev/null
+                wget -qO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --dearmor | tee /usr/share/keyrings/tor-archive-keyring.gpg >/dev/null
 
-               # Installieren
+               	# Installieren
 
-               apt install tor deb.torproject.org-keyring                                                             
+                apt install tor deb.torproject.org-keyring                                                             
     
-               Nach dem starten von tor am besten als nicht root user representiert sich das virtuelle Interface (eth0:1) wie folgt
+                Nach dem starten von tor am besten als nicht root user representiert sich das virtuelle Interface (eth0:1) wie folgt
 
-               Nmap scan report for 172.29.255.1
+                nmap scan report for 172.29.255.1
 
-	       22/tcp   open  ssh
-	       443/tcp  open  https
-	       1081/tcp open  vpnproxx
-	       8080/tcp open  http-proxy
-               9050/tcp open  tor-socks
+	        22/tcp   open  ssh
+	        443/tcp  open  https
+	        1081/tcp open  vpnproxx
+	        8080/tcp open  http-proxy
+                9050/tcp open  tor-socks
   
-               Die beiden verfügbaren Proxy Ports 8080 und 9050 können natürlich auch über das VPN benutzt werden !
-               Und natürlich ist nun auch das tun0 Interface per ICMP erreichbar ! Und der TOR service kann individuell 
-               auch nach Bedarf gestartet werden. Aber die beste Lösung von allen wäre natürlich ein eigenes TOR Interface
-               über ein drittes Wireguard Interface zur Verfügung zu stellen. Ob die CPU und der geringe Arbeitsspeicher
-               des virtuellen Servers dies schlussendlich auch zulassen, müsste natürlich mittels Tests ermittelt werden. 
-               Vom Standpunkt der Sicherheit aus wäre eine solche Verbindung wie ein eigenes und unabhängiges Tails System.
-               Dieses Wireguard Interface könnte auf dem UDP Port 53 lauschen und würde einzig und allein Verbindungen zum
-               TCP Port 9050 akzeptieren. Alle übrigen und verbliebenen UDP / TCP oder sogar ICMP Verbindungen unter IP V4 
-               werden einfach geblockt. Der IP Stack 6 wird als einer der letzten Chalanges in Angriff genommen.
+                Die beiden verfügbaren Proxy Ports 8080 und 9050 können natürlich auch über das VPN benutzt werden !
+                Und natürlich ist nun auch das tun0 Interface per ICMP erreichbar ! Und der TOR service kann individuell 
+                auch nach Bedarf gestartet werden. Aber die beste Lösung von allen wäre natürlich ein eigenes TOR Interface
+                über ein drittes Wireguard Interface zur Verfügung zu stellen. Ob die CPU und der geringe Arbeitsspeicher
+                des virtuellen Servers dies schlussendlich auch zulassen, müsste natürlich mittels Tests ermittelt werden. 
+                Vom Standpunkt der Sicherheit aus wäre eine solche Verbindung wie ein eigenes und unabhängiges Tails System.
+                Dieses Wireguard Interface könnte auf dem UDP Port 53 lauschen und würde einzig und allein Verbindungen zum
+                TCP Port 9050 akzeptieren. Alle übrigen und verbliebenen UDP / TCP oder sogar ICMP Verbindungen unter IP V4 
+                werden einfach geblockt. Der IP Stack 6 wird als einer der letzten Chalanges in Angriff genommen.
   
-17/03/24       Der umgebaute Firefox Browser funktioniert perfekt mit dem TOR-Metzwerk des Servers.Aber ob der UDP Port 53
-               eine so gute Wahl für ein drittes Wireguard ist, ist langsam zweifelhaft. Da ich mir vorstellen könnte, dass
-               der NTP Port 123 eine besser Wahl darstellen würde, wird dieser als erstes probiert.Wenn das dritte Wireguard 
-               Interface (wg3) scharf geschaltet wird, wird dies auch mit Abstand das best geschützte Interface nau aussen hin
-               darstellen. Alle möglichen Computer-Clients dürfen nur einen einzigen Port zur Kommunikation mit der Aussenwelt 
-               benutzten. Jeder Versuch des Computers ausserhalb dieses genehmigten Ports zu kommunizieren wird durch die 
-               Firewall geblockt. 
+17/03/24        Der umgebaute Firefox Browser funktioniert perfekt mit dem TOR-Metzwerk des Servers.Aber ob der UDP Port 53
+                eine so gute Wahl für ein drittes Wireguard ist, ist langsam zweifelhaft. Da ich mir vorstellen könnte, dass
+                der NTP Port 123 eine besser Wahl darstellen würde, wird dieser als erstes probiert.Wenn das dritte Wireguard 
+                Interface (wg3) scharf geschaltet wird, wird dies auch mit Abstand das best geschützte Interface nau aussen hin
+                darstellen. Alle möglichen Computer-Clients dürfen nur einen einzigen Port zur Kommunikation mit der Aussenwelt 
+                benutzten. Jeder Versuch des Computers ausserhalb dieses genehmigten Ports zu kommunizieren wird durch die 
+                Firewall geblockt. 
                   
-20/03/24       Es werden nun nur 2 WG Interfaces betrieben.Auf dem Interface Wirguard1 (Port 80) können
-               nur die installierten Proxy benutzt werden.
+20/03/24        Es werden nun nur 2 WG Interfaces betrieben.Auf dem Interface Wirguard1 (Port 80) können
+                nur die installierten Proxy benutzt werden.
 
-22/03/24       Ich wollte eigentlich noch den kleinen snowflake-proxy auf meinem Server installieren,
-               weil mit 2 TB Datenvolumen habe ich noch sehr viel Luft nach oben.
-               Lange Reder -> Kurzer Sinn : Eine Katastrophe hoch 3	                                      
-               Erst nachdem ich die Quellen des Proxy selbst übersetzt habe , ging der Server
-               Der aktuelle Release aus Debian 12 wurde wohl zur Zeit der Neandertaler übersetzt. 
+22/03/24        Ich wollte eigentlich noch den kleinen snowflake-proxy auf meinem Server installieren,
+                weil mit 2 TB Datenvolumen habe ich noch sehr viel Luft nach oben hin.
+                Lange Reder -> Kurzer Sinn : Eine Katastrophe hoch 3	                                      
+                Erst nachdem ich die Quellen des Proxy selbst übersetzt habe,funktionierte der Server
+                Der aktuelle Release aus Debian 12 wurde wohl zur Zeit der Neandertaler übersetzt. 
      
-07/04/24       Der snowflake-proxy funkioniert nun ausgezeichnet.Auch die Probleme mit einem 
-               bbc fähigen socks5-server sind nun endlich behoben.Auch der Fehler dass keine ICMP Nachrichten
-               an das entfernte IPSec Netzwerk gesendet werden konnten, ist nun behoben. 
+07/04/24        Der snowflake-proxy funkioniert nun ausgezeichnet.Auch die Probleme mit einem 
+                bbc fähigen socks5-server sind nun endlich behoben.Auch der Fehler dass keine ICMP Nachrichten
+                an das entfernte IPSec Netzwerk gesendet werden konnten, ist nun behoben. 
 
-               OUTPUT ICMP DROP IN= OUT=ens192 SRC=172.23.50.254 DST=172.17.1.1 LEN=84 TOS=0x00 PREC=0x00 TTL=64 ID=48015 DF PROTO=ICMP TYPE=8 CODE=0 ID=28469 SEQ=1 
-               OUTPUT ICMP DROP IN= OUT=ens192 SRC=172.23.50.254 DST=172.17.1.1 LEN=84 TOS=0x00 PREC=0x00 TTL=64 ID=48047 DF PROTO=ICMP TYPE=8 CODE=0 ID=28469 SEQ=2 
+                OUTPUT ICMP DROP IN= OUT=ens192 SRC=172.23.50.254 DST=172.17.1.1 LEN=84 TOS=0x00  
+                OUTPUT ICMP DROP IN= OUT=ens192 SRC=172.23.50.254 DST=172.17.1.1 LEN=84 TOS=0x00 
 
-               Offenbar fehlten 2 Regeln.
+                Offenbar fehlten 2 Regeln.
 
      
-12/09/24       Nach etwas längerer Pause geht es nun weiter mit dem optimieren. Speziell der kleine
-               VM Computer mit nur einem Speicherausbau von 1GB Ram ist natürlich geradzu dankbar,über
-               jeden Speicher der gespart werden kann.
+12/09/24        Nach etwas längerer Pause geht es nun weiter mit dem optimieren. Speziell der kleine
+                VM Computer mit einem Speicherausbau von nur 1GB Ram ist natürlich geradzu dankbar,über
+                jeden Speicher der gespart werden kann.
 	 
-               Natürlich bekommt diese Feature ein eigenen Schalter 
+                Natürlich bekommt diese Feature ein eigenen Schalter 
 
-               /etc/config/cfg/optimize_memory 
+                /etc/config/cfg/optimize_memory 
 
                  
-25/09/24       Etwas wurde im ganzen Gerummel schlicht und einfach vergessen.
-               Das Endgerät sollte alle Verbindungen zu IPV6 kappen, oder
-               es besteht das Risiko eines VPN leaks !!!!!
-               Also bitte mit Vorsicht IPV6 aktiviert lassen !!!
+25/09/24        Etwas wurde im ganzen Gerummel schlicht und einfach vergessen.
+                Das Endgerät sollte alle Verbindungen zu IPV6 kappen, oder
+                es besteht das Risiko eines VPN leaks !!!!!
+                Also bitte mit Vorsicht IPV6 aktiviert lassen !!!
 
-28/09/24       Die Verbindugs-Daten werden verlinkt. Dies macht der Wechsel 
-               einer Konfiguration enorm einfacher.
+28/09/24        Die Verbindugs-Daten werden per Symbolische Link verlinkt. Dies macht der Wechsel 
+                einer Konfiguration enorm einfacher.
                              
-01/10/24       Optimierung der Kommunikation zwischen redsocks und Fehlererkennung.
-               Das Timeout der curl Anfrage wurde leicht erhöht um den Fehler rc=28 
-               zu vermeiden.
+01/10/24        Optimierung der Kommunikation zwischen redsocks und Fehlererkennung.
+                Das Timeout der curl Anfrage wurde leicht erhöht um den Fehler rc=28 
+                zu vermeiden.
        
-05/10/24       Das Wireguard client script kann nun auch alle png Grafiken für 
-               die WireGuard Clients erzeugen. Testen aller Verbindungen !!!                   
+05/10/24        Das Wireguard client script kann nun auch alle png Grafiken für 
+                die WireGuard Clients erzeugen. Testen aller Verbindungen !!!                   
 
-06/10/24       Der letzte kleine Fehler mit ICMP ist nun ebenfalls behoben.
-               Ebenfalls ab heute steht das ganze unter der GPL 2.0 Lizenz auf 
-               github.com zur Verfügung.
+06/10/24        Der letzte kleine Fehler mit ICMP ist nun ebenfalls behoben.
+                Ebenfalls ab heute steht das ganze unter der GPL 2.0 Lizenz auf
+                github.com zur Verfügung.
 
-21/10/24       Backup script hinzugefügt /etc/config/backup
+21/10/24        Backup script hinzugefügt /etc/config/backup
      
-27/10/24       Fehler im Backup für den snowflake-proxy service (pfad ungültig) 
-               und ebenso beim aktivierten Tor-Deamon
+27/10/24        Fehler im Backup für den snowflake-proxy service (pfad ungültig) 
+                und ebenso beim aktivierten Tor-Deamon
 
-28/10/24       Neues Updates .... Neue Fehler 
-               Offenbar vertragen sich der Schalter OPTIMIZE_MEMORY und 
-               2-3 kleine services nicht richtig. Hiervon sind die folgende
-               Dienste betroffen 
+28/10/24        Neues Updates .... Neue Fehler 
+                Offenbar vertragen sich der Schalter OPTIMIZE_MEMORY und 
+                2-3 kleine services nicht richtig. Hiervon sind die folgende
+                Dienste betroffen 
 
-               - tor 
-               - pihole und Webserver
+                - tor 
+                - pihole und Webserver
        
-               Die redsocks Konfiguration /etc/redsocks.conf wurde ebenfalls 
-               nicht im Backup gesichert (fixed)
+                Die redsocks Konfiguration /etc/redsocks.conf wurde ebenfalls 
+                nicht im Backup gesichert (fixed)
                        
   
-29/10/24      Auch der tor-service lässt sich nach einem Update mittels
-              "systemctl start tor" nicht mehr zum starten überreden.
-              Als einfachste Behelfslösung einfach nicht die gelieferten 
-              Scripte verwenden !
+29/10/24	Auch der tor-service lässt sich nach einem Update mittels
+                "systemctl start tor" nicht mehr zum starten überreden.
+                Als einfachste Behelfslösung einfach nicht die gelieferten 
+                Scripte verwenden !
 
-              Hauptserver 02 -> Wechsel auf auf Nummer 03      
+		Hauptserver 02 -> Wechsel auf auf Nummer 03      
   
-              Funktionstest mittels git pull und der tor-service funktioniert !
+                Funktionstest mittels git pull und der tor-service funktioniert !
   
-12/11/24     Eines der letzten Überbleibsel vom alten Prototypen wurde 
-             enfternt. Nun wird auch der Name der externen WAN Schnittstelle 
-             über das cfg Verzeichniss eingelesen.
+12/11/24        Eines der letzten Überbleibsel vom alten Prototypen wurde 
+                enfternt. Nun wird auch der Name der externen WAN Schnittstelle 
+                über das cfg Verzeichniss eingelesen.
 
-16/09/25     Remote SSH Verbindungen müssen neu definiert werden .... 
-             Sprich sie müssen bezahlt werden.
+16/09/25        Remote SSH Verbindungen müssen neu definiert werden .... 
+                Sprich sie müssen bezahlt werden.
 
-17/09/25     Die Benutzung des verschlüsselten DNS Dienstes wird mittels 
-             einem eigenen Schalter (/etc/config/stubby) gesteuert.
+17/09/25	Die Benutzung des verschlüsselten DNS Dienstes wird mittels 
+                einem eigenen Schalter (/etc/config/stubby) gesteuert.
 
-             Auch ein kompletter Debian Upgrade von Version 12 auf Version 13 
-             (trixie) ist nun im Petto. 
+		Auch ein kompletter Debian Upgrade von Version 12 auf Version 13 
+		(trixie) ist nun im Petto. 
  
-18/09/25     Testen der automatischen Aktivierung beim starten der VM.
-             Die Interfaces für die WirGuardVerbindungen werden nun 
-             über DNS Adressiert, sofern ein DNS vorhanden ist.
-             Leider müssen natürlich auch alle config Dateien von 
-             WireGuard neu eingelesen und angepasst werden. 
+18/09/25	Testen der automatischen Aktivierung beim starten der VM.
+		Die Interfaces für die WirGuardVerbindungen werden nun 
+		über DNS Adressiert, sofern ein DNS vorhanden ist.
+		Leider müssen natürlich auch alle config Dateien von
+		WireGuard neu eingelesen und angepasst werden. 
                 
-01/10/25     Der bis anhin voll funktionierende BBC-Account über 
-             einen externen socks5 Server und einen lokalen redsocks 
-             Server funktioniert nicht mehr. 
-             Nach tagelangen Funktionstests habe ich die Konfiguration
-             auf NordVPN umgestellt -> Und alles funktioniert wieder wie 
-             es sollte !
+01/10/25	Der bis anhin voll funktionierende BBC-Account über 
+                einen externen socks5 Server und einen lokalen redsocks 
+                Server funktioniert ploötzlich nicht mehr. 
+                Nach tagelangen Funktionstests und Funktionstest habe ich die 
+	        Konfiguration komplett auf NordVPN umgestellt -> 
+                Und siehe da, alles funktioniert wieder wie es sollte !
               
-02/10/25     Die Wireguard Interfaces werden nun ebenfalls mit 
-             DNS-Namen betrieben
+02/10/25	Die Wireguard Interfaces werden nun ebenfalls mit 
+                DNS-Namen betrieben
 
-04/10/25     Update Probleme beim Wechsel von Debian 12 auf die Version 13.
-             Auch die Aktivierung des VPN's über rc.local funktioniert nicht.
+04/10/25	Update Probleme beim Wechsel von Debian 12 auf die Version 13.
+                Auch die Aktivierung des VPN's das über das globale rc.local 
+		funktioniert nicht.
 
-10/10/25     Die Webseite Britbox würde eigentlich schon funktionieren über 
-             eine eigenständige IP in England, damit wäre aber die ganze
-             Anonymität welche der VPN Dienst bietet, einfach verschwunden.
-             Der einfache Workaround um DRM geschützte Inhalte abzuspielen
-             funktiomniert einwanfrei. (Thanks to pg fron l .-) ) 
+10/10/25	Die Englische Webseite Britbox würde eigentlich schon funktionieren über 
+                eine eigenständige IP in England, damit wäre aber die ganze
+                Anonymität welche der VPN Dienst bietet, einfach verschwunden.
+	        Der einfache Workaround um DRM geschützte Inhalte abzuspielen
+                funktiomniert einwanfrei. (Thanks to pg fron l .-) ) 
 	
-15/10/25     Umbenennung des aktuellen github Accounts und des Projekts auf
+15/10/25	Umbenennung des aktuellen github Accounts und des Projekts auf
 
-             https://github.com/debian-professional/debian-vpn-gateway
+		https://github.com/debian-professional/debian-vpn-gateway
 
-             Account : debian-professional 
-             Projekt : debian-vpn-gateway 
+		Account : debian-professional 
+		Projekt : debian-vpn-gateway 
 
 
-16/10/25     Die aktuelle Uhrzeit welche über ssh angezeigt wird, sollte natürlich
-             mit dem Server-Standort übereinstimmen.
+16/10/25	Die aktuelle Uhrzeit welche über ssh angezeigt wird, sollte natürlich
+		mit dem Server-Standort übereinstimmen.
+		Das snowflake-proxy packet wurde aktualisiert:
+                snowflake-proxy 2.11.0
 
-             Das snowflake-proxy packet wurde aktualisiert:
-             snowflake-proxy 2.11.0
+20/10/25	Der Nordvpn Dienst verhindert mit folgendem Eintrag eine sinnvolle Benutzung des DNS 
+		Dienstes und auch den lokalen Socks5 Servers.
 
-20/10/25     Der Nordvpn Dienst verhindert mit folgendem Eintrag eine sinnvolle Benutzung des DNS 
-             Dienstes und auch den lokalen Socks5 Server unbenutzbar.
+		5	DROP       tcp  --  anywhere             172.16.0.0/12        tcp dpt:domain /* nordvpn */
+		6	DROP       udp  --  anywhere             172.16.0.0/12        udp dpt:domain /* nordvpn */
 
-	     5	DROP       tcp  --  anywhere             172.16.0.0/12        tcp dpt:domain /* nordvpn */
-	     6	DROP       udp  --  anywhere             172.16.0.0/12        udp dpt:domain /* nordvpn */
+                So ist eine sinnvolle und einfache Benutzung nicht möglich.
+		Da NordVPN ebenfalls mit Wireguard arbeitet, machen wir die Umleitungen über SSH.
 
-             So ist eine sinnvolle Benutzung einfach nicht möglich.
-             Da NordVPN ebenfalls mit Wireguard arbeitet, machen wir die Umleitungen über SSH.
-             Ürspünglich war nur eine Umleitung des WG0 Interfaces über einen lokalen Socks5 Server
-             möglich.Neu wird auch eine Umleitung des Interfaces WG1 möglich sein.
-             Um eine Unterscheidung zu ermöglichen, werden die ursprünglichen Parameter wie 
-             folgt umbenennt.
+		Ürspünglich war nur eine Umleitung des WG0 Interfaces über einen lokalen Socks5 Server
+                möglich.Neu wird auch eine Umleitung des Interfaces WG2,WG3,WHG4 möglich sein.
+		Um eine Unterscheidung zu ermöglichen, werden die ursprünglichen Parameter wie 
+		folgt umbenennt.
 
-             redirect01_command
-	     redirect01_port
-             redirect01_user_socks5 
-             redirect01_wg0
+		redirect01_command	
+		redirect01_port
+		redirect01_user_socks5 
+		redirect01_wg0
 
-22/10/25     Der Pfad für den Backup-Pfad des snowflake-proxys war falsch.
+22/10/25	Der Pfad für den Backup-Pfad des snowflake-proxys war falsch.
 	               
-24/10/25     Der ganze Update-Prozess von Debian 12 auf Debian 13 ist beinahe 
-             abgeschlossen. Auf dem virtuellen Interface eth0:1 sind nun wieder wie
-             vorher 3 Proxy-Server (Ports 1080-1082) und 3 Redsocks Eintiegspunkte 
-             (Ports 8080-8082). Gekrönt wird das ganze mit einem TOR-Port (9050)
-             welcher ebenfalls über das VPN benutzbar ist. 
+24/10/25	Der ganze Update-Prozess von Debian 12 auf Debian 13 ist beinahe 
+		abgeschlossen. Auf dem virtuellen Interface eth0:1 sind nun wieder wie
+		vorher 3 Proxy-Server (Ports 1080-1082) und 3 Redsocks Eintiegspunkte 
+		(Ports 8080-8082). Gekrönt wird das ganze mit einem TOR-Port (9050)
+		welcher ebenfalls über das VPN benutzbar ist. 
 
-	     1080/tcp open  socks
-             1081/tcp open  pvuniwien
-             1082/tcp open  amt-esd-prot
-             8080/tcp open  http-proxy
-             8081/tcp open  blackice-icecap
-             8082/tcp open  blackice-alerts
-             9050/tcp open  tor-socks
+		1080/tcp open  socks
+		1081/tcp open  pvuniwien
+		1082/tcp open  amt-esd-prot
+
+		8080/tcp open  http-proxy	
+		8081/tcp open  blackice-icecap
+		8082/tcp open  blackice-alerts
+
+		9050/tcp open  tor-socks
                 
- 
-31/10/25     Der DNS Server wird  bei aktiviertem VPN wird ebenfalls verändert. 
-             Der VPN Status wird nun überwacht und bei Befarf neu gestartet. 
-             Der Redsocks Server erfuhr ebenfalls ein paar Optimierungen.
-             Neu wird beim aktivieren des VPN's der lokale DNS bereits
-             laufende Stubby Service verwendet, anstelle des externen
-             DNS Servers des VPN Anbieters.	
+31/10/25	Der in benutzung stehende DNS Server wird  bei aktiviertem VPN wird ebenfalls
+		verändert. Der VPN Status wird nun überwacht und bei Befarf neu gestartet.
+		Der Redsocks Server erfuhr ebenfalls ein paar Optimierungen. Neu wird beim 
+		aktivieren des VPN's der lokale DNS bereits laufende Stubby Service verwendet, 
+		anstelle des externen DNS Servers des VPN Anbieters.	
