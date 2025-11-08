@@ -293,3 +293,5 @@
 		Der Redsocks Server erfuhr ebenfalls ein paar Optimierungen. Neu wird beim 
 		aktivieren des VPN's der lokale DNS bereits laufende Stubby Service verwendet, 
 		anstelle des externen DNS Servers des VPN Anbieters.	
+
+
