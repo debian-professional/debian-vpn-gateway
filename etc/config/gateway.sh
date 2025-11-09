@@ -36,7 +36,6 @@ if [ -f /etc/config/cfg/gateway ]; then
             rm /home/$user/controll-0$line_number.sh > /dev/null 2>&1
             echo "#!/bin/bash" >  /home/$user/controll-0$line_number.sh
             echo               >> /home/$user/controll-0$line_number.sh
-            cat /etc/config/controll >> /home/$user/controll-0$line_number.sh
             chmod +x /home/$user/controll-0$line_number.sh
 
             chown $user:$user /home/$user/controll-0$line_number.sh
@@ -44,7 +43,6 @@ if [ -f /etc/config/cfg/gateway ]; then
             rm /home/$user/controll-0$line_number.sh > /dev/null 2>&1
             echo "#!/bin/bash" >  /home/$user/controll-0$line_number.sh
             echo               >> /home/$user/controll-0$line_number.sh
-            cat /etc/config/controll >> /home/$user/controll-0$line_number.sh
             chmod +x /home/$user/controll-0$line_number.sh
             chown $user:$user /home/$user/controll-0$line_number.sh
          fi
@@ -81,11 +79,16 @@ if [ -f /etc/config/cfg/gateway ]; then
 
          echo "ssh -p 22 -A42NC -D "$proxy_port $ssh_user "&" >> /home/$user/connect-ssh.sh
          arg01=$(echo $searching)
-         arg02=$(echo "ssh -p 22 -A42NC -D "$proxy_port $ssh_user)
+         arg02=$(echo "ssh -p 22 -A42NC -D "$proxy_port $ssh_user \&)
          arg03=$(echo /home/$user/controll-0$line_number.log)
 
-         sudo --user=$user /home/$user/controll-0$line_number.sh $arg01 $arg02 > $arg03 2>&1 &
-         sudo --user=$user chown user:user $arg03 2>&1
+         echo searching=\"$arg01\" >> /home/$user/controll-0$line_number.sh
+         echo command=\"$arg02\" >> /home/$user/controll-0$line_number.sh
+         cat /etc/config/controll-part >> /home/$user/controll-0$line_number.sh
+
+         # echo $arg03 >> /home/$user/controll-0$line_number.sh
+         # sudo --user=$user /home/$user/controll-0$line_number.sh $arg01 $arg02 > $arg03 2>&1 &
+         # sudo --user=$user chown $user:$user $arg03
 
          # Port 22 SSH weiterleiten
 
@@ -200,7 +203,10 @@ if [ -f /etc/config/cfg/gateway ]; then
    fi
 
    redsocks -c /etc/redsocks.conf
-   sudo --user=$user /home/$user/connect-ssh.sh
+   sudo --user=$user /home/$user/connect-ssh.sh 
+
+   cd /etc/config
+   ./random.sh > /dev/null 2>&1 &
 
    # Neustart stubby
 

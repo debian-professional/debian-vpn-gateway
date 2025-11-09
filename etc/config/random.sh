@@ -1,5 +1,7 @@
 #!/bin/bash
 
+while true
+do
 
 rm /tmp/links > /dev/null 2>&1
 
@@ -81,4 +83,8 @@ while read -r LINE
 
 done < "$INFILE"
 echo random list all destinations visited ....
+
+
+done
+
 

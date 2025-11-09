@@ -1,0 +1,13 @@
+
+while true
+      do
+      pid=$(ps axu | grep $searching | grep -v grep | awk '{print $2}')
+      if  [ -z "$pid" ]; then 
+          echo ssh must be restarted .....
+          eval $command 
+          echo ssh restarted .....
+      else
+          echo ssh is still running ....
+      fi 
+      sleep 20 
+done

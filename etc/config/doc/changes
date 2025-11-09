@@ -155,7 +155,7 @@
 
                  
 25/09/24        Etwas wurde im ganzen Gerummel schlicht und einfach vergessen.
-                Das Endgerät sollte alle Verbindungen zu IPV6 kappen, oder
+                Das Endgerät sollte wohl alle Verbindungen zu IPV6 kappen, oder
                 es besteht das Risiko eines VPN leaks !!!!!
                 Also bitte mit Vorsicht IPV6 aktiviert lassen !!!
 
@@ -295,3 +295,4 @@
 		anstelle des externen DNS Servers des VPN Anbieters.	
 
 
+08/11/25        Fehler im Gateway Modus korrigiert.

@@ -28,7 +28,10 @@ ln -s /home/source/debian-vpn-gateway/etc/config/get-pi-hole.sh get-pihole.sh
 ln -s /home/source/debian-vpn-gateway/etc/config/off.sh off.sh
 ln -s /home/source/debian-vpn-gateway/etc/config/vpnc.sh vpnc.sh
 ln -s /home/source/debian-vpn-gateway/etc/config/gateway.sh gateway.sh
+ln -s /home/source/debian-vpn-gateway/etc/config/random.sh random.sh
 ln -s /home/source/debian-vpn-gateway/etc/config/c-part c-part
+ln -s /home/source/debian-vpn-gateway/etc/config/controll-part controll-part
+
 
 cd /etc
 
