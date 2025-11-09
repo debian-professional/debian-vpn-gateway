@@ -152,6 +152,9 @@ if [ -f /etc/config/cfg/nvpn ]; then
             echo /usr/sbin/iptables -D OUTPUT 5      >> /etc/config/vpn.sh
             echo                                     >> /etc/config/vpn.sh
             cat /etc/config/c-part                   >> /etc/config/vpn.sh
+            echo "cd /etc/config"                    >> /etc/config/vpn.sh
+            echo "./random.sh > /dev/null 2>&1 &"    >> /etc/config/vpn.sh
+
             chmod +x /etc/config/vpn.sh > /dev/null 2>&1
 
          else
