@@ -1596,19 +1596,22 @@ if [ $swtor_use_ipsec = "yes" ] ; then
    ./ipsec.sh $remote_keep_alive $ipsec_connection &
 fi
 
-if [ $using_tor = "yes" ] ; then
-   echo [ip-tables : start tor and tornode3ip.sh script]
 
-   # Da steckt zur Zeit der Wurm drin ......
-   # systemctl start tor > /dev/null
 
-   cd /etc/config/scripts
+if [ $nvpn = "no" ]; then
+   if [ $using_tor = "yes" ] ; then
+      echo [ip-tables : start tor and tornode3ip.sh script]
 
-   killall tornode3ip.sh > /dev/null 2>&1
+      # Da steckt zur Zeit wohl der Wurm drin ......
+      # systemctl start tor > /dev/null
 
-   ./tornode3ip.sh $tor_user > /dev/null 2>&1 &
-   echo [ip-tables : tornode3ip.sh ]
+      cd /etc/config/scripts
 
+      killall tornode3ip.sh > /dev/null 2>&1
+
+      ./tornode3ip.sh $tor_user > /dev/null 2>&1 &
+      echo [ip-tables : tornode3ip.sh ]
+   fi
 fi
 
 if [ $using_snowflake = "yes" ] ; then
