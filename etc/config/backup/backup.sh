@@ -19,7 +19,8 @@ cd /etc/config/backup
 find /root/.ssh > backup-files
 find /root/.bashrc >> backup-files
 find /root/.bash_history >> backup-files
-
+find /usr/share/keyrings >> backup-files
+ 
 # all other users
 
 find /home | grep .ssh >> backup-files

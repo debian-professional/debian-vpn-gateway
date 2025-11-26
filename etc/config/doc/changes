@@ -300,3 +300,9 @@
 
 09/11/25	Funktionstest Gateway Modus / Funktionstest ssh-Verbindungs Abbruch 
 
+
+26/11/25        Auch die Keys für Debian fremde Packet Quellen müssen im
+                Backup gesichert werden. 
+
+
+
