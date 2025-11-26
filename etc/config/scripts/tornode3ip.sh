@@ -13,7 +13,7 @@ while true
    while [ $i -ne 20 ]
    do
         i=$(($i+1))
-        curl --silent --proxy socks5h://172.29.255.1:9050  https://www.boredbut>
+        curl --silent --proxy socks5h://172.29.255.1:9050  https://www.boredbutton.com/random | \
         grep iframe | grep src |  tr '"' ' ' | awk '{print $3}' >> /tmp/links2
     done
     line_number="1"
@@ -21,9 +21,11 @@ while true
     while read -r LINE
     do
       url=$(printf '%s\n' "$LINE"| awk '{print $1}')
-      rvalue=$(shuf -i 1-3 -n 1 -r)
+      echo ............
+      echo $line_number
+      echo $url
+      echo .............
       curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
-      sleep $rvalue
       line_number=$((line_number+1))
     done < "$INFILE"
  done
