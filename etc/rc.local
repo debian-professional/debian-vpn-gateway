@@ -124,6 +124,27 @@ if [ -f /etc/config/cfg/gateway ]; then
    rm /etc/snowflake/* > /dev/null 2>&1
 fi
 
+if [ -f /etc/config/cfg/swtor_tor ]; then
+   if [ -f /usr/sbin/tor ]; then
+      using_tor="yes"
+      tor_port=9050
+
+      if [ -f /etc/config/cfg/swtor_tor_user ]; then
+          tor_user=$(cat /etc/config/cfg/swtor_tor_user)
+      else
+          echo tor user ist nicht definiert !
+          using_tor="no"
+          exit 1
+      fi
+   else
+      echo tor ist nicht installiert !
+      using_tor="no"
+      exit 1
+   fi
+else
+   using_tor="no"
+fi
+
 if [ -f /etc/config/cfg/nvpn ]; then
    if [ -f /etc/config/cfg/nvpn_country ]; then
       if [ -f /etc/config/cfg/nvpn_token ]; then
@@ -154,7 +175,13 @@ if [ -f /etc/config/cfg/nvpn ]; then
             cat /etc/config/c-part                   >> /etc/config/vpn.sh
             echo "cd /etc/config"                    >> /etc/config/vpn.sh
             echo "./random.sh > /dev/null 2>&1 &"    >> /etc/config/vpn.sh
+            echo                                     >> /etc/config/vpn.sh
 
+            if [ $using_tor = "yes" ] ; then
+               echo "cd /etc/config/scripts"         >> /etc/config/vpn.sh
+               echo "killall tornode3ip.sh"          >> /etc/config/vpn.sh
+               echo "./tornode3ip.sh" $tor_user ">  /dev/null 2>&1 &" >> /etc/config/vpn.sh
+            fi
             chmod +x /etc/config/vpn.sh > /dev/null 2>&1
 
          else
