@@ -305,4 +305,8 @@
                 Backup gesichert werden. 
 
 
+27/11/25	Nach einem Kernel Update funktionierte der Befehl shutdown -r now nicht
+                mehr ! 
+
+  
 
