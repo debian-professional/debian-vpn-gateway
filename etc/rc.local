@@ -196,7 +196,7 @@ fi
 
 
 cd /etc/config
-./firewall.sh
+./firewall.sh > firewall.log
 
 
 # Egal wie auch immer ... das VPN will er mir einfach
