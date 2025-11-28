@@ -40,7 +40,7 @@
                 Auch die sehr ärgerlichen Verbindungsunterbrüche unter dem OS Android 14 und dem offiziellen 
                 Wireguard Client müssen näher untersucht werden. Habe zu Testzwecken das Telefon neu gestartet 
                 und bekam eine private Class A Adresse bekommen : 10.43.92.202 
-                Werde diese Client Adresse des Telefons im Auge behalten und schauen ob sich diese Adresse ändert.
+                Werde diese Client Adresse des Telefons im Auge behalten und schauen ob sich diese Adresse ändert.                
                 Aufgrund der privaten Adresse werden alle Verbindungen ins Internet über einen Gateway geleitet.
                 Ich hoffe inständig die Verbindung wird mit dem Parameter keepalive wieder neu aufgebaut. 
                 Sollte die bestehende Verbindung aus irgend einem Grund gekippt werden.
@@ -307,6 +307,9 @@
 
 27/11/25	Nach einem Kernel Update funktionierte der Befehl shutdown -r now nicht
                 mehr ! 
-
+                linux-image-6.12.48+deb13-amd64 -> Standard Kernel 
+                Installation des RT Kernel -> linux-image-6.12.57+deb13-rt-amd64
+ 
+ 
   
 
