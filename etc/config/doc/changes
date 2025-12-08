@@ -302,13 +302,39 @@
 
 
 26/11/25        Auch die Keys für Debian fremde Packet Quellen müssen im
-                Backup gesichert werden. 
+                Backup natürlih gesichert werden. 
 
 
 27/11/25	Nach einem Kernel Update funktionierte der Befehl shutdown -r now nicht
                 mehr ! 
-                linux-image-6.12.48+deb13-amd64 -> Standard Kernel 
+                linux-image-6.12.48+deb13-amd64 -> Standard Kernel der installiert war 
                 Installation des RT Kernel -> linux-image-6.12.57+deb13-rt-amd64
+                Die Fehlersuche dürfte sich mehr als etwas schwierig gestalten !!!
+                  
+08/12/25        Nachdem ich nun schon mehrere Tage dem Fehler auf der Spur, habe ich 
+                folgendes endtdeckt. Die beiden Wireguard Packete von Debian
+
+                - wireguard 
+                - wireguard-tools 
+        
+                haben urpötzlich als Abhängigkeit den RT Kernel eingetragen. Ich habe die beiden 
+                Debian Packete manipuliert und die Abhängigkeiten vom RT Kernel entfernt.
+                Um zu verhindern,dass ein simples apt-get upgrade mir die alten Packete 
+                mit den Abhängigkeiten erneut installiert, habe ich den Version-String 
+                auf 1.1 erhöht.So wird auch verhindert, dass mir wieder der RT Kernel 
+                (welcher kompletter Mist ist ...) installiert wird.
+
+                Das nächste Ziel ist das finden des Shutdown Bugs !
+                 
+
+
+
+
+
+
+ 
+
+
  
  
   
