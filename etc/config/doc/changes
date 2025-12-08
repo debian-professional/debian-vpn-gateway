@@ -305,8 +305,9 @@
                 Backup natürlih gesichert werden. 
 
 
-27/11/25	Nach einem Kernel Update funktionierte der Befehl shutdown -r now nicht
-                mehr ! 
+27/11/25	Nach einem Kernel Update funktionierte plötzlich der Befehl 
+                shutdown -r now nicht mehr und ohne Ankündigung wurde der 
+                verfluchte RT-Kernel aus Debian 13 installiert ! 
                 linux-image-6.12.48+deb13-amd64 -> Standard Kernel der installiert war 
                 Installation des RT Kernel -> linux-image-6.12.57+deb13-rt-amd64
                 Die Fehlersuche dürfte sich mehr als etwas schwierig gestalten !!!
@@ -325,8 +326,10 @@
                 (welcher kompletter Mist ist ...) installiert wird.
 
                 Das nächste Ziel ist das finden des Shutdown Bugs !
-                 
+                Auch der Befehl systemctl poweroff funtkioniert ebenfalls nicht !
 
+   
+              
 
 
 
