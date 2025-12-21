@@ -302,12 +302,17 @@
 
 
 26/11/25        Auch die Keys für Debian fremde Packet Quellen müssen im
-                Backup natürlih gesichert werden. 
-
+                Backup natürlich gesichert werden.Sollten die selbe 
+                Packetquellen wieder benutzt werden, einfach folgenden key 
+                restoren. 
+                
+                /usr/share/keyrings/deb.torproject.org-keyring.gpg
+                         
+                Oder Debian 13 meckert wegen den Schlüsseln  
 
 27/11/25	Nach einem Kernel Update funktionierte plötzlich der Befehl 
-                shutdown -r now nicht mehr und ohne Ankündigung wurde der 
-                verfluchte RT-Kernel aus Debian 13 installiert ! 
+                shutdown -r now nicht mehr und ohne eine Ankündigung oder dergleichen 
+                wurde der verfluchte RT-Kernel aus Debian 13 installiert ! 
                 linux-image-6.12.48+deb13-amd64 -> Standard Kernel der installiert war 
                 Installation des RT Kernel -> linux-image-6.12.57+deb13-rt-amd64
                 Die Fehlersuche dürfte sich mehr als etwas schwierig gestalten !!!
@@ -330,11 +335,22 @@
 
    
               
+21/12/25        Normalerweise bringt einem die Weihnachtszeit hübsche Geschenke und viel Freude.
+                Mein Hosting Provider hat mir ein Geschenk bzw. eine Akündigung gemacht, welche 
+                meine Betriebstemperatur um etliche Grad steigen lies. Mein Weihnachtsstimmung 2025 
+                war mit dieser Ankündigung dahin.Er kündigte eiskalt an, ab dem 18 Feburar 2026
+                jeden noch aktiven Virtuellen Server (VPS) unter VMWare mit  weiteren 5 Euros zu
+                belasten.Wenn dein kleiner VPS gerade mal 5 Euro kostet und der geldgeile Hosting
+                Provider gleich nochmals 5 Euro aufschlägt, ist dies ja nur eine kleine 
+                Preiserhöhung von gerade mal 100 %. Wenn ich nur 1 Server auf eine andere Plattform
+                als VMWare umziehen müsste, wäre ich nur etwas wütend ! Ich muss aber 4 dieser virtuellen 
+                Server wechseln auf eine andere Plattform, welche ich seit 2018 benutze !!
+                Das es früher oder später so kommen musste, sahen viele schon vorher !
+                
+                https://www.it-daily.net/it-management/cloud-computing/vmware-droht-der-absturz
 
 
-
-
-
+                
  
 
 
