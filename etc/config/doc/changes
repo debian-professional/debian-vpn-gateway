@@ -34,7 +34,7 @@
 
                 Ich habe die DNS Server innerhalb von WireGuard auf den Pihole-Server umgestellt. 
                 Die Namensauflösung über Pihole funktioniert nun einwandfrei jedoch habe ich vergessen
-                das tun0 Interface zu den möglichen ICMP Zielen hinzuzufügen. Ergo gib es keinen 
+                das tun0 Interface zu den möglichen ICMP Zielen hinzuzufügen. Ergo gab es keinen 
                 ping test auf den DNS Server. 
 
                 Auch die sehr ärgerlichen Verbindungsunterbrüche unter dem OS Android 14 und dem offiziellen 
@@ -359,8 +359,11 @@
                 ersten 3 Monate genau 1.5 Euro. Nach 3 Monaten steigt der Preis auf 2.5 Euro. 
                    
   
+                2 weitere Konfigurations-Dateien in das CFG Verzeichniss hinzugefügt
  
-                
+                disable_interface
+                disable_ipv6
+ 
  
 
 

@@ -3,7 +3,7 @@
 # Firewall Script : firewall.sh                                               #
 # Beschreibung    : Schützen eines privaten VPS                               #
 # OS              : Debian 12 Bookworm                                        #
-# Virtuell        : Ja unter VMWare                                           #
+# Virtuell        : Ja unter VMWare oder OpenStack                            #
 # Speicher 	  : 1 GB oder 2GB (hängt vom Modell ab)                       #
 # Festplatte 	  : 20 oder 40 GB (hängt vom Modell ab)                       #
 # Interface       : 1 x GB eth0                                               #
@@ -589,14 +589,6 @@ fi
 /sbin/sysctl -w net.ipv4.conf.all.arp_ignore=1 > /dev/null 2>&1
 /sbin/sysctl -w net.ipv4.conf.all.arp_announce=2 > /dev/null 2>&1
 /sbin/sysctl -w net.ipv4.conf.all.rp_filter=2 > /dev/null 2>&1
-
-
-# Sollte der GRUB Bootparameter nicht wirksam sein ...
-# Auch so lässt sich IP V6 wirksam ausschalten.
-
-#/sbin/sysctl -w net.ipv6.conf.all.disable_ipv6=1 > /dev/null 2>&1
-#/sbin/sysctl -w net.ipv6.conf.all.autoconf=0 > /dev/null 2>&1
-#/sbin/sysctl -w net.ipv6.conf.default.disable_ipv6=1 > /dev/null 2>&1
 
 if [ $nvpn = "no" ]; then
    echo [ip-tables  :  reset tables]

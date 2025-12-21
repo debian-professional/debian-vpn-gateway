@@ -26,6 +26,14 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+if [ -f /etc/config/cfg/disable_ipv6 ]; then
+   /sbin/sysctl -w net.ipv6.conf.all.disable_ipv6=1 > /dev/null 2>&1
+   /sbin/sysctl -w net.ipv6.conf.all.autoconf=0 > /dev/null 2>&1
+   /sbin/sysctl -w net.ipv6.conf.default.disable_ipv6=1 > /dev/null 2>&1
+fi
+
+
+
 if [ -f /etc/config/cfg/pihole ]; then
    pihole disable
    service pihole-FTL stop
@@ -150,6 +158,7 @@ if [ -f /etc/config/cfg/nvpn ]; then
       if [ -f /etc/config/cfg/nvpn_token ]; then
          if [ -f /usr/bin/nordvpn ]; then
 
+
             rm /etc/config/vpn.sh > /dev/null 2>&1
 
             token=$(cat /etc/config/cfg/nvpn_token)
@@ -157,6 +166,13 @@ if [ -f /etc/config/cfg/nvpn ]; then
 
             echo "#!/bin/bash" >> /etc/config/vpn.sh
             echo               >>  /etc/config/vpn.sh
+            echo               >>  /etc/config/vpn.sh
+
+            if [ -f /etc/config/cfg/disable_interface ]; then
+               cat /etc/cfg/disable_interface  >>  /etc/config/vpn.sh
+               echo               >>  /etc/config/vpn.sh
+            fi
+
             echo /usr/bin/nordvpn login --token $token   >> /etc/config/vpn.sh
             echo /usr/bin/nordvpn whitelist add port 22  >> /etc/config/vpn.sh
             echo /usr/bin/nordvpn whitelist add port 80  >> /etc/config/vpn.sh
