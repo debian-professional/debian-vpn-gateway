@@ -174,12 +174,33 @@ if [ -f /etc/config/cfg/nvpn ]; then
             fi
 
             echo /usr/bin/nordvpn login --token $token   >> /etc/config/vpn.sh
-            echo /usr/bin/nordvpn whitelist add port 22  >> /etc/config/vpn.sh
-            echo /usr/bin/nordvpn whitelist add port 80  >> /etc/config/vpn.sh
-            echo /usr/bin/nordvpn whitelist add port 443 >> /etc/config/vpn.sh
-            echo /usr/bin/nordvpn allowlist add subnet 172.31.255.0/24 >> /etc/config/vpn.sh
-            echo /usr/bin/nordvpn allowlist add subnet 172.30.255.0/24 >> /etc/config/vpn.sh
-            echo /usr/bin/nordvpn allowlist add subnet 172.29.255.0/24 >> /etc/config/vpn.sh
+
+            if [ -f /etc/config/cfg/swtor_ssh_port1 ]; then
+               ssh_port1=$(cat /etc/config/cfg/swtor_ssh_port1)
+               echo /usr/bin/nordvpn whitelist add port $ssh_port1 >> /etc/config/vpn.sh
+            fi
+
+            if [ -f /etc/config/cfg/swtor_wireguard_port1 ]; then
+                wg1=$(cat /etc/config/cfg/swtor_wireguard_port1)
+                echo /usr/bin/nordvpn whitelist add port $wg1  >> /etc/config/vpn.sh
+            fi
+
+            if [ -f /etc/config/cfg/swtor_wireguard_port2 ]; then
+                wg2=$(cat /etc/config/cfg/swtor_wireguard_port2)
+                echo /usr/bin/nordvpn whitelist add port $wg2  >> /etc/config/vpn.sh
+            fi
+
+            if [ -f /etc/config/cfg/wireguard_subnet1 ]; then
+               echo /usr/bin/nordvpn allowlist add subnet 172.31.255.0/24 >> /etc/config/vpn.sh
+            fi
+
+            if [ -f /etc/config/cfg/wireguard_subnet2 ]; then
+               echo /usr/bin/nordvpn allowlist add subnet 172.30.255.0/24 >> /etc/config/vpn.sh
+            fi
+
+            if [ $using_tor = "yes" ] ; then
+               echo /usr/bin/nordvpn allowlist add subnet 172.29.255.0/24 >> /etc/config/vpn.sh
+            fi
 
             echo /usr/bin/nordvpn set dns 127.0.0.1  >> /etc/config/vpn.sh
             echo /usr/bin/nordvpn connect $country   >> /etc/config/vpn.sh
@@ -197,7 +218,7 @@ if [ -f /etc/config/cfg/nvpn ]; then
             if [ $using_tor = "yes" ] ; then
                echo "cd /etc/config/scripts"                          >> /etc/config/vpn.sh
                echo "killall tornode3ip.sh > /dev/null 2>&1"          >> /etc/config/vpn.sh
-               echo "./tornode3ip.sh" $tor_user ">  /dev/null 2>&1 &" >> /etc/config/vpn.sh
+               echo "./tornode3ip.sh" $tor_user "> /dev/null 2>&1 &" >> /etc/config/vpn.sh
             fi
             chmod +x /etc/config/vpn.sh > /dev/null 2>&1
 
