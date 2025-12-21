@@ -32,8 +32,6 @@ if [ -f /etc/config/cfg/disable_ipv6 ]; then
    /sbin/sysctl -w net.ipv6.conf.default.disable_ipv6=1 > /dev/null 2>&1
 fi
 
-
-
 if [ -f /etc/config/cfg/pihole ]; then
    pihole disable
    service pihole-FTL stop
@@ -111,22 +109,11 @@ if [ -f /etc/config/cfg/nvpn ]; then
    fi
 fi
 
-if [ -f /etc/config/cfg/nvpn ]; then
-   if [ -f /usr/bin/nordvpn ]; then
-      echo nordvpn binary does exist ....
-   else
-      echo nordvpn binary does not exist ....
-   fi
-fi
 
 if [ -f /etc/config/cfg/nvpn ]; then
-   if [ -f /etc/config/cfg/gateway]; then
-      echo Fehler innerhalb der aktuellen Konfiguration !!!
-      echo Entweder wird nur nvpn oder nur gateway !
-      echo Aber unter gar keinen Umständen beide Optionen !
-      exit 1
-   fi
+   echo vpn is used
 fi
+
 
 if [ -f /etc/config/cfg/gateway ]; then
    rm /etc/snowflake/* > /dev/null 2>&1
@@ -169,7 +156,7 @@ if [ -f /etc/config/cfg/nvpn ]; then
             echo               >>  /etc/config/vpn.sh
 
             if [ -f /etc/config/cfg/disable_interface ]; then
-               cat /etc/cfg/disable_interface  >>  /etc/config/vpn.sh
+               cat /etc/config/cfg/disable_interface  >>  /etc/config/vpn.sh
                echo               >>  /etc/config/vpn.sh
             fi
 
@@ -191,18 +178,23 @@ if [ -f /etc/config/cfg/nvpn ]; then
             fi
 
             if [ -f /etc/config/cfg/wireguard_subnet1 ]; then
-               echo /usr/bin/nordvpn allowlist add subnet 172.31.255.0/24 >> /etc/config/vpn.sh
+               wg1_subnet=$(cat /etc/config/cfg/wireguard_subnet1)
+               echo /usr/bin/nordvpn allowlist add subnet $wg1_subnet >> /etc/config/vpn.sh
             fi
 
             if [ -f /etc/config/cfg/wireguard_subnet2 ]; then
-               echo /usr/bin/nordvpn allowlist add subnet 172.30.255.0/24 >> /etc/config/vpn.sh
+               wg2_subnet=$(cat /etc/config/cfg/wireguard_subnet2)
+               echo /usr/bin/nordvpn allowlist add subnet $wg2_subnet >> /etc/config/vpn.sh
             fi
 
             if [ $using_tor = "yes" ] ; then
                echo /usr/bin/nordvpn allowlist add subnet 172.29.255.0/24 >> /etc/config/vpn.sh
             fi
 
-            echo /usr/bin/nordvpn set dns 127.0.0.1  >> /etc/config/vpn.sh
+            if [ -f /etc/config/cfg/stubby ]; then
+               echo /usr/bin/nordvpn set dns 127.0.0.1  >> /etc/config/vpn.sh
+            fi
+
             echo /usr/bin/nordvpn connect $country   >> /etc/config/vpn.sh
 
             echo                                     >> /etc/config/vpn.sh
