@@ -340,16 +340,26 @@
                 meine Betriebstemperatur um etliche Grad steigen lies. Mein Weihnachtsstimmung 2025 
                 war mit dieser Ankündigung dahin.Er kündigte eiskalt an, ab dem 18 Feburar 2026
                 jeden noch aktiven Virtuellen Server (VPS) unter VMWare mit  weiteren 5 Euros zu
-                belasten.Wenn dein kleiner VPS gerade mal 5 Euro kostet und der geldgeile Hosting
-                Provider gleich nochmals 5 Euro aufschlägt, ist dies ja nur eine kleine 
-                Preiserhöhung von gerade mal 100 %. Wenn ich nur 1 Server auf eine andere Plattform
-                als VMWare umziehen müsste, wäre ich nur etwas wütend ! Ich muss aber 4 dieser virtuellen 
-                Server wechseln auf eine andere Plattform, welche ich seit 2018 benutze !!
+                belasten.Wenn dein kleiner VPS gerade mal 5 Euro kostet und der geldgeile Besitzer 
+                vom VMWare (BroadCom) die Kosten für Unterhalt und Betrieb der Plattform massiv erhöht, 
+                bleibt einem Betreiber wohl keine Wahl als diese Preise weiter zu reichen !
+                Meine eigentliche Wut richtet sich gegen den Beitzer von VmWare (BroadCom) !!!!          
+                
+                Wenn ich nur 1 Server auf eine andere Plattform als VMWare umziehen müsste, wäre 
+                ich nur etwas wütend ! Ich muss aber 4 dieser virtuellen Server wechseln auf eine
+                andere Virtualisierungs Plattform, welche ich seit 2018 benutze !!
                 Das es früher oder später so kommen musste, sahen viele schon vorher !
                 
                 https://www.it-daily.net/it-management/cloud-computing/vmware-droht-der-absturz
 
-
+                Der einzige Vorteil vom ganzen Desaster.Die neue Virtualisierung Openstack kostet
+                mich in Zukunft massiv weniger und für die ersten 3 Monate kosten die 4 Server nur
+                die Hälfte. Ein Server mit 1 GB RAM / 2 TB Datenvolumen kostete unter VMWare genau 
+                5 Euro. Der neue Server mit den genau gleichen Leistungsdaten kostet mich nun für die 
+                ersten 3 Monate genau 1.5 Euro. Nach 3 Monaten steigt der Preis auf 2.5 Euro. 
+                   
+  
+ 
                 
  
 
