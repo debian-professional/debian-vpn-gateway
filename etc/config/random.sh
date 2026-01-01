@@ -1,5 +1,14 @@
 #!/bin/bash
 
+if [ $# -eq 0 ]; then
+    echo "no arguments"
+    arguments="no"
+else
+    echo "have arguments"
+    arguments="yes"
+fi
+
+
 while true
 do
 
@@ -34,105 +43,209 @@ while read -r LINE
       rvalue=$(shuf -i 1-10 -n 1 -r)
 
       if [ "$rvalue" -eq 0 ]; then
-         echo 0 : $url
-         curl --silent $url
+         if [ $arguments = "yes" ]; then
+            echo 0 : $url
+            curl --silent --proxy socks5h://172.29.255.1:9050 $url
+         else
+            echo 0 : $url        > /dev/null 2>&1
+            curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+         fi
       fi
 
       if [ "$rvalue" -eq 1 ]; then
-         echo 1 : $url
-         if [ -f /etc/config/cfg/gateway ]; then
-            curl --silent --proxy socks5h://172.29.255.1:1080 $url > /dev/null 2>&1
+         if [ $arguments = "yes" ]; then
+            echo 1 : $url
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1080 $url
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url
+            fi
          else
-            curl --silent $url > /dev/null 2>&1
+            echo 1 : $url > /dev/null 2>&1
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1080 $url > /dev/null 2>&1
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+            fi
          fi
       fi
+
+
 
       if [ "$rvalue" -eq 2 ]; then
-         echo 2 : $url
-         if [ -f /etc/config/cfg/gateway ]; then
-            curl --silent --proxy socks5h://172.29.255.1:1081 $url > /dev/null 2>&1
+         if [ $arguments = "yes" ]; then
+            echo 2 : $url
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1081 $url
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url
+            fi
          else
-            curl --silent $url > /dev/null 2>&1
+            echo 2 : $url > /dev/null 2>&1
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1081 $url > /dev/null 2>&1
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+            fi
          fi
       fi
+
 
       if [ "$rvalue" -eq 3 ]; then
-         echo 3 : $url
-         if [ -f /etc/config/cfg/gateway ]; then
-            curl --silent --proxy socks5h://172.29.255.1:1082 $url > /dev/null 2>&1
+         if [ $arguments = "yes" ]; then
+            echo 3 : $url
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1082 $url
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url
+            fi
          else
-            curl --silent $url > /dev/null 2>&1
+            echo 3 : $url > /dev/null 2>&1
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1082 $url > /dev/null 2>&1
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+            fi
          fi
       fi
+
 
       if [ "$rvalue" -eq 4 ]; then
-         echo 4 : $url
-         if [ -f /etc/config/cfg/gateway ]; then
-            curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+         if [ $arguments = "yes" ]; then
+            echo 4 : $url
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1083 $url
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url
+            fi
          else
-            curl --silent $url > /dev/null 2>&1
+            echo 4 : $url > /dev/null 2>&1
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1083 $url > /dev/null 2>&1
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+            fi
          fi
       fi
+
 
       if [ "$rvalue" -eq 5 ]; then
-         echo 5 : $url
-         if [ -f /etc/config/cfg/gateway ]; then
-            curl --silent --proxy socks5h://172.29.255.1:1082 $url > /dev/null 2>&1
+         if [ $arguments = "yes" ]; then
+            echo 5 : $url
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1080 $url
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url
+            fi
          else
-            curl --silent $url > /dev/null 2>&1
+            echo 5 : $url > /dev/null 2>&1
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1080 $url > /dev/null 2>&1
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+            fi
          fi
       fi
+
 
       if [ "$rvalue" -eq 6 ]; then
-         echo 6 : $url
-         if [ -f /etc/config/cfg/gateway ]; then
-            curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+         if [ $arguments = "yes" ]; then
+            echo 6 : $url
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1081 $url
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url
+            fi
          else
-            curl --silent $url > /dev/null 2>&1
+            echo 6 : $url > /dev/null 2>&1
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1081 $url > /dev/null 2>&1
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+            fi
          fi
       fi
 
+
       if [ "$rvalue" -eq 7 ]; then
-         echo 7 : $url
-         if [ -f /etc/config/cfg/gateway ]; then
-            curl --silent --proxy socks5h://172.29.255.1:1082 $url > /dev/null 2>&1
+         if [ $arguments = "yes" ]; then
+            echo 7 : $url
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1082 $url
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url
+            fi
          else
-            curl --silent $url > /dev/null 2>&1
+            echo 7 : $url > /dev/null 2>&1
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1082 $url > /dev/null 2>&1
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+            fi
          fi
       fi
 
       if [ "$rvalue" -eq 8 ]; then
-         echo 8 : $url
-         if [ -f /etc/config/cfg/gateway ]; then
-            curl --silent --proxy socks5h://172.29.255.1:1081 $url > /dev/null 2>&1
+         if [ $arguments = "yes" ]; then
+            echo 8 : $url
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1083 $url
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url
+            fi
          else
-            curl --silent $url > /dev/null 2>&1
+            echo 8 : $url > /dev/null 2>&1
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1083 $url > /dev/null 2>&1
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+            fi
          fi
       fi
+
 
       if [ "$rvalue" -eq 9 ]; then
-         echo 9 : $url
-         if [ -f /etc/config/cfg/gateway ]; then
-            curl --silent --proxy socks5h://172.29.255.1:1080 $url > /dev/null 2>&1
+         if [ $arguments = "yes" ]; then
+            echo 9 : $url
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1080 $url
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url
+            fi
          else
-            curl --silent $url > /dev/null 2>&1
+            echo 9 : $url > /dev/null 2>&1
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1080 $url > /dev/null 2>&1
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+            fi
          fi
       fi
 
+
       if [ "$rvalue" -eq 10 ]; then
-         echo 10 : $url
-         if [ -f /etc/config/cfg/gateway ]; then
-            curl --silent $url > /dev/null 2>&1
+         if [ $arguments = "yes" ]; then
+            echo 10 : $url
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1081 $url
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url 
+            fi
          else
-            curl --silent $url > /dev/null 2>&1
+            echo 10 : $url > /dev/null 2>&1
+            if [ -f /etc/config/cfg/gateway ]; then
+               curl --silent --proxy socks5h://172.29.255.1:1081 $url > /dev/null 2>&1
+            else
+               curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+            fi
          fi
       fi
 
       line_number=$((line_number+1))
 
-      if [ -f /etc/config/cfg/gateway ]; then
-         sleep $rvalue
-      fi
+#     if [ -f /etc/config/cfg/gateway ]; then
+#        sleep $rvalue
+#     fi
 
 done < "$INFILE"
 echo random list all destinations visited ....
