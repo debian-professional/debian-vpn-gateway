@@ -2,7 +2,7 @@
 ###############################################################################
 # Firewall Script : firewall.sh                                               #
 # Beschreibung    : Schützen eines privaten VPS                               #
-# OS              : Debian 12 Bookworm / 13                                   #
+# OS              : Debian 12 Bookworm / 13 Trixie                            #
 # Virtuell        : Ja unter VMWare oder OpenStack                            #
 # Speicher 	  : 1 GB oder 2GB (hängt vom Modell ab)                       #
 # Festplatte 	  : 20 oder 40 GB (hängt vom Modell ab)                       #

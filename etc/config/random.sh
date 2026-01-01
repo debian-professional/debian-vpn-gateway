@@ -24,7 +24,7 @@ do
            curl --silent --proxy socks5h://172.29.255.1:9050  https://www.boredbutton.com/random | \
            grep iframe | grep src |  tr '"' ' ' | awk '{print $3}' >> /tmp/links
         else
-           curl --silent https://www.boredbutton.com/random | \
+           curl --silent --proxy socks5h://172.29.255.1:1080 https://www.boredbutton.com/random | \
            grep iframe | grep src |  tr '"' ' ' | awk '{print $3}' >> /tmp/links
         fi
 done
