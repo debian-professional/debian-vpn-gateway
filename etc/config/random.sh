@@ -19,7 +19,12 @@ do
            grep iframe | grep src |  tr '"' ' ' | awk '{print $3}' >> /tmp/links
         fi
 done
-echo random list generated ......
+echo random list is now generated ......
+
+echo ......................................
+cat /tmp/links
+echo ......................................
+
 
 line_number="1"
 INFILE=/tmp/links

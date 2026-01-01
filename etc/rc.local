@@ -117,6 +117,21 @@ fi
 
 if [ -f /etc/config/cfg/gateway ]; then
    rm /etc/snowflake/* > /dev/null 2>&1
+
+   # Testen ob redsocks binary exisitiert ....
+
+   if [ -f /usr/sbin/redsocks  ]; then
+      echo redsocks binary found
+   else
+      echo redsocks binary ist nicht installiert !
+   fi
+
+   if [ -f /etc/redsocks.conf  ]; then
+      echo redsocks Konfiguration vorhanden
+   else
+      echo redsocks Konfiguration nicht vorhanden !
+   fi
+
 fi
 
 if [ -f /etc/config/cfg/swtor_tor ]; then

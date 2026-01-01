@@ -2,7 +2,7 @@
 ###############################################################################
 # Firewall Script : firewall.sh                                               #
 # Beschreibung    : Schützen eines privaten VPS                               #
-# OS              : Debian 12 Bookworm                                        #
+# OS              : Debian 12 Bookworm / 13                                   #
 # Virtuell        : Ja unter VMWare oder OpenStack                            #
 # Speicher 	  : 1 GB oder 2GB (hängt vom Modell ab)                       #
 # Festplatte 	  : 20 oder 40 GB (hängt vom Modell ab)                       #
@@ -1500,7 +1500,7 @@ if [ $redirect01_wg0_to_socks5 = "yes" ] ; then
    cd /etc/config/scripts
 
    # Bevor wir dieses Script starten ... sollten alle Instanzen
-   # der Scripts im Zusammenhang mit redirect auch wirklich beendet werden.
+   # der Scripts im Zusammenhang mit dem umleiten auch wirklich beendet werden.
    # Warnung : Ist der VPN aktiv -> wird das Script ssh-v nicht gestartet !
 
    if [ $nvpn = "yes" ]; then
