@@ -40,6 +40,10 @@ if [ -d /etc/config/cfg02 ]; then
    find /etc/config/cfg02 >> backup-files
 fi
 
+if [ -d /etc/config/cfg03 ]; then
+   find /etc/config/cfg03 >> backup-files
+fi
+
 if [ -d /etc/config/cfg04 ]; then
    find /etc/config/cfg04 >> backup-files
 fi
