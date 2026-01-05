@@ -35,14 +35,14 @@ if [ -f /etc/config/cfg/gateway ]; then
 
             rm /home/$user/controll-0$line_number.sh > /dev/null 2>&1
             echo "#!/bin/bash" >  /home/$user/controll-0$line_number.sh
-            echo sleep 30      >> /home/$user/controll-0$line_number.sh
+            echo sleep 5       >> /home/$user/controll-0$line_number.sh
             chmod +x /home/$user/controll-0$line_number.sh
 
             chown $user:$user /home/$user/controll-0$line_number.sh
          else
             rm /home/$user/controll-0$line_number.sh > /dev/null 2>&1
             echo "#!/bin/bash" >  /home/$user/controll-0$line_number.sh
-            echo sleep 30      >> /home/$user/controll-0$line_number.sh
+            echo sleep 5       >> /home/$user/controll-0$line_number.sh
             chmod +x /home/$user/controll-0$line_number.sh
             chown $user:$user /home/$user/controll-0$line_number.sh
          fi
@@ -196,7 +196,9 @@ if [ -f /etc/config/cfg/gateway ]; then
    echo [gateway       :  we are done here ]
 
    if [ -f /etc/config/cfg/gateway ]; then
-      rm /etc/redsocks/redsocks.log > /dev/null 2>&1
+        if [ -f /etc/redsocks/redsocks,log ]; then
+           rm /etc/redsocks/redsocks.log > /dev/null 2>&1
+        fi
    fi
 
    redsocks -c /etc/redsocks.conf

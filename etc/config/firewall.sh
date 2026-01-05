@@ -10,7 +10,7 @@
 # Volumen         : 2TB oder 5TB (hängt vom Modell ab)                        #
 #                                                                             #
 #                                                                             #
-# Version 0.97d                                                               #
+# Version 0.98d                                                               #
 # - IPSec kann nun alle Filter passieren ohne Fehler sofern es benutzt wird   #
 # - Virtuelle Interfaces und alle VPN Bereiche werden im Script gesetzt.      #
 # - Es kann bei Bedarf eine weitere Wireguard Instanz wg1 gestartet werden.   #
@@ -52,7 +52,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-version="0.97d"
+version="0.98d"
 figlet firewall $version
 
 if [ -f /etc/config/cfg/eth0.ip ]; then
@@ -1601,8 +1601,15 @@ if [ $nvpn = "no" ]; then
 
       killall tornode3ip.sh > /dev/null 2>&1
 
-      ./tornode3ip.sh $tor_user > /dev/null 2>&1 &
-      echo [ip-tables : tornode3ip.sh ]
+      su $tor_user ./tornode3ip.sh $tor_user > /dev/null 2>&1 &
+
+      # ./tornode3ip.sh $tor_user > /dev/null 2>&1 &
+
+      cd /etc/config
+      killall random.sh  > /dev/null 2>&1
+      su $tor_user ./random.sh > /dev/null 2>&1 &
+
+      echo [ip-tables : tornode3ip.sh with user $tor_user]
    fi
 fi
 
