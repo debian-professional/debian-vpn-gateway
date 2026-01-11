@@ -1,6 +1,13 @@
 #!/bin/bash
 
-su $1 ./start-tor.sh > /dev/null 2>&1 &
+cd /etc/config/scripts/
+
+./start-tor.sh > /dev/null 2>&1 &
+
+cd /etc/config
+
+killall random.sh  > /dev/null 2>&1"
+./random.sh show > /home/source/random.log 2>&1 &
 
 sleep 15
 

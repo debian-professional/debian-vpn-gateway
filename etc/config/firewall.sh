@@ -1569,6 +1569,14 @@ else
    echo [ip-tables : No wireguard rules added on this host ]
 fi
 
+if [ $swtor_allow_wireguard2 = "yes" ] ; then
+   echo [ip-tables : Allow new incoming Wireguard / UDP port $swtor_wireguard_port2 on interface eth0]
+   /usr/sbin/iptables -A INPUT  -i $external_if -m state --state NEW,ESTABLISHED -p udp --dport $swtor_wireguard_port2 -j ACCEPT
+   /usr/sbin/iptables -A OUTPUT -o $external_if -m state --state ESTABLISHED -p udp --sport $swtor_wireguard_port2  -j ACCEPT
+else
+   echo [ip-tables : No wireguard rules added on this host ]
+fi
+
 if [ $do_log = "yes" ] ; then
    echo [ip-tables : block all remaing traffic ]
 
