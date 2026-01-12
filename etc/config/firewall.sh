@@ -1602,20 +1602,20 @@ if [ $nvpn = "no" ]; then
    if [ $using_tor = "yes" ] ; then
       echo [ip-tables : start tor and tornode3ip.sh script]
 
+      cd /etc/config/scripts
+      killall tornode3ip.sh
+      su $tor_user ./tornode3ip.sh" $tor_user > /home/source/tornode3ip.log 2>&1 &
+      chown source:source /home/source/tornode3ip.log
+
       # Da steckt zur Zeit wohl der Wurm drin ......
       # systemctl start tor > /dev/null
-
-      cd /etc/config/scripts
-
-      killall tornode3ip.sh > /dev/null 2>&1
-
-      su $tor_user ./tornode3ip.sh $tor_user > /dev/null 2>&1 &
-
+      # cd /etc/config/scripts
+      # killall tornode3ip.sh > /dev/null 2>&1
+      # su $tor_user ./tornode3ip.sh $tor_user > /dev/null 2>&1 &
       # ./tornode3ip.sh $tor_user > /dev/null 2>&1 &
-
-      cd /etc/config
-      killall random.sh  > /dev/null 2>&1
-      su $tor_user ./random.sh > /dev/null 2>&1 &
+      # cd /etc/config
+      # killall random.sh  > /dev/null 2>&1
+      # su $tor_user ./random.sh > /dev/null 2>&1 &
 
       echo [ip-tables : tornode3ip.sh with user $tor_user]
    fi

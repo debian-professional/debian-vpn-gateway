@@ -226,10 +226,6 @@ if [ -f /etc/config/cfg/nvpn ]; then
                echo "killall tornode3ip.sh > /dev/null 2>&1"          >> /etc/config/vpn.sh
                echo "su" $tor_user "./tornode3ip.sh" $tor_user " > /home/source/tornode3ip.log 2>&1 &"  >> /etc/config/vpn.sh
                echo "chown source:source /home/source/tornode3ip.log" >> /etc/config/vpn.sh
-               # echo "cd /etc/config"                                     >> /etc/config/vpn.sh
-               # echo "killall random.sh  > /dev/null 2>&1"                >> /etc/config/vpn.sh
-               # echo "su " $tor_user "./random.sh > /home/socks/random.log 2>&1 &"     >> /etc/config/vpn.sh
-               # echo "chown socks:socks /home/socks/random.log" >> /etc/config/vpn.sh
             fi
 
             echo                                                      >> /etc/config/vpn.sh
