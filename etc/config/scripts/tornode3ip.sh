@@ -7,7 +7,7 @@ cd /etc/config/scripts/
 cd /etc/config
 
 killall random.sh  > /dev/null 2>&1
-./random.sh show > /home/source/random.log 2>&1 &
+./random.sh show > /dev/null 2>&1 &
 
 sleep 10
 
