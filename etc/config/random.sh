@@ -8,13 +8,20 @@ else
     arguments="yes"
 fi
 
+if [ -f /etc/config/cfg/gateway ]; then
+   host1_command=$(cat /etc/config/cfg/gw-host1)
+   host2_command=$(cat /etc/config/cfg/gw-host2)
+   host3_command=$(cat /etc/config/cfg/gw-host3)
+   host4_command=$(cat /etc/config/cfg/gw-host1)
+else
+   host1_command=""
+   host2_command=""
+   host3_command=""
+   host4_command=""
+fi
+
 while true
 do
-
-host1_command=$(cat /etc/config/cfg/gw-host1)
-host2_command=$(cat /etc/config/cfg/gw-host2)
-host3_command=$(cat /etc/config/cfg/gw-host3)
-host4_command=$(cat /etc/config/cfg/gw-host1)
 
 rm /tmp/links > /dev/null 2>&1
 
