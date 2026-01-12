@@ -10,7 +10,7 @@
 # Volumen         : 2TB oder 5TB (hängt vom Modell ab)                        #
 #                                                                             #
 #                                                                             #
-# Version 0.98d                                                               #
+# Version 0.99a                                                               #
 # - IPSec kann nun alle Filter passieren ohne Fehler sofern es benutzt wird   #
 # - Virtuelle Interfaces und alle VPN Bereiche werden im Script gesetzt.      #
 # - Es kann bei Bedarf eine weitere Wireguard Instanz wg1 gestartet werden.   #
@@ -52,7 +52,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-version="0.98d"
+version="0.99a"
 figlet firewall $version
 
 if [ -f /etc/config/cfg/eth0.ip ]; then
@@ -1566,7 +1566,7 @@ if [ $swtor_allow_wireguard1 = "yes" ] ; then
    /usr/sbin/iptables -A INPUT  -i $external_if -m state --state NEW,ESTABLISHED -p udp --dport $swtor_wireguard_port1 -j ACCEPT
    /usr/sbin/iptables -A OUTPUT -o $external_if -m state --state ESTABLISHED -p udp --sport $swtor_wireguard_port1  -j ACCEPT
 else
-   echo [ip-tables : No wireguard rules added on this host ]
+   echo [ip-tables : No wireguard rules (wg0) added on this host ]
 fi
 
 if [ $swtor_allow_wireguard2 = "yes" ] ; then
@@ -1574,7 +1574,7 @@ if [ $swtor_allow_wireguard2 = "yes" ] ; then
    /usr/sbin/iptables -A INPUT  -i $external_if -m state --state NEW,ESTABLISHED -p udp --dport $swtor_wireguard_port2 -j ACCEPT
    /usr/sbin/iptables -A OUTPUT -o $external_if -m state --state ESTABLISHED -p udp --sport $swtor_wireguard_port2  -j ACCEPT
 else
-   echo [ip-tables : No wireguard rules added on this host ]
+   echo [ip-tables : No wireguard rules (wg1) added on this host ]
 fi
 
 if [ $do_log = "yes" ] ; then
@@ -1604,19 +1604,8 @@ if [ $nvpn = "no" ]; then
 
       cd /etc/config/scripts
       killall tornode3ip.sh
-      su $tor_user ./tornode3ip.sh" $tor_user > /home/source/tornode3ip.log 2>&1 &
+      su $tor_user ./tornode3ip.sh $tor_user > /home/source/tornode3ip.log 2>&1 &
       chown source:source /home/source/tornode3ip.log
-
-      # Da steckt zur Zeit wohl der Wurm drin ......
-      # systemctl start tor > /dev/null
-      # cd /etc/config/scripts
-      # killall tornode3ip.sh > /dev/null 2>&1
-      # su $tor_user ./tornode3ip.sh $tor_user > /dev/null 2>&1 &
-      # ./tornode3ip.sh $tor_user > /dev/null 2>&1 &
-      # cd /etc/config
-      # killall random.sh  > /dev/null 2>&1
-      # su $tor_user ./random.sh > /dev/null 2>&1 &
-
       echo [ip-tables : tornode3ip.sh with user $tor_user]
    fi
 fi
@@ -1635,5 +1624,5 @@ fi
 
 if [ -f /etc/config/cfg/gateway ]; then
    cd /etc/config/
-   ./gateway.sh
+#  ./gateway.sh
 fi
