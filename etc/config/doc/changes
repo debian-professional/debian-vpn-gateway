@@ -371,6 +371,9 @@
                 Beim starten im Gateway Modus wird nun geprüft, ob der Redsocks Service installiert
                 und auch konfiguriert ist. 
   
+12/01/26        Die verschieden Moduse wurden von der Benutzerverwaltung vereinfacht. 
+                Leider produziert die proxychain über den TOR-Service Fehlermeldungen
+                am laufenden Band. 
  
  
   

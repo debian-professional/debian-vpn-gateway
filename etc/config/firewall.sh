@@ -1560,13 +1560,12 @@ else
    echo [ip-tables : No ESP and IPsec rules added on this host ]
 fi
 
-
 if [ $swtor_allow_wireguard1 = "yes" ] ; then
    echo [ip-tables : Allow new incoming Wireguard / UDP port $swtor_wireguard_port1 on interface eth0]
    /usr/sbin/iptables -A INPUT  -i $external_if -m state --state NEW,ESTABLISHED -p udp --dport $swtor_wireguard_port1 -j ACCEPT
    /usr/sbin/iptables -A OUTPUT -o $external_if -m state --state ESTABLISHED -p udp --sport $swtor_wireguard_port1  -j ACCEPT
 else
-   echo [ip-tables : No wireguard rules (wg0) added on this host ]
+   echo [ip-tables : No wireguard rules wg0 added on this host ]
 fi
 
 if [ $swtor_allow_wireguard2 = "yes" ] ; then
@@ -1574,7 +1573,7 @@ if [ $swtor_allow_wireguard2 = "yes" ] ; then
    /usr/sbin/iptables -A INPUT  -i $external_if -m state --state NEW,ESTABLISHED -p udp --dport $swtor_wireguard_port2 -j ACCEPT
    /usr/sbin/iptables -A OUTPUT -o $external_if -m state --state ESTABLISHED -p udp --sport $swtor_wireguard_port2  -j ACCEPT
 else
-   echo [ip-tables : No wireguard rules (wg1) added on this host ]
+   echo [ip-tables : No wireguard rules wg1 added on this host ]
 fi
 
 if [ $do_log = "yes" ] ; then
@@ -1597,13 +1596,12 @@ if [ $swtor_use_ipsec = "yes" ] ; then
 fi
 
 
-
 if [ $nvpn = "no" ]; then
    if [ $using_tor = "yes" ] ; then
       echo [ip-tables : start tor and tornode3ip.sh script]
 
       cd /etc/config/scripts
-      killall tornode3ip.sh
+      killall tornode3ip.sh > /dev/null 2>&1
       su $tor_user ./tornode3ip.sh $tor_user > /home/source/tornode3ip.log 2>&1 &
       chown source:source /home/source/tornode3ip.log
       echo [ip-tables : tornode3ip.sh with user $tor_user]
@@ -1626,3 +1624,6 @@ if [ -f /etc/config/cfg/gateway ]; then
    cd /etc/config/
 #  ./gateway.sh
 fi
+
+echo [ip-tables : end of script firewall.sh reached ]
+
