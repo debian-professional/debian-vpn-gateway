@@ -1602,8 +1602,13 @@ if [ $nvpn = "no" ]; then
 
       cd /etc/config/scripts
       killall tornode3ip.sh > /dev/null 2>&1
-      su $tor_user ./tornode3ip.sh $tor_user > /home/source/tornode3ip.log 2>&1 &
-      chown source:source /home/source/tornode3ip.log
+      su $tor_user ./tornode3ip.sh $tor_user > /dev/null 2>&1 &
+
+      rm /home/source/random.log > /dev/null 2>&1
+      rm /home/source/tornode3ip.log > /dev/null 2>&1
+      #
+      # chown source:source /home/source/tornode3ip.log
+      #
       echo [ip-tables : tornode3ip.sh with user $tor_user]
    fi
 fi
