@@ -11,6 +11,11 @@ fi
 while true
 do
 
+host1_command=$(cat /etc/config/cfg/gw-host1)
+host2_command=$(cat /etc/config/cfg/gw-host2)
+host3_command=$(cat /etc/config/cfg/gw-host3)
+host4_command=$(cat /etc/config/cfg/gw-host1)
+
 rm /tmp/links > /dev/null 2>&1
 
 echo random list generating ......
@@ -41,6 +46,7 @@ while read -r LINE
          if [ $arguments = "yes" ]; then
             echo 0 : $url
             curl --silent --proxy socks5h://172.29.255.1:9050 $url
+            proxychains $(echo $host1_command)
          else
             echo 0 : $url        > /dev/null 2>&1
             curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
@@ -52,6 +58,7 @@ while read -r LINE
             echo 1 : $url
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
+               proxychains $(echo $host2_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
             fi
@@ -59,6 +66,7 @@ while read -r LINE
             echo 1 : $url > /dev/null 2>&1
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+               proxychains $(echo $host2_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
             fi
@@ -70,6 +78,7 @@ while read -r LINE
             echo 2 : $url
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
+               proxychains $(echo $host3_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
             fi
@@ -77,6 +86,7 @@ while read -r LINE
             echo 2 : $url > /dev/null 2>&1
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+               proxychains $(echo $host3_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
             fi
@@ -89,6 +99,7 @@ while read -r LINE
             echo 3 : $url
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
+               proxychains $(echo $host4_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
             fi
@@ -96,6 +107,7 @@ while read -r LINE
             echo 3 : $url > /dev/null 2>&1
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+               proxychains $(echo $host4_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
             fi
@@ -108,6 +120,7 @@ while read -r LINE
             echo 4 : $url
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
+               proxychains $(echo $host1_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
             fi
@@ -115,6 +128,7 @@ while read -r LINE
             echo 4 : $url > /dev/null 2>&1
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+               proxychains $(echo $host1_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
             fi
@@ -127,6 +141,7 @@ while read -r LINE
             echo 5 : $url
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
+               proxychains $(echo $host2_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
             fi
@@ -134,6 +149,7 @@ while read -r LINE
             echo 5 : $url > /dev/null 2>&1
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+               proxychains $(echo $host2_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
             fi
@@ -146,6 +162,7 @@ while read -r LINE
             echo 6 : $url
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
+               proxychains $(echo $host3_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
             fi
@@ -153,18 +170,19 @@ while read -r LINE
             echo 6 : $url > /dev/null 2>&1
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+               proxychains $(echo $host3_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
             fi
          fi
       fi
 
-
       if [ "$rvalue" -eq 7 ]; then
          if [ $arguments = "yes" ]; then
             echo 7 : $url
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
+               proxychains $(echo $host4_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
             fi
@@ -172,7 +190,8 @@ while read -r LINE
             echo 7 : $url > /dev/null 2>&1
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
-            else
+               proxychains $(echo $host4_command)
+             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
             fi
          fi
@@ -183,6 +202,7 @@ while read -r LINE
             echo 8 : $url
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
+               proxychains $(echo $host1_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
             fi
@@ -190,6 +210,7 @@ while read -r LINE
             echo 8 : $url > /dev/null 2>&1
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+               proxychains $(echo $host1_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
             fi
@@ -202,6 +223,7 @@ while read -r LINE
             echo 9 : $url
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
+               proxychains $(echo $host2_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
             fi
@@ -209,6 +231,7 @@ while read -r LINE
             echo 9 : $url > /dev/null 2>&1
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+               proxychains $(echo $host2_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
             fi
@@ -221,6 +244,7 @@ while read -r LINE
             echo 10 : $url
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
+               proxychains $(echo $host3_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url
             fi
@@ -228,6 +252,7 @@ while read -r LINE
             echo 10 : $url > /dev/null 2>&1
             if [ -f /etc/config/cfg/gateway ]; then
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
+               proxychains $(echo $host3_command)
             else
                curl --silent --proxy socks5h://172.29.255.1:9050 $url > /dev/null 2>&1
             fi
