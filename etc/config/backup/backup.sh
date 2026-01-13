@@ -126,6 +126,7 @@ cd ..
 
 gpg --batch --passphrase-file passwd -c $(echo $backupfile)
 
+# We keep the tar.gz backup
 # rm $backupfile > /dev/null 2>&1
 mv *.gpg $(cat config).gpg
 chown source:source *.gpg
