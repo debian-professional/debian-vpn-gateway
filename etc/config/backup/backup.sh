@@ -20,7 +20,7 @@ find /root/.ssh > backup-files
 find /root/.bashrc >> backup-files
 find /root/.bash_history >> backup-files
 find /usr/share/keyrings >> backup-files
- 
+
 # all other users
 
 find /home | grep .ssh >> backup-files
@@ -50,6 +50,10 @@ fi
 
 if [ -d /etc/config/cfg05 ]; then
    find /etc/config/cfg05 >> backup-files
+fi
+
+if [ -d /etc/config/cfg06 ]; then
+   find /etc/config/cfg06 >> backup-files
 fi
 
 tar cvzf tmp/configuration.tar.gz --exclude=/etc/config/backup/tmp $(cat /etc/config/backup/backup-files) > /dev/null 2>&1
