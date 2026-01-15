@@ -47,7 +47,7 @@ INFILE=/tmp/links
 while read -r LINE
       do
       url=$(printf '%s\n' "$LINE"| awk '{print $1}')
-      rvalue=$(shuf -i 1-10 -n 1 -r)
+      rvalue=$(shuf -i 1-14 -n 1 -r)
 
       if [ "$rvalue" -eq 0 ]; then
          if [ $arguments = "yes" ]; then
