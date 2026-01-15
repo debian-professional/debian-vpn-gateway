@@ -5,8 +5,7 @@
                 Um in Zukunft solche Fehler zu vermeiden sei folgendes bemerkt.
                 - Pihole darf auf gar keinen Fall auf dem Hauptinterface eth0 installiert werden.
                 - Ein einzelnes Interface tun0 erfüllt genau den gleichen Zweck wie eth0
-                - Der stubby daemon darf unter gar keinen Umständen auf den loopback Adapter gebunden werden
-                  (127.0.0.1:53) er muss unter einer anderen Adresse laufen (z.b. 127.0.0.1:5353)
+                - Der stubby daemon darf unter gar keinen Umständen auf den loopback Adapter gebunden werden                  (127.0.0.1:53) er muss unter einer anderen Adresse laufen (z.b. 127.0.0.1:5353)
                 - Der DNS Service (Port 53) darf nur auf dem tun0 interface und loopback laufen
                 - Werden stubby oder dnsmasque im Modus 0.0.0.0 betrieben, machen sie sich gegenseitig 
                   die Interfaces streitig und einer der beiden Dienst quittiert den Dienst.
@@ -378,6 +377,7 @@
  
 15/01/26        Der Betrieb im GW-Modus produzierte beinahe 200 GB Datenvolumen bei einem einzigen
                 Server. So würde in nicht einmal 20 Tagen das komplette Datenvolumen eines kleinen 
-                Server von 2TB verbraucht. 
+                Server von 2TB verbraucht.Der grosse Brocken mit 512MB zum runterladen wurde auf
+                64MB ernidriegt. 
   
 
