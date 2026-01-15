@@ -195,22 +195,22 @@ if [ -f /etc/config/cfg/gateway ]; then
 
    echo [gateway       :  we are done here ]
 
-   if [ -f /etc/config/cfg/gateway ]; then
-        if [ -f /etc/redsocks/redsocks,log ]; then
-           rm /etc/redsocks/redsocks.log > /dev/null 2>&1
-        fi
-   fi
+#   if [ -f /etc/config/cfg/gateway ]; then
+#        if [ -f /etc/redsocks/redsocks,log ]; then
+#           rm /etc/redsocks/redsocks.log > /dev/null 2>&1
+#        fi
+#   fi
 
-   redsocks -c /etc/redsocks.conf
+#  redsocks -c /etc/redsocks.conf
    sudo --user=$user /home/$user/connect-ssh.sh
 
-   cd /etc/config
-   ./random.sh > /dev/null 2>&1 &
+#   cd /etc/config
+#   ./random.sh > /dev/null 2>&1 &
 
-   # Neustart stubby
-
-   systemctl stop stubby
-   systemctl start stubby
+#   Neustart stubby
+#
+#   systemctl stop stubby
+#   systemctl start stubby
 
    exit 0
 else
