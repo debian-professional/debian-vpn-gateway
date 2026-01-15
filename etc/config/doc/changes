@@ -377,7 +377,10 @@
  
 15/01/26        Der Betrieb im GW-Modus produzierte beinahe 200 GB Datenvolumen bei einem einzigen
                 Server. So würde in nicht einmal 20 Tagen das komplette Datenvolumen eines kleinen 
-                Server von 2TB verbraucht.Der grosse Brocken mit 512MB zum runterladen wurde auf
-                64MB ernidriegt. 
+                Server von 2TB komplett verbraucht.Der grosse Brocken mit 512MB zum runterladen wurde auf
+                64MB ernidriegt. In einem ersten Schritt wurden auch Perfomance Schwachstellen des 
+                Debian Standard Kernels erkannt und systematisch mittels sysctl ausgemerzt.
+
+ 
   
 
