@@ -398,3 +398,5 @@ echo "Zurücksetzen: rm ${CONFIG_FILE} && sysctl --system"
 echo "================================================================"
 
 exit 0
+
+k
