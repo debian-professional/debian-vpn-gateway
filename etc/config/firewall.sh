@@ -1576,6 +1576,11 @@ else
    echo [ip-tables : No wireguard rules wg1 added on this host ]
 fi
 
+if [ -f ./cfg/custom_rules ]; then
+   cd /etc/config/cfg
+   ./custom_rules
+fi
+
 if [ $do_log = "yes" ] ; then
    echo [ip-tables : block all remaing traffic ]
 
