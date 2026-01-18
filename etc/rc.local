@@ -292,7 +292,7 @@ if [ -f /etc/config/cfg/optimize_virtual_server_01 ]; then
   # OOM-KILLER
   vm.panic_on_oom = 0
   vm.oom_kill_allocating_task = 1
-  EOF
+EOF
 
   # Konfiguration laden
   sysctl -p "$CONFIG_FILE" 2>/dev/null || true
@@ -676,7 +676,7 @@ if [ -f /etc/config/cfg/optimize_virtual_server_02 ]; then
 
    # NUMA-OPTIMIERUNGEN
    kernel.numa_balancing = 0
-   EOF
+EOF
 
    # Konfiguration laden
    sysctl -p "$CONFIG_FILE" 2>/dev/null || true
@@ -749,8 +749,6 @@ if [ -f /etc/config/cfg/optimize_virtual_server_02 ]; then
    echo "Zurücksetzen: rm ${CONFIG_FILE} && sysctl --system"
    echo "================================================================"
 fi
-
-
 
 
 if [ -f /etc/config/cfg/pihole ]; then

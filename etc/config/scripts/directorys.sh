@@ -19,6 +19,7 @@ ln -s /home/source/debian-vpn-gateway/etc/config/backup backup
 ln -s /home/source/debian-vpn-gateway/etc/config/deb deb
 ln -s /home/source/debian-vpn-gateway/etc/config/doc doc
 ln -s /home/source/debian-vpn-gateway/etc/config/scripts scripts
+chown -h source:source scripts
 
 # scripts
 
