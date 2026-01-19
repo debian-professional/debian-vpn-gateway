@@ -185,6 +185,11 @@ if [ -f /etc/config/cfg/nvpn ]; then
                echo /usr/bin/nordvpn whitelist add port $ssh_port1 >> /etc/config/vpn.sh
             fi
 
+            if [ -f /etc/config/cfg/swtor_ssh_port2 ]; then
+               ssh_port1=$(cat /etc/config/cfg/swtor_ssh_port2)
+               echo /usr/bin/nordvpn whitelist add port $ssh_port2 >> /etc/config/vpn.sh
+            fi
+
             if [ -f /etc/config/cfg/swtor_wireguard_port1 ]; then
                 wg1=$(cat /etc/config/cfg/swtor_wireguard_port1)
                 echo /usr/bin/nordvpn whitelist add port $wg1  >> /etc/config/vpn.sh
