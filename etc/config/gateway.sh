@@ -33,18 +33,19 @@ if [ -f /etc/config/cfg/gateway ]; then
 
             # Controll Script
 
-            rm /home/$user/controll-0$line_number.sh > /dev/null 2>&1
-            echo "#!/bin/bash" >  /home/$user/controll-0$line_number.sh
-            echo sleep 5       >> /home/$user/controll-0$line_number.sh
-            chmod +x /home/$user/controll-0$line_number.sh
+#            rm /home/$user/controll-0$line_number.sh > /dev/null 2>&1
+#            echo "#!/bin/bash" >  /home/$user/controll-0$line_number.sh
+#            echo sleep 5       >> /home/$user/controll-0$line_number.sh
+#            chmod +x /home/$user/controll-0$line_number.sh
 
             chown $user:$user /home/$user/controll-0$line_number.sh
          else
-            rm /home/$user/controll-0$line_number.sh > /dev/null 2>&1
-            echo "#!/bin/bash" >  /home/$user/controll-0$line_number.sh
-            echo sleep 5       >> /home/$user/controll-0$line_number.sh
-            chmod +x /home/$user/controll-0$line_number.sh
-            chown $user:$user /home/$user/controll-0$line_number.sh
+             echo
+#            rm /home/$user/controll-0$line_number.sh > /dev/null 2>&1
+#            echo "#!/bin/bash" >  /home/$user/controll-0$line_number.sh
+#           echo sleep 5       >> /home/$user/controll-0$line_number.sh
+#            chmod +x /home/$user/controll-0$line_number.sh
+#            chown $user:$user /home/$user/controll-0$line_number.sh
          fi
 
          country=$(printf '%s\n' "$LINE"| awk '{print $2}')
@@ -202,7 +203,7 @@ if [ -f /etc/config/cfg/gateway ]; then
 #   fi
 
 #  redsocks -c /etc/redsocks.conf
-   sudo --user=$user /home/$user/connect-ssh.sh
+#  sudo --user=$user /home/$user/connect-ssh.sh
 
 #   cd /etc/config
 #   ./random.sh > /dev/null 2>&1 &

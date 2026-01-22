@@ -255,7 +255,8 @@ if [ -f ./cfg/swtor_allow_local_ssh ]; then
    # Unbedingt beachten : Ultra extreme Firewalls werden niemals eine Verbindung von
    # einem Client auf den UDP Port 443 zulassen, da gemäss RFC nur TCP als
    # Transportprotokoll für den zugelassen https Verkehr vorgesehen wurde.
-   # ist ! Sollte dieses Port geblock werden bietet sich Port 123 gerdazu an.
+   # ist ! Sollte dieses Port geblock werden bietet sich der Port 123 oder 4500
+   # geradazu an.
 
    if [ -f ./cfg/swtor_ssh_port2 ]; then
       swtor_ssh_port2=$(cat ./cfg/swtor_ssh_port2)
@@ -1575,6 +1576,8 @@ if [ $swtor_allow_wireguard2 = "yes" ] ; then
 else
    echo [ip-tables : No wireguard rules wg1 added on this host ]
 fi
+
+# Achtung : Diese Regeln müssen  unbedingt vor der Standart-Regel angewendet werden !
 
 if [ -f ./cfg/custom_rules ]; then
    cd /etc/config/cfg
