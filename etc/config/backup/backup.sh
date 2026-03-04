@@ -102,6 +102,15 @@ if [ -f /etc/config/cfg/swtor_tor ]; then
    tar cvzf tmp/tor.tar.gz /etc/tor > /dev/null 2>&1
 fi
 
+# APACHE2
+if [ -f /etc/apache2  ]; then
+   tar cvzf tmp/apache.tar.gz /etc/apache2 /var/www > /dev/null 2>&1
+fi
+
+
+
+
+
 # Nice to have files inside of the backup
 
 tar cvzf tmp/nice_to_have.tar.gz /etc/apt /etc/resolv.conf /etc/hosts /etc/hostname /etc/motd /etc/sudoers \
