@@ -10,7 +10,7 @@
 # Volumen         : 2TB oder 5TB (hängt vom Modell ab)                        #
 #                                                                             #
 #                                                                             #
-# Version 0.99a                                                               #
+# Version 0.99b                                                               #
 # - IPSec kann nun alle Filter passieren ohne Fehler sofern es benutzt wird   #
 # - Virtuelle Interfaces und alle VPN Bereiche werden im Script gesetzt.      #
 # - Es kann bei Bedarf eine weitere Wireguard Instanz wg1 gestartet werden.   #
@@ -52,7 +52,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-version="0.99a"
+version="0.99b"
 figlet firewall $version
 
 if [ -f /etc/config/cfg/eth0.ip ]; then
@@ -658,6 +658,11 @@ echo [ip-tables : Detect bad packets as soon as possible ]
 # Kette platziert hat die fundamentalsten Grundprinzipien von iptables nicht wirklich verstanden !
 # Auch zu diesem sehr komplexen Thema gibt es wirklich ausgezeichnete Bücher !
 
+# ESTABLISHED/RELATED Pakete brauchen keine zusätzlicgen Flag-Checks
+
+iptables -t mangle -A PREROUTING \
+  -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
 if [ $fw_debug = "yes" ] ; then
 iptables -t mangle -A PREROUTING -p tcp -m conntrack --ctstate NEW -m tcpmss ! --mss 536:65535 -j LOG --log-prefix "chain01/01 "
 fi
@@ -765,6 +770,19 @@ iptables -t mangle -A PREROUTING -f -j LOG  --log-prefix "chain01/18 "
 fi
 iptables -t mangle -A PREROUTING -f -j DROP \
 -m comment --comment "chain 01/18 block fragmented packets"
+
+if [ $fw_debug = "yes" ] ; then
+iptables -t mangle -A PREROUTING -p tcp --syn \
+  -m hashlimit --hashlimit-above 20/sec --hashlimit-burst 30 \
+  --hashlimit-mode srcip --hashlimit-name syn_flood \
+  -j LOG --log-prefix "chain01/19 "
+fi
+iptables -t mangle -A PREROUTING -p tcp --syn \
+  -m hashlimit --hashlimit-above 20/sec --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-name syn_flood \
+  -j DROP -m comment --comment "chain 01/19 synflood limit"
+
+
+
 
 
 echo [ip-tables : allow all traffic on loopback interface 127.0.0.1]
@@ -1332,7 +1350,7 @@ if [ $virtual_iface = "yes" ] ; then
        /usr/sbin/iptables -A OUTPUT -o $virtual_ifacename3 -p all -j ACCEPT
        /usr/sbin/iptables -A INPUT  -i $virtual_ifacename3  -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
        /usr/sbin/iptables -A OUTPUT -o $virtual_ifacename3  -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-       if [ $using_swnowflake = "no" ] ; then
+       if [ $using_snowflake = "no" ] ; then
           /usr/sbin/iptables -A FORWARD -i $virtual_ifacename3 -o $external_if  -j ACCEPT
           /usr/sbin/iptables -A FORWARD -i $external_if -o $virtual_ifacename3 -j ACCEPT
           /usr/sbin/iptables -t nat -A POSTROUTING -s $virtual_interface3 -d 0.0.0.0/0  -j SNAT --to $external_ip
