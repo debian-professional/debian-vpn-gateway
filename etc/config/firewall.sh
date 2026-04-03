@@ -14,7 +14,7 @@
 # - IPSec kann nun alle Filter passieren ohne Fehler sofern es benutzt wird   #
 # - Virtuelle Interfaces und alle VPN Bereiche werden im Script gesetzt.      #
 # - Es kann bei Bedarf eine weitere Wireguard Instanz wg1 gestartet werden.   #
-# - Der Start der VPN Vebindung und auch der Start von Wireguard wird hier    #
+# - Der Start der VPN Verbindung und auch der Start von Wireguard wird hier   #
 #   im Skript erledigt.                                                       #
 # - Das gesamte Handling liegt nun hier im Skript und nicht mehr in           #
 #   verschiedenen Skripten die von Hand aufgerufen werden müssen.             #
@@ -22,12 +22,12 @@
 #   cfg Verzeichniss erleichtern das komplette Handling mit Updates           #
 # - Support für 3 virtuelle Ethernet Interfaces (eth0) hinzugefügt            #
 # - Die Umleitung von normalen http und https Verkehr ist nun möglich über    #
-#   einen externen Socks5 Server.Sehr sinvoll wenn zum Beispiel die BBC       #
+#   einen externen Socks5 Server.Sehr sinnvoll wenn zum Beispiel die BBC      #
 #   behauptet,meine verwendete externe IP Adresse wäre nicht in der UK        #
 #   registriert.                                                              #
 # - Der ganze Konfiguration mittels dem WireGuard VPN und auch der IPSec      #
 #   Verbindung inkl. der Umleitung von normalen http und https Verkehr auf    #
-#   den externen Socks5 Server macht dieses kleine  Script zu einenm          #
+#   den externen Socks5 Server macht dieses kleine  Script zu einem           #
 #   regelrechten Bijou der besonderen Art.                                    #
 ###############################################################################
 
@@ -36,15 +36,15 @@
 # eth0 		Das Tor zu Welt (IP V4).
 # eth0:0	Das virtuelle Interface dient als Endpunkt zur Kommunikation mittels IPSec mit
 #               dem remote verbundenen Netzwerk.
-# eth0:1        Dieses virtuelle Interface wird zum Bereistellen eines nicht öffentlichen SSH-Zugangs
+# eth0:1        Dieses virtuelle Interface wird zum Bereitstellen eines nicht öffentlichen SSH-Zugangs
 #               verwendet und ebenso als Socks5 Server auf dem Port 1080.Der redsocks-redirector welcher normale
-#               Webverbindungen in socks5 konforme Verbindungen übersetzt, arbeitet auf dem lokalten Port
+#               Webverbindungen in socks5 konforme Verbindungen übersetzt, arbeitet auf dem lokalen Port
 #               2089.Der dazu optionale tor-service läuft auf Port 9050.
 # eth0:2        Wird zum jetzigen Zeitpunkt noch nicht verwendet.
 # tun0          Dieses Interface wird hauptsächlich für Pihole verwendet.(172.29.255.2)
 #               Der DNS Resolver und die Weboberfläche werden mit diesem Interface verbunden
 #               damit die Einrichtung ohne Probleme läuft.
-# wg0           lauscht auf UDP Port 80 und behinhaltet den Netzwerk-Range 172.255.31.0/24
+# wg0           lauscht auf UDP Port 80 und beinhaltet den Netzwerk-Range 172.255.31.0/24
 # wg1           lauscht auf UDP Port 443 und beinhaltet den Netzwerk-Range 172.255.30.0/24
 
 if [[ $EUID -ne 0 ]]; then
@@ -81,7 +81,7 @@ if [ -f /etc/config/cfg/redirect01_wg0 ]; then
    if [ -f /etc/config/cfg/redirect01_port ]; then
       redirect01_wg0=$(cat /etc/config/cfg/redirect01_port)
    else
-      redirect0_wg01_to_socks5="no"
+      redirect01_wg0_to_socks5="no"
       echo Definition des redirect-ports fehlt in der Konfiguration !
       exit 1
    fi
@@ -223,7 +223,7 @@ fi
 # Alle Optionen der SSH Einstellungen werden über das           #
 # Vorhanden sein bzw. Fehlen der Dateien im Verzeichniss        #
 # /etc/config/cfg bestimmt und bestimmen die zu anzuwendenden   #
-# Firwall Regeln                                                #
+# Firewall Regeln                                               #
 #                                                               #
 # swtor_allow_local_ssh                                         #
 # swtor_ssh_port1                                               #
@@ -279,7 +279,7 @@ else
    swtor_allow_local_ssh="no"
    swtor_ssh_port1="nicht definiert"
    swtor_ssh_port2="nicht definiert"
-   swtor_allow_ssh_to_outside="nich definiert"
+   swtor_allow_ssh_to_outside="nicht definiert"
 fi
 
 
@@ -352,7 +352,7 @@ if [ -f ./cfg/virtual_iface ]; then
 else
 
    # Da die eigentliche Hauptoption gar nicht erst aktiviert wurde ....
-   # werden die 3 möglichen virtuellen Schnistellen auch gar nicht erst aktiviert !!!!
+   # werden die 3 möglichen virtuellen Schnittstellen auch gar nicht erst aktiviert !!!!
 
    virtual_iface="no"
    virtual_iface1="no"
@@ -385,7 +385,7 @@ if [ -f ./cfg/ipsec ]; then
       echo Lesen schadet der Dummheit !
       echo IPSec kann nicht ein ohne virtuelles Interface über eth0 betrieben werden !
       echo Das Virtuelle Interface1 wird nur für IPSec verwendet und ist nicht
-      echo definiert.Die aktuell vorliegende Konfiguration ist so nicht läuffähig !
+      echo definiert.Die aktuell vorliegende Konfiguration ist so nicht lauffähig !
       echo RTFM and have a nice day !
       exit 1
    fi
@@ -477,7 +477,7 @@ fi
 # Alle Optionen der WireGuard  Einstellungen werden über das    #
 # Vorhanden sein bzw. Fehlen der Dateien im Verzeichniss        #
 # /etc/config/cfg bestimmt und bestimmen die zu anzuwendenden   #
-# Firwall Regeln                                                #
+# Firewall Regeln                                               #
 #                                                               #
 # swtor_allow_wireguard1                                        #
 # swtor_wireguard_port1                                         #
@@ -658,7 +658,7 @@ echo [ip-tables : Detect bad packets as soon as possible ]
 # Kette platziert hat die fundamentalsten Grundprinzipien von iptables nicht wirklich verstanden !
 # Auch zu diesem sehr komplexen Thema gibt es wirklich ausgezeichnete Bücher !
 
-# ESTABLISHED/RELATED Pakete brauchen keine zusätzlicgen Flag-Checks
+# ESTABLISHED/RELATED Pakete brauchen keine zusätzlichen Flag-Checks
 
 iptables -t mangle -A PREROUTING \
   -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
@@ -780,9 +780,6 @@ fi
 iptables -t mangle -A PREROUTING -p tcp --syn \
   -m hashlimit --hashlimit-above 20/sec --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-name syn_flood \
   -j DROP -m comment --comment "chain 01/19 synflood limit"
-
-
-
 
 
 echo [ip-tables : allow all traffic on loopback interface 127.0.0.1]
@@ -943,8 +940,8 @@ fi
 /usr/sbin/iptables -A INPUT -p icmp --icmp-type 29 -j DROP
 /usr/sbin/iptables -A INPUT -p icmp --icmp-type 30 -j DROP
 
-# Hier wird genau definiert .... was de OUTPUT Kette verlassen darf.
-# Bein ICMP-Prorkoll  wird einzig nur ping (type 8) unterstützt. Der Rest wird geblockt.
+# Hier wird genau definiert .... was die OUTPUT Kette verlassen darf.
+# Beim ICMP-Protokoll wird einzig nur ping (type 8) unterstützt. Der Rest wird geblockt.
 # Unter gar keinen Umständen wird ein Packet mit der Zielrichtung
 # UDP Port 53 diesen Server jemals verlassen.
 # Der Rest ist im Moment noch ziemlich egal ......
@@ -1051,7 +1048,7 @@ if [ $redirect01_wg0_to_socks5 = "yes" ] ; then
 
 
    # Alles was für ein entferntes Netzwerk über IPSec bestimmt ist, wird direkt in
-   # die nächste Kette geleitet. Keine Magie für diese Packete notwendi !
+   # die nächste Kette geleitet. Keine Magie für diese Packete notwendig !
 
    if [ $swtor_use_ipsec = "yes" ] ; then
       if [ $virtual_iface1 = "yes" ] ; then
@@ -1090,7 +1087,7 @@ if [ $redirect01_wg0_to_socks5 = "yes" ] ; then
 
    else
 
-     # DNS von Wirguard1 (ohne Pihole)
+     # DNS von Wireguard1 (ohne Pihole)
 
      /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p udp \
      --dport 53 -d $wireguard1_dns -j RETURN
@@ -1121,7 +1118,7 @@ if [ $redirect01_wg0_to_socks5 = "yes" ] ; then
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p udp \
    --dport 443 -j DNAT --to-destination $redirect01_wg0
 
-   # An dieser Stelle werden die wohl wichtigsten Ports unter dem Bereich 1024 umgleitet.
+   # An dieser Stelle werden die wohl wichtigsten Ports unter dem Bereich 1024 umgeleitet.
 
    # Port 25 und 110 die unverschlüsselten Urgesteine der SMTP Kommunikation
 
@@ -1175,10 +1172,10 @@ if [ $redirect01_wg0_to_socks5 = "yes" ] ; then
    /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $wireguard1_clients -p udp \
    --dport 123 -j DNAT --to-destination $redirect01_wg0
 
-   # Da wir noch nicht genau wissen, welcher der beiden TCP auf Socks5 Comverter
+   # Da wir noch nicht genau wissen, welcher der beiden TCP auf Socks5 Converter
    # unter Debian 13 nun eigentlich besser läuft, beginnen wir mal mit dem redsocks converter
    # Gewisse Webseiten wie zum Beispiel google laufen auch in der aktuellen Konfiguration nicht
-   # wirklich richtig. Ich vermute es müssen noch vereinzelne Ports umgeleitet werden.
+   # wirklich richtig. Ich vermute es müssen noch vereinzelte Ports umgeleitet werden.
    # Um zu wissen, was genau über den Kanal läuft, loggen wir mal zur Sicherheit alles.
    # Auch der redirector redsocks scheint seine eigenen kleinen Probleme zu haben.
 
@@ -1209,7 +1206,7 @@ if [ $swtor_allow_wireguard1 = "yes" ] ; then
    /usr/sbin/iptables -A FORWARD -m iprange --src-range $wireguard1_clients -d 127.0.0.0/8 -j REJECT
    # APIPA
    /usr/sbin/iptables -A FORWARD -m iprange --src-range $wireguard1_clients -d 169.254.0.0/16 -j REJECT
-   # Unicast und Mutlicast
+   # Unicast und Multicast
    /usr/sbin/iptables -A FORWARD -m iprange --src-range $wireguard1_clients -d 224.0.0.0/4 -j REJECT
    /usr/sbin/iptables -A FORWARD -m iprange --src-range $wireguard1_clients -d 240.0.0.0/4 -j REJECT
    # Privater Klasse A Bereich
@@ -1287,7 +1284,7 @@ if [ $swtor_allow_wireguard2 = "yes" ] ; then
    /usr/sbin/iptables -A FORWARD -m iprange --src-range $wireguard2_clients -d 127.0.0.0/8 -j REJECT
    # APIPA
    /usr/sbin/iptables -A FORWARD -m iprange --src-range $wireguard2_clients -d 169.254.0.0/16 -j REJECT
-   # Unicast und Mutlicast
+   # Unicast und Multicast
    /usr/sbin/iptables -A FORWARD -m iprange --src-range $wireguard2_clients -d 224.0.0.0/4 -j REJECT
    /usr/sbin/iptables -A FORWARD -m iprange --src-range $wireguard2_clients -d 240.0.0.0/4 -j REJECT
    # Privater Klasse A Bereich
@@ -1547,8 +1544,8 @@ if [ $swtor_allow_local_ssh = "yes" ] ; then
       /usr/sbin/iptables -A INPUT  -i $external_if -m state --state NEW,ESTABLISHED -p tcp --dport $swtor_ssh_port2 -j ACCEPT
       /usr/sbin/iptables -A OUTPUT -o $external_if -m state --state ESTABLISHED -p tcp --sport $swtor_ssh_port2 -j ACCEPT
 
-      # Das UDP Protkoll wird hier nur benötigt sollte auf Port 443 ein weiters Wireguard Interface lauschen !
-      # Ansonsten werden keine Verbindung zu Port 443 / UDP zugelassen
+      # Das UDP Protokoll wird hier nur benötigt sollte auf Port 443 ein weiteres Wireguard Interface lauschen !
+      # Ansonsten werden keine Verbindungen zu Port 443 / UDP zugelassen
 
       if [ $swtor_allow_wireguard2 = "yes" ] ; then
          /usr/sbin/iptables -A INPUT  -i $external_if -m state --state NEW,ESTABLISHED -p udp --dport $swtor_ssh_port2 -j ACCEPT
@@ -1595,7 +1592,7 @@ else
    echo [ip-tables : No wireguard rules wg1 added on this host ]
 fi
 
-# Achtung : Diese Regeln müssen  unbedingt vor der Standart-Regel angewendet werden !
+# Achtung : Diese Regeln müssen  unbedingt vor der Standard-Regel angewendet werden !
 
 if [ -f ./cfg/custom_rules ]; then
    cd /etc/config/cfg
