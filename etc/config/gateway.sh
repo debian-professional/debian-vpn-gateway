@@ -134,8 +134,8 @@ if [ -f /etc/config/cfg/gateway ]; then
          --dport $service_07_port -j DNAT --to-destination $redsocks_port
 
          # Und ab hier wollen wie einfach mal schauen, was schlussendlich noch probiert durch
-         # unsere sehr eng definierte Firewall zu schlüpfen. Dienste können nun enfach weiter
-         # hinzugefügt werden, sollte dies in Zulunft nötig werden.
+         # unsere sehr eng definierte Firewall zu schlüpfen. Dienste können nun einfach weiter
+         # hinzugefügt werden, sollte dies in Zukunft nötig werden.
 
          /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p udp \
          -j LOG --log-level warning --log-prefix "Client UDP redirect blocked"
