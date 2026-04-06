@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Firewall Script : rc.loclal                                                 #
+# Firewall Script : rc.local                                                  #
 # Beschreibung    : Schützen eines privaten VPS                               #
 # OS              : Debian 13 trixie                                          #
 ###############################################################################
@@ -100,8 +100,7 @@ fi
 
 # Folgende Variablen müssen gesetzt sein damit das Feature gesetzt ist !!
 # /etc/config/cfg/nvpn /etc/config/cfg/nvpn_country /etc/config/cfg/nvpn_token
-# und naürlch auch das entsprechende binary selbst !!!!
-#
+# und natürlch auch das entsprechende binary selbst !!!!
 
 if [ -f /etc/config/cfg/nvpn ]; then
    if [ -f /etc/config/cfg/swtor_snowflake ]; then
@@ -121,7 +120,7 @@ fi
 if [ -f /etc/config/cfg/gateway ]; then
    rm /etc/snowflake/* > /dev/null 2>&1
 
-   # Testen ob redsocks binary exisitiert ....
+   # Testen ob redsocks binary vorhanden ist ...
 
    if [ -f /usr/sbin/redsocks  ]; then
       echo redsocks binary found
