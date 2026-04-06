@@ -100,7 +100,7 @@ fi
 
 # Folgende Variablen müssen gesetzt sein damit das Feature gesetzt ist !!
 # /etc/config/cfg/nvpn /etc/config/cfg/nvpn_country /etc/config/cfg/nvpn_token
-# und natürlch auch das entsprechende binary selbst !!!!
+# und natürlich auch das entsprechende binary selbst !!!!
 
 if [ -f /etc/config/cfg/nvpn ]; then
    if [ -f /etc/config/cfg/swtor_snowflake ]; then
