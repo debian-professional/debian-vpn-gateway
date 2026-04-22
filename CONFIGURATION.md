@@ -27,7 +27,7 @@ rm /etc/config/cfg/pihole          # PiHole deaktivieren
 Die Datei enthält einen konkreten Wert (IP-Adresse, Portnummer, Benutzername etc.).
 
 ```bash
-echo '194.182.86.53' > /etc/config/cfg/eth0.ip
+echo '<DEINE-WAN-IP>' > /etc/config/cfg/eth0.ip
 echo '22'            > /etc/config/cfg/swtor_ssh_port1
 ```
 
@@ -55,7 +55,7 @@ Die öffentliche IP-Adresse des Servers (WAN-Interface). Diese Adresse wird in z
 
 **Beispiel:**
 ```bash
-echo '194.182.86.53' > /etc/config/cfg/eth0.ip
+echo '<DEINE-WAN-IP>' > /etc/config/cfg/eth0.ip
 ```
 
 **Auswirkung:**  
@@ -871,7 +871,7 @@ Das folgende Beispiel zeigt die Mindestkonfiguration für einen einfachen WireGu
 
 ```bash
 # Pflichtfelder
-echo '194.182.86.53' > /etc/config/cfg/eth0.ip
+echo '<DEINE-WAN-IP>' > /etc/config/cfg/eth0.ip
 echo 'enx3'          > /etc/config/cfg/eth0.name
 
 # SSH aktivieren
