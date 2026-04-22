@@ -9,17 +9,20 @@ etc/doc
 etc/scripts
 
 
-
 files : 
 
-.gitignore			
+.gitignore
+files			
 CONFIGURATION.md
 LICENSE
 README.md
 etc/rc.local
 
+
 RAW Download : 
 
+https://raw.githubusercontent.com/debian-professional/debian-vpn-gateway/refs/heads/main/.gitignore
+https://raw.githubusercontent.com/debian-professional/debian-vpn-gateway/refs/heads/main/files
 https://raw.githubusercontent.com/debian-professional/debian-vpn-gateway/refs/heads/main/CONFIGURATION.md
 https://raw.githubusercontent.com/debian-professional/debian-vpn-gateway/refs/heads/main/LICENSE
 https://raw.githubusercontent.com/debian-professional/debian-vpn-gateway/refs/heads/main/README.md
