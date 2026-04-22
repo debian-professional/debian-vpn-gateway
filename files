@@ -1,0 +1,30 @@
+
+directorys :
+
+etc
+etc/config
+etc/backup
+etc/deb 
+etc/doc
+etc/scripts
+
+
+
+files : 
+
+.gitignore			
+CONFIGURATION.md
+LICENSE
+README.md
+etc/rc.local
+
+RAW Download : 
+
+https://raw.githubusercontent.com/debian-professional/debian-vpn-gateway/refs/heads/main/CONFIGURATION.md
+https://raw.githubusercontent.com/debian-professional/debian-vpn-gateway/refs/heads/main/LICENSE
+https://raw.githubusercontent.com/debian-professional/debian-vpn-gateway/refs/heads/main/README.md
+https://raw.githubusercontent.com/debian-professional/debian-vpn-gateway/refs/heads/main/etc/rc.local
+
+
+
+

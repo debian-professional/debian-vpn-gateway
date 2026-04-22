@@ -18,36 +18,6 @@ if [ -f /etc/config/cfg/gateway ]; then
          do
 
          user=$(printf '%s\n' "$LINE"| awk '{print $1}')
-
-         if [ $line_number = "1" ]; then
-
-            rm /home/$user/*.log > /dev/null 2>&1
-
-            # Start Script
-
-            rm /home/$user/connect-ssh.sh > /dev/null 2>&1
-            echo "#!/bin/bash" >  /home/$user/connect-ssh.sh
-            echo               >> /home/$user/connect-ssh.sh
-            chmod +x /home/$user/connect-ssh.sh
-            chown $user:$user /home/$user/connect-ssh.sh
-
-            # Controll Script
-
-#            rm /home/$user/controll-0$line_number.sh > /dev/null 2>&1
-#            echo "#!/bin/bash" >  /home/$user/controll-0$line_number.sh
-#            echo sleep 5       >> /home/$user/controll-0$line_number.sh
-#            chmod +x /home/$user/controll-0$line_number.sh
-
-            chown $user:$user /home/$user/controll-0$line_number.sh
-         else
-             echo
-#            rm /home/$user/controll-0$line_number.sh > /dev/null 2>&1
-#            echo "#!/bin/bash" >  /home/$user/controll-0$line_number.sh
-#           echo sleep 5       >> /home/$user/controll-0$line_number.sh
-#            chmod +x /home/$user/controll-0$line_number.sh
-#            chown $user:$user /home/$user/controll-0$line_number.sh
-         fi
-
          country=$(printf '%s\n' "$LINE"| awk '{print $2}')
          internal_network=$(printf '%s\n' "$LINE"| awk '{print $3}')
          proxy_port=$(printf '%s\n' "$LINE"| awk '{print $4}')
@@ -77,16 +47,6 @@ if [ -f /etc/config/cfg/gateway ]; then
          service_05_port="5230"
          service_06_port="5938"
          service_07_port="3389"
-
-         echo "ssh -p 22 -A42NC -D "$proxy_port $ssh_user "&" >> /home/$user/connect-ssh.sh
-         arg01=$(echo $searching)
-         arg02=$(echo "ssh -p 22 -A42NC -D "$proxy_port $ssh_user \&)
-         arg03=$(echo /home/$user/controll-0$line_number.log)
-         echo /home/$user/controll-0$line_number.sh "&"  >> /home/$user/connect-ssh.sh
-
-         echo searching=\"$arg01\" >> /home/$user/controll-0$line_number.sh
-         echo command=\"$arg02\" >> /home/$user/controll-0$line_number.sh
-         cat /etc/config/controll-part >> /home/$user/controll-0$line_number.sh
 
          # Port 22 SSH weiterleiten
 
@@ -174,8 +134,8 @@ if [ -f /etc/config/cfg/gateway ]; then
          --dport $service_07_port -j DNAT --to-destination $redsocks_port
 
          # Und ab hier wollen wie einfach mal schauen, was schlussendlich noch probiert durch
-         # unsere sehr eng definierte Firewall zu schlüpfen. Dienste können nun enfach weiter
-         # hinzugefügt werden, sollte dies in Zulunft nötig werden.
+         # unsere sehr eng definierte Firewall zu schlüpfen. Dienste können nun einfach weiter
+         # hinzugefügt werden, sollte dies in Zukunft nötig werden.
 
          /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p udp \
          -j LOG --log-level warning --log-prefix "Client UDP redirect blocked"
@@ -196,22 +156,17 @@ if [ -f /etc/config/cfg/gateway ]; then
 
    echo [gateway       :  we are done here ]
 
-#   if [ -f /etc/config/cfg/gateway ]; then
-#        if [ -f /etc/redsocks/redsocks,log ]; then
-#           rm /etc/redsocks/redsocks.log > /dev/null 2>&1
-#        fi
-#   fi
+   cd /home/redirect01
+   su redirect01 ./ssh_connections.sh > /dev/null 2>&1 &
 
-#  redsocks -c /etc/redsocks.conf
-#  sudo --user=$user /home/$user/connect-ssh.sh
+   echo [gateway       :  external ssh-connections started ]
 
-#   cd /etc/config
-#   ./random.sh > /dev/null 2>&1 &
+   redsocks -c /etc/redsocks.conf
 
-#   Neustart stubby
-#
-#   systemctl stop stubby
-#   systemctl start stubby
+   echo [gateway       :  redsocks converter started ]
+
+   systemctl stop stubby
+   systemctl start stubby
 
    exit 0
 else
