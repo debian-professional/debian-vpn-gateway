@@ -83,12 +83,117 @@ echo 'enx3' > /etc/config/cfg/eth0.name
 Wird in allen iptables-Regeln als Interface-Parameter (`-i` / `-o`) verwendet. Ein falscher Name führt dazu dass keine Regeln greifen.
 
 ---
-
 ## 2. VPN-Modus
+
+> ⚠️ **Wichtig:** `nvpn` und `swtor_snowflake` schliessen sich gegenseitig aus.
+> Beide Optionen gleichzeitig zu aktivieren führt zu einem sofortigen Scriptabbruch mit Fehlermeldung.
+
+> ℹ️ Alle drei Parameter `nvpn`, `nvpn_country` und `nvpn_token` müssen gesetzt sein
+> damit NordVPN erfolgreich gestartet werden kann. Fehlt einer der drei Parameter,
+> wird kein NordVPN-Login durchgeführt und kein `vpn.sh` Script generiert.
 
 ---
 
-### `nvpn` – NordVPN-Modus
+### Konzept und Vorteile des NordVPN-Modus
+
+Dieses Architekturkonzept trennt bewusst zwei Dinge voneinander die bei kommerziellen
+VPN-Anbietern zwingend gekoppelt sind: den **physischen Serverstandort** und die
+**geografische Identität** des ausgehenden Traffics.
+
+Der VPS steht physisch in einem günstigen Rechenzentrum — zum Beispiel in Deutschland
+oder Tschechien. Durch die NordVPN-Integration erscheint der gesamte ausgehende Traffic
+jedoch mit einer NordVPN-IP-Adresse aus einem frei wählbaren Land. Für alle WireGuard-Clients
+die sich auf diesen Server verbinden, ist das transparent: Sie surfen scheinbar aus der
+Schweiz, aus dem Vereinigten Königreich oder aus Island heraus — ganz nach Konfiguration.
+
+**Konkrete Vorteile:**
+
+**1. Kostenoptimierung durch Entkoppelung**
+Statt einen teuren Schweizer VPS (ca. 15-20 EUR/Monat) zu mieten, kombiniert man einen
+günstigen deutschen oder tschechischen Server (2.50 EUR/Monat) mit einer NordVPN-Lizenz
+(ca. 4-6 EUR/Monat bei Mehrjahresabo). Das Ergebnis ist identisch — zu einem Bruchteil
+der Kosten.
+
+**2. Geografische Flexibilität ohne Serverumzug**
+Das Zielland lässt sich jederzeit durch Änderung einer einzigen Konfigurationsdatei
+wechseln. Heute Schweiz, morgen UK für BBC iPlayer, übermorgen Island für maximalen
+Datenschutz — ohne den Server zu wechseln oder umzukonfigurieren.
+
+**3. Alle Benutzer profitieren gleichzeitig**
+Die NordVPN-Lizenz deckt alle WireGuard-Clients ab die sich auf diesen Server verbinden.
+Die Kosten verteilen sich auf alle Benutzer des privaten VPN-Dienstes. Was für einen
+einzelnen Benutzer als Zusatzkosten erscheint, ist für eine Gruppe von Benutzern ein
+sehr günstiges Angebot.
+
+**4. Doppelte Entkoppelung der Identität**
+Der VPS-Anbieter sieht ausschliesslich verschlüsselten NordVPN-Traffic — er weiss nicht
+was die Clients tun. NordVPN sieht den Traffic, aber nicht die eigentlichen Clients
+dahinter — diese sind durch den WireGuard-Tunnel geschützt. Eine doppelte Schicht der
+Anonymisierung die kein kommerzieller VPN-Anbieter alleine bieten kann.
+
+**5. Geo-Restrictions gezielt umgehen**
+Dienste wie BBC iPlayer, bestimmte Streaming-Plattformen oder länderspezifische
+Webinhalte prüfen die IP-Adresse des Besuchers. Mit einer NordVPN-IP aus dem
+Vereinigten Königreich erscheint jeder WireGuard-Client als britischer Nutzer —
+vollständig transparent und ohne zusätzliche Konfiguration auf dem Client.
+
+**6. Maximale Kontrolle bei minimaler Abhängigkeit**
+Anders als bei kommerziellen VPN-Anbietern behält man die vollständige Kontrolle
+über die eigene Firewall, die eigenen Logs (bzw. deren Abwesenheit) und die eigene
+Infrastruktur. NordVPN wird ausschliesslich als geografischer Exit-Node verwendet —
+die gesamte Sicherheitsarchitektur bleibt in eigener Hand.
+
+**Das Kosten-Nutzen-Verhältnis:**
+
+| Variante | Monatliche Kosten | Geografische Flexibilität |
+|----------|-------------------|--------------------------|
+| Schweizer VPS direkt | ~15-20 EUR | Fix — ein Land |
+| Günstiger VPS + NordVPN | ~7-9 EUR | Beliebig wechselbar |
+| Ersparnis | ~8-11 EUR/Monat | Bei mehr Flexibilität |
+
+> ✅ Die Zusatzkosten für NordVPN sind gemessen an den Vorteilen für den Betreiber
+> und alle Benutzer des privaten VPN-Dienstes mehr als gerechtfertigt.
+
+---
+
+### Installation von NordVPN
+
+Für die Installation von NordVPN unter Debian steht das Hilfscript `get-nordvpn.sh`
+zur Verfügung. Es lädt direkt das offizielle Installationsscript von den NordVPN-Servern
+herunter und führt es aus — ohne manuelle Einrichtung von Paketquellen oder
+Schlüsselverwaltung.
+
+```bash
+cd /etc/config
+./get-nordvpn.sh
+```
+
+Das Script führt intern folgenden Befehl aus:
+
+```bash
+sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh)
+```
+
+> ℹ️ **Vorteile dieser Installationsmethode:**
+> - Immer die aktuellste NordVPN-Version direkt vom Hersteller
+> - Automatische Einrichtung der APT-Paketquelle für zukünftige Updates via `apt upgrade`
+> - Keine manuelle GPG-Schlüsselverwaltung notwendig
+
+> ⚠️ Das Script muss als `root` ausgeführt werden.
+
+**Nach der Installation verfügbare Befehle:**
+```bash
+nordvpn --version          # Installierte Version prüfen
+nordvpn countries          # Alle verfügbaren Länder anzeigen
+nordvpn status             # Aktuellen Verbindungsstatus anzeigen
+nordvpn login --token <t>  # Login via Access Token
+nordvpn connect <country>  # Verbindung herstellen
+nordvpn disconnect         # Verbindung trennen
+```
+
+---
+
+### `nvpn` – NordVPN-Modus aktivieren
 
 | Eigenschaft | Wert |
 |-------------|------|
@@ -96,16 +201,129 @@ Wird in allen iptables-Regeln als Interface-Parameter (`-i` / `-o`) verwendet. E
 | **Pflichtfeld** | Nein |
 | **Standard** | Nicht aktiv |
 
-**Beschreibung:**  
-Aktiviert den NordVPN-Kompatibilitätsmodus. Wenn dieser Schalter gesetzt ist, werden die iptables-Tabellen beim Start des Scripts **nicht** zurückgesetzt. Dies ist notwendig weil NordVPN eigene iptables-Regeln setzt die beim Reset verloren gehen würden. Im nvpn-Modus wird der SSH-Tunnel für den Socks5-Redirector nicht automatisch gestartet.
+**Beschreibung:**
+Aktiviert den NordVPN-Kompatibilitätsmodus. Wenn dieser Schalter gesetzt ist, werden
+die iptables-Tabellen beim Start des Scripts **nicht** zurückgesetzt. Dies ist notwendig
+weil NordVPN beim Start eigene iptables-Regeln setzt die beim Reset verloren gehen würden.
+
+Im nvpn-Modus wird durch `rc.local` automatisch ein temporäres Script `vpn.sh`
+generiert und ausgeführt welches folgende Schritte durchführt:
+
+1. NordVPN Login via Token (`nordvpn login --token`)
+2. SSH-Ports zur NordVPN Whitelist hinzufügen
+3. WireGuard-Subnetze zur NordVPN Allowlist hinzufügen
+4. DNS auf `127.0.0.1` setzen (wenn `stubby` aktiv)
+5. Verbindung zum konfigurierten Land herstellen (`nordvpn connect <country>`)
+
+> ℹ️ Im nvpn-Modus wird der SSH-Tunnel für den Socks5-Redirector **nicht** automatisch
+> gestartet. Der VPN-Tunnel übernimmt die Funktion der Verkehrsumleitung.
 
 **Beispiel:**
 ```bash
 touch /etc/config/cfg/nvpn
 ```
 
-**Auswirkung:**  
-Verhindert das Flushen der iptables-Tabellen beim Scriptstart. Die bestehenden NordVPN-Regeln bleiben erhalten.
+**Auswirkung:**
+Verhindert das Flushen der iptables-Tabellen beim Scriptstart. Die bestehenden
+NordVPN-Regeln bleiben erhalten. Aktiviert die Auswertung von `nvpn_country`
+und `nvpn_token`.
+
+---
+
+### `nvpn_country` – Zielland für NordVPN
+
+| Eigenschaft | Wert |
+|-------------|------|
+| **Typ** | Wert-Datei – Ländername (NordVPN-Format) |
+| **Pflichtfeld** | Ja (wenn nvpn aktiv) |
+| **Standard** | Nicht gesetzt |
+
+**Beschreibung:**
+Das Land zu dem NordVPN eine Verbindung aufbauen soll. Der Wert muss dem NordVPN-
+internen Länderformat entsprechen (englischer Landesname, Unterstriche statt Leerzeichen).
+
+> ℹ️ Die vollständige Liste der verfügbaren Länder liefert der Befehl: `nordvpn countries`
+
+**Beispiele:**
+```bash
+echo 'Switzerland'      > /etc/config/cfg/nvpn_country
+echo 'United_Kingdom'   > /etc/config/cfg/nvpn_country
+echo 'Netherlands'      > /etc/config/cfg/nvpn_country
+echo 'Iceland'          > /etc/config/cfg/nvpn_country
+```
+
+**Auswirkung:**
+Wird als Parameter an `nordvpn connect <country>` übergeben. Fehlt diese Datei,
+wird kein `vpn.sh` generiert und NordVPN nicht gestartet.
+
+---
+
+### `nvpn_token` – Authentifizierungstoken für NordVPN
+
+| Eigenschaft | Wert |
+|-------------|------|
+| **Typ** | Wert-Datei – NordVPN Access Token |
+| **Pflichtfeld** | Ja (wenn nvpn aktiv) |
+| **Standard** | Nicht gesetzt |
+
+**Beschreibung:**
+Der NordVPN Access Token für die passwortlose Anmeldung via `nordvpn login --token`.
+Dieser Token ersetzt die interaktive Anmeldung mit Benutzername und Passwort und
+ermöglicht den automatischen Start beim Systemboot ohne manuelle Eingabe.
+
+**Token generieren:**
+1. Einloggen auf [my.nordaccount.com](https://my.nordaccount.com)
+2. Unter *Services → NordVPN → Access Token* einen neuen Token erstellen
+3. Den Token sicher in der Konfigurationsdatei speichern
+
+**Beispiel:**
+```bash
+echo '<DEIN-NORDVPN-TOKEN>' > /etc/config/cfg/nvpn_token
+chmod 600 /etc/config/cfg/nvpn_token
+```
+
+> ⚠️ **Sicherheitshinweis:** Der Token gewährt vollen Zugriff auf das NordVPN-Konto.
+> Die Datei sollte ausschliesslich für root lesbar sein (`chmod 600`).
+> Der Token darf **niemals** in ein öffentliches Repository eingecheckt werden.
+> Er gehört ausschliesslich in das verschlüsselte Konfigurations-Repository
+> `debian-professional/debian-vpn-configuration`.
+
+**Auswirkung:**
+Wird als Parameter an `nordvpn login --token <token>` übergeben. Fehlt diese Datei,
+wird kein `vpn.sh` generiert und NordVPN nicht gestartet.
+
+---
+
+### Zusammenspiel der drei nvpn-Parameter
+
+Alle drei Parameter müssen vorhanden sein damit NordVPN automatisch gestartet wird.
+`rc.local` prüft die Existenz in folgender Reihenfolge:
+
+```
+nvpn → nvpn_country → nvpn_token → nordvpn binary → vpn.sh generieren → NordVPN starten
+```
+
+Fehlt irgendein Element in dieser Kette, wird stillschweigend kein `vpn.sh` generiert
+und NordVPN nicht gestartet. Das `firewall.sh` läuft in jedem Fall weiter.
+
+**Minimalbeispiel NordVPN-Setup:**
+```bash
+# NordVPN installieren
+cd /etc/config && ./get-nordvpn.sh
+
+# Konfiguration setzen
+touch /etc/config/cfg/nvpn
+echo 'Switzerland'          > /etc/config/cfg/nvpn_country
+echo '<DEIN-NORDVPN-TOKEN>' > /etc/config/cfg/nvpn_token
+chmod 600 /etc/config/cfg/nvpn_token
+
+# SSH-Port muss in der Whitelist sein (zwingend vor VPN-Start!)
+touch /etc/config/cfg/swtor_allow_local_ssh
+echo '22' > /etc/config/cfg/swtor_ssh_port1
+```
+
+> ✅ Mit dieser Konfiguration verbindet sich der Server beim Start automatisch
+> mit einem NordVPN-Server in der Schweiz. Der SSH-Port bleibt dabei zugänglich.
 
 ---
 
