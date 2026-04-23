@@ -1,0 +1,24 @@
+
+Include /etc/ssh/sshd_config.d/*.conf
+
+Port 22
+AddressFamily inet
+ListenAddress <DEINE-WAN-IP>
+LogLevel QUIET
+PermitRootLogin no
+AllowUsers admin-user socks
+StrictModes yes
+AllowTCPForwarding yes
+PermitOpen any
+MaxSessions 10
+PubkeyAuthentication yes
+PasswordAuthentication no
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+KbdInteractiveAuthentication no
+UsePAM yes
+X11Forwarding yes
+PrintMotd no
+PrintLastLog no
+AcceptEnv LANG LC_*
+Subsystem       sftp    /usr/lib/openssh/sftp-server
