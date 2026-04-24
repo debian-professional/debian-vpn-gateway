@@ -1,0 +1,3 @@
+SocksPort 172.29.255.1:9050
+Log notice file ~/.tor/notices.log
+RunAsDaemon 1
