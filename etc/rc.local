@@ -149,6 +149,14 @@ if [ -f /etc/config/cfg/swtor_tor ]; then
 
       if [ -f /etc/config/cfg/swtor_tor_user ]; then
           tor_user=$(cat /etc/config/cfg/swtor_tor_user)
+
+          if id "$1" >/dev/null 2>&1; then
+             echo 'user found'
+          else
+             echo user $tor_user not found !
+             using_tor="no"
+             exit 1
+          fi
       else
           echo tor user ist nicht definiert !
           using_tor="no"

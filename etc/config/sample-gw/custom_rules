@@ -1,0 +1,14 @@
+
+/usr/sbin/iptables -A INPUT  -i enx3 -m state --state NEW,ESTABLISHED -p udp --dport 80 -j ACCEPT
+/usr/sbin/iptables -A OUTPUT -o enx3 -m state --state ESTABLISHED -p udp --sport 80  -j ACCEPT
+
+/usr/sbin/iptables -A INPUT  -i enx3 -m state --state NEW,ESTABLISHED -p udp --dport 443 -j ACCEPT
+/usr/sbin/iptables -A OUTPUT -o enx3 -m state --state ESTABLISHED -p udp --sport 443  -j ACCEPT
+
+/usr/sbin/iptables -A INPUT  -i enx3 -m state --state NEW,ESTABLISHED -p udp --dport 4500 -j ACCEPT
+/usr/sbin/iptables -A OUTPUT -o enx3 -m state --state ESTABLISHED -p udp --sport 4500  -j ACCEPT
+
+/usr/sbin/iptables -A INPUT  -i enx3 -m state --state NEW,ESTABLISHED -p udp --dport 8080 -j ACCEPT
+/usr/sbin/iptables -A OUTPUT -o enx3 -m state --state ESTABLISHED -p udp --sport 8080  -j ACCEPT
+
+echo [ip-tables : custom iptables rules executed ]
