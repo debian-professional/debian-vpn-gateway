@@ -131,7 +131,7 @@ if [ -f /etc/config/cfg/gateway ]; then
    if [ -f /usr/sbin/redsocks  ]; then
       echo redsocks binary found
    else
-      echo redsocks binary ist nicht installiert !
+      echo redsocks packet ist nicht installiert !
    fi
 
    if [ -f /etc/redsocks.conf  ]; then
@@ -139,7 +139,6 @@ if [ -f /etc/config/cfg/gateway ]; then
    else
       echo redsocks Konfiguration nicht vorhanden !
    fi
-
 fi
 
 if [ -f /etc/config/cfg/swtor_tor ]; then
@@ -163,13 +162,22 @@ if [ -f /etc/config/cfg/swtor_tor ]; then
           exit 1
       fi
    else
-      echo tor ist nicht installiert !
+      echo tor packet ist nicht installiert !
       using_tor="no"
       exit 1
    fi
 else
    using_tor="no"
 fi
+
+
+if [ -f /etc/config/cfg/gateway ] && [ -f /etc/config/cfg/swtor_tor ]; then
+    if ! command -v proxychains &>/dev/null; then
+        echo "proxychains packet ist nicht installiert!"
+        exit 1
+    fi
+fi
+
 
 if [ -f /etc/config/cfg/nvpn ]; then
    if [ -f /etc/config/cfg/nvpn_country ]; then
