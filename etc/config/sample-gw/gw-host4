@@ -1,0 +1,1 @@
+ssh redirect01@112.77.12.14 curl --proxy socks5h://172.29.255.1:9050 https://speedtest.bitel.io/Testdateien/64MB --output /dev/null 2>&1
