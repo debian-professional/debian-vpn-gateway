@@ -39,7 +39,7 @@
 # eth0:1        Dieses virtuelle Interface wird zum Bereitstellen eines nicht öffentlichen SSH-Zugangs
 #               verwendet und ebenso als Socks5 Server auf dem Port 1080.Der redsocks-redirector welcher normale
 #               Webverbindungen in socks5 konforme Verbindungen übersetzt, arbeitet auf dem lokalen Port
-#               2089.Der dazu optionale tor-service läuft auf Port 9050.
+#               8080.Der dazu optionale tor-service läuft auf Port 9050.
 # eth0:2        Wird zum jetzigen Zeitpunkt noch nicht verwendet.
 # tun0          Dieses Interface wird hauptsächlich für Pihole verwendet.(172.29.255.2)
 #               Der DNS Resolver und die Weboberfläche werden mit diesem Interface verbunden
@@ -1650,7 +1650,7 @@ fi
 
 if [ -f /etc/config/cfg/gateway ]; then
    cd /etc/config/
-#  ./gateway.sh
+   ./gateway.sh
 fi
 
 echo [ip-tables : end of script firewall.sh reached ]
