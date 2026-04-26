@@ -5,9 +5,7 @@
 # OS              : Debian 13 trixie                                          #
 ###############################################################################
 
-# By default this script does nothing.
-#
-# Do make it works ....
+
 # create /etc/rc.local
 # chmod +x rc.local
 # systemctl daemon-reload
@@ -30,10 +28,6 @@ dmesg -n 1
 
 # exit 0
 
-#if [ -f /etc/rc.local2 ]; then
-#   cd /etc
-#   ./rc.local2
-#fi
 
 if [ -f /etc/config/cfg/pihole ]; then
    pihole disable
@@ -226,7 +220,7 @@ if [ -f /etc/config/cfg/nvpn ]; then
             fi
 
             if [ -f /etc/config/cfg/swtor_ssh_port2 ]; then
-               ssh_port1=$(cat /etc/config/cfg/swtor_ssh_port2)
+               ssh_port2=$(cat /etc/config/cfg/swtor_ssh_port2)
                echo /usr/bin/nordvpn whitelist add port $ssh_port2 >> /etc/config/vpn.sh
             fi
 
