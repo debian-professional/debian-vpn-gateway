@@ -469,4 +469,260 @@ zu einem Bruchteil der Kosten einer vergleichbaren kommerziellen Lösung.
 
 ---
 
+---
+
+## Die Standard-Server (Server 1–4) – SOCKS5 über SSH mit Länder-Exit
+
+### Grundprinzip
+
+Das Framework unterstützt den Betrieb von bis zu vier unabhängigen Standard-Servern,
+die jeweils in einem Rechenzentrum im Ausland gehostet werden. Jeder Server leitet
+seinen gesamten ausgehenden Traffic über NordVPN in ein definiertes Zielland:
+
+| Server | NordVPN Exit-Land | SOCKS5-Port (lokal) |
+|--------|-------------------|---------------------|
+| Server 1 | Deutschland | 1080 |
+| Server 2 | United Kingdom | 1081 |
+| Server 3 | Schweiz | 1082 |
+| Server 4 | Spanien | 1083 |
+
+Das Zielland wird pro Server über die Konfigurationsdatei `nvpn_country` gesteuert —
+ein Wechsel des Exit-Landes erfordert keine Änderung am Script, nur eine neue
+Konfigurationsdatei.
+
+### Verbindungsaufbau via SSH Dynamic Port Forwarding
+
+Der Zugriff auf jeden Server erfolgt über einen **SSH SOCKS5-Tunnel** mittels
+Dynamic Port Forwarding (`-D`). Der Befehl auf der Client-Seite ist denkbar einfach:
+
+```bash
+ssh -D 1080 -N socks@server1.example.com  # Exit: Deutschland
+ssh -D 1081 -N socks@server2.example.com  # Exit: UK
+ssh -D 1082 -N socks@server3.example.com  # Exit: Schweiz
+ssh -D 1083 -N socks@server4.example.com  # Exit: Spanien
+```
+
+Der SSH-Client öffnet damit einen lokalen SOCKS5-Proxy-Port. Jede Applikation
+die diesen Port als Proxy nutzt, verlässt das Internet über das jeweilige Zielland.
+
+### Vollständige DNS-Sicherheit am SOCKS5-Client
+
+Ein entscheidender Aspekt ist die Verwendung von `socks5h` statt `socks5` im Client:
+
+- **`socks5`** – Hostname-Auflösung passiert **lokal** → DNS-Leak möglich
+- **`socks5h`** – Hostname-Auflösung passiert **auf dem Remote-Server** → kein DNS-Leak
+
+```
+socks5h://localhost:1080  # Korrekt – DNS auf dem Server, verschlüsselt via Stubby
+socks5://localhost:1080   # Falsch  – DNS lokal beim Client, Klartext-Leak
+```
+
+Da auf dem Server Port 53 (Klartext-DNS) in der Firewall vollständig geblockt ist
+und **Stubby** alle DNS-Anfragen via DNS-over-TLS (Port 853) verschlüsselt,
+ist eine unverschlüsselte DNS-Anfrage technisch unmöglich.
+
+### Verbindungsnachweis via X11 Forwarding
+
+Ein einfacher und zuverlässiger Verbindungstest für den Administrator:
+
+```bash
+ssh -X admin-user@server1.example.com xclock
+```
+
+Erscheint die `xclock` auf dem lokalen Desktop, ist die Verbindung vollständig
+funktionsfähig. Die `xclock` lügt nicht — entweder sie erscheint oder nicht.
+X11 Forwarding ist deshalb in der `sshd_config` bewusst aktiviert.
+
+### SSH-Serverhärtung
+
+Die `sshd_config` der Standard-Server ist konsequent gehärtet:
+
+```
+Port 22
+Port 443
+PasswordAuthentication no
+PermitRootLogin no
+AllowUsers admin-user socks
+PubkeyAuthentication yes
+AddressFamily inet
+ListenAddress <WAN-IP>
+LogLevel QUIET
+```
+
+**Warum Port 443 zusätzlich zu Port 22?**
+Viele öffentliche Netzwerke (Hotels, Flughäfen, Unternehmen) blockieren Port 22.
+Port 443 ist praktisch überall offen, da er als HTTPS-Port gilt. Der Client
+verbindet sich einfach über den verfügbaren Port:
+
+```bash
+ssh -D 1080 -N -p 443 socks@server1.example.com  # falls Port 22 geblockt
+ssh -D 1080 -N -p 22  socks@server1.example.com  # Standard
+```
+
+Der dedizierte `socks`-User ist ausschliesslich für SOCKS5-Tunnel-Verbindungen
+vorgesehen und vom Administrator-Account sauber getrennt.
+
+### TOR als Traffic-Obfuskation
+
+Auf allen Standard-Servern läuft bei aktivem `swtor_tor`-Schalter ein lokaler
+TOR-Dienst. Das Script `random.sh` generiert kontinuierlich **künstlichen
+Hintergrund-Traffic** via TOR zu zufälligen Webseiten:
+
+```bash
+curl --proxy socks5h://172.29.255.1:9050 https://www.boredbutton.com/random
+```
+
+**Zweck:** Ein Server der ausschliesslich SSH-Tunnel-Traffic erzeugt, fällt
+einem aufmerksamen Netzwerkbeobachter auf. Mit dem Noise-Traffic sieht
+das Netzwerkprofil wie gewöhnliches Browsing aus. Der eigentliche
+SSH-SOCKS5-Traffic verschwindet im Rauschen — klassisches
+**Traffic Analysis Resistance**.
+
+### Was das Rechenzentrum sieht
+
+Aus Sicht des VPS-Betreibers — zum Beispiel in Tschechien — ist der Traffic
+vollständig opak:
+
+| Sichtbarer Traffic | Tatsächlicher Inhalt |
+|---|---|
+| Verschlüsselter SSH Port 22/443 | SOCKS5-Tunnel zum Client |
+| Verschlüsselter TOR-Traffic | Noise-Traffic via `random.sh` |
+| Verschlüsselter NordVPN-Traffic | Exit in DE / UK / CH / ES |
+| DNS-over-TLS Port 853 | Stubby-Anfragen |
+
+Kein einziges Byte ist im Klartext lesbar. Selbst unter Zwang gibt es
+nichts Verwertbares herauszugeben.
+
+### Automatische Verbindungsüberwachung
+
+Das Script `controll-part` überwacht die SSH-Verbindungen in einer
+Endlosschleife und startet sie bei Ausfall automatisch neu. Dabei werden
+die Monitoring-Pings selbst via `proxychains` über TOR gesendet:
+
+```bash
+proxychains ssh -p 22 -A42C redirect01@your-own-ddns-name02.ddnsfree.com ping -c 3 www.google.com
+```
+
+**Voraussetzungen für `proxychains`:**
+- Schalter `swtor_tor` muss aktiv sein (`/etc/config/cfg/swtor_tor`)
+- Im Gateway-Modus zusätzlich: Schalter `gateway` muss aktiv sein
+- Das Binary `proxychains` muss installiert sein
+
+Eine automatische Prüfung bei Systemstart:
+
+```bash
+if [ -f /etc/config/cfg/gateway ] && [ -f /etc/config/cfg/swtor_tor ]; then
+    if ! command -v proxychains &>/dev/null; then
+        echo "FEHLER: proxychains ist nicht installiert!"
+        exit 1
+    fi
+fi
+```
+
+---
+
+## Der Gateway-Modus – Transparenter Proxy für alle Endgeräte
+
+### Das Konzept
+
+Der Gateway-Modus ist die fortgeschrittene Betriebsart des Frameworks.
+Ein dedizierter GW-Server fungiert als **transparenter Proxy-Gateway**
+für beliebige Client-Geräte — Smartphones, Tablets, Windows-PCs, alles
+was WireGuard unterstützt.
+
+Der entscheidende Unterschied zum SOCKS5-Modus:
+
+| SOCKS5-Modus | Gateway-Modus |
+|---|---|
+| Client muss Proxy konfigurieren | Client konfiguriert **nichts** |
+| Nur kompatible Apps profitieren | **Gesamter** Traffic umgeleitet |
+| `socks5h` muss bekannt sein | WireGuard einrichten → fertig |
+| Technisches Wissen nötig | Für jeden Nutzer geeignet |
+
+### Verbindungsaufbau für den Endnutzer
+
+```
+1. WireGuard-App installieren
+2. QR-Code scannen oder Config-Datei importieren
+3. Fertig — gesamter Traffic läuft durch die Infrastruktur
+```
+
+Kein Proxy-Eintrag, kein DNS-Setup, kein technisches Wissen erforderlich.
+
+### Die vollständige Kette im Gateway-Modus
+
+```
+Client-Gerät (keine Konfiguration nötig)
+    → WireGuard (verschlüsselt – Ebene 1)
+        → GW-Server
+            → redsocks (transparent TCP → SOCKS5)
+                → SSH-Tunnel via proxychains/TOR (verschlüsselt – Ebene 2)
+                    → Standard-Server 1-4
+                        → NordVPN (verschlüsselt – Ebene 3)
+                            → Zielland (DE / UK / CH / ES)
+```
+
+Auf jeder Ebene wird die Herkunft weiter verschleiert. Kein einzelner
+Knoten kennt das vollständige Bild.
+
+### Die Gateway-Konfigurationsdatei
+
+Die Datei `/etc/config/cfg/gateway` steuert den gesamten Gateway-Modus.
+Pro Zeile wird ein Client-Netzwerk mit eigenem Exit-Land konfiguriert:
+
+```
+redirect01 Germany     172.25.255.2-172.25.255.22  172.29.255.1:1080  172.29.255.1:8080  redirect01@server1  172.25.255.1  1080
+redirect01 UK          172.26.255.2-172.26.255.22  172.29.255.1:1081  172.29.255.1:8081  redirect01@server2  172.26.255.1  1081
+redirect01 switzerland 172.27.255.2-172.27.255.22  172.29.255.1:1082  172.29.255.1:8082  redirect01@server3  172.27.255.1  1082
+redirect01 spain       172.28.255.2-172.28.255.22  172.29.255.1:1083  172.29.255.1:8083  redirect01@server4  172.28.255.1  1083
+```
+
+Pro Zeile / pro Exit-Land wird automatisch ein eigenes **WireGuard-Interface**
+gestartet. Clients wählen ihr Exit-Land durch die Wahl des WireGuard-Profils.
+
+### Transparente Umleitung via redsocks
+
+`redsocks` leitet den gesamten TCP-Traffic der WireGuard-Clients transparent
+auf den SOCKS5-Port um — ohne dass der Client etwas davon merkt. Umgeleitet
+werden alle relevanten Ports:
+
+- HTTP (80), HTTPS (443)
+- SMTP (25, 465, 587), IMAP (143, 993), POP3 (110, 995)
+- DNS-over-TLS (853)
+- SFTP (989, 990)
+- Google Play / Chrome / WhatsApp (5222–5230)
+- RDP (3389)
+
+Jeder nicht explizit erlaubte Port wird geloggt und geblockt.
+
+### Nutzung für versierte Benutzer
+
+Da der GW-Server die vier SSH-SOCKS5-Verbindungen zu den Standard-Servern
+bereits etabliert hat und aktiv überwacht, können versierte Benutzer diese
+**direkt nutzen** — ohne eigene SSH-Verbindung aufzubauen:
+
+```
+socks5h://localhost:1080  → Deutschland
+socks5h://localhost:1081  → UK
+socks5h://localhost:1082  → Schweiz
+socks5h://localhost:1083  → Spanien
+```
+
+Die Verbindungen laufen bereits, werden automatisch überwacht und bei
+Ausfall neu gestartet. Der versierte Nutzer profitiert von der bestehenden
+Infrastruktur ohne zusätzlichen Aufwand.
+
+### Noise-Traffic im Gateway-Modus
+
+Bei aktivem `gateway`- und `swtor_tor`-Schalter erzeugt `random.sh`
+zusätzlich Traffic über die `gw-host1..4` Verbindungen via `proxychains`.
+Dies erhöht die Ununterscheidbarkeit des Traffics auf dem GW-Server
+weiter — der Betreiber des GW-Rechenzentrums sieht ein ununterscheidbares
+Gemisch aus WireGuard-, SSH-, TOR- und normalem HTTPS-Traffic.
+
+---
+
 *github.com/debian-professional/debian-vpn-gateway*
+
+
+
