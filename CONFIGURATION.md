@@ -19,18 +19,18 @@ Es gibt zwei Arten von Parameterdateien:
 **1. Schalter-Dateien (Feature-Flags)**  
 Die blosse Existenz der Datei aktiviert das Feature. Der Inhalt ist irrelevant.
 
-\`\`\`bash
+```bash
 touch /etc/config/cfg/swtor_tor      # TOR aktivieren
 rm    /etc/config/cfg/swtor_tor      # TOR deaktivieren
-\`\`\`
+```
 
 **2. Wert-Dateien**  
 Die Datei enthält einen konkreten Wert (IP-Adresse, Portnummer, Benutzername etc.).
 
-\`\`\`bash
+```bash
 echo '<DEINE-WAN-IP>' > /etc/config/cfg/eth0.ip
 echo '22'            > /etc/config/cfg/swtor_ssh_port1
-\`\`\`
+```
 
 > ⚠️ **Wichtig:** Alle Dateien müssen **ohne Dateiendung** erstellt werden.  
 > Korrekt: `pihole` – Falsch: `pihole.txt` oder `pihole.conf`
@@ -48,7 +48,6 @@ Das Framework kennt zwei grundlegende Betriebsmodi:
 
 > ⚠️ `nvpn` und `swtor_snowflake` schliessen sich gegenseitig aus.  
 > Beide gleichzeitig aktiviert führt zu einem sofortigen Scriptabbruch.
-
 
 ---
 
@@ -71,7 +70,6 @@ Die öffentliche IP-Adresse des Servers (WAN-Interface). Diese Adresse wird in
 zahlreichen iptables-Regeln als Source- und Destination-Adresse verwendet.
 Bei einer falschen Adresse funktioniert die gesamte Firewall nicht korrekt.
 
-**Beispiel:**
 ```bash
 echo '<DEINE-WAN-IP>' > /etc/config/cfg/eth0.ip
 ```
@@ -91,7 +89,6 @@ Der exakte Name des externen Netzwerkinterfaces. Unter OpenStack weicht dieser
 häufig von `eth0` ab und lautet z.B. `enx3`, `ens3` oder `ens192`.
 Den korrekten Namen ermittelt man mit: `ip a`
 
-**Beispiel:**
 ```bash
 echo 'enx3' > /etc/config/cfg/eth0.name
 ```
@@ -106,7 +103,6 @@ echo 'enx3' > /etc/config/cfg/eth0.name
 | **Pflichtfeld** | Nein |
 | **Standard** | Nicht gesetzt |
 
-**Beispiel:**
 ```bash
 echo '9.9.9.9' > /etc/config/cfg/eth0.dns
 ```
@@ -164,9 +160,14 @@ echo '22' > /etc/config/cfg/swtor_ssh_port1
 
 **Beschreibung:**  
 Port 443 wird empfohlen um SSH-Verbindungen als HTTPS-Traffic zu tarnen.
-Viele öffentliche Netzwerke (Hotels, Flughäfen) blockieren Port 22 —
-Port 443 ist praktisch überall offen. Da SSH nur TCP und WireGuard nur UDP
-verwendet, können beide problemlos den gleichen Port nutzen.
+Viele öffentliche Netzwerke (Hotels, Flughäfen, Unternehmen) blockieren Port 22 —
+Port 443 ist praktisch überall offen.
+
+Da SSH nur TCP und WireGuard nur UDP als Transportprotokoll verwendet, können
+beide problemlos denselben Port nutzen.
+
+> ⚠️ Extrem restriktive Firewalls erkennen SSH-Traffic auf Port 443 und blockieren
+> ihn. Alternativen: Port 123 (NTP) oder Port 4500 (IPSec NAT-T).
 
 ```bash
 echo '443' > /etc/config/cfg/swtor_ssh_port2
@@ -178,15 +179,9 @@ Port 22
 Port 443
 ```
 
-Der Client wählt einfach den verfügbaren Port:
-```bash
-ssh -D 1080 -N socks@server.example.com         # Port 22
-ssh -D 1080 -N -p 443 socks@server.example.com  # Port 443
-```
-
 ---
 
-### `swtor_allow_ssh_to_outside` – Ausgehende SSH-Verbindungen
+### `swtor_allow_ssh_to_outside` – Ausgehende SSH-Verbindungen auf TCP Port 22
 
 | Eigenschaft | Wert |
 |-------------|------|
@@ -195,8 +190,17 @@ ssh -D 1080 -N -p 443 socks@server.example.com  # Port 443
 | **Standard** | Nicht aktiv |
 
 **Beschreibung:**  
-Erlaubt ausgehende SSH-Verbindungen. Im Gateway-Modus zwingend erforderlich,
-da der GW-Server SSH-Verbindungen zu den Standard-Servern 1–4 aufbaut.
+Erlaubt ausgehende SSH-Verbindungen zu einem entfernten System auf dem
+**TCP Destination Port 22**. Ohne diesen Schalter blockt die iptables-Firewall
+alle ausgehenden Verbindungen von diesem Server zu einem Remote-System auf
+Port 22 vollständig.
+
+Als Trost kann immerhin zum Loopback-Interface eine Verbindung hergestellt
+werden — aber dies dürfte von externer Seite schwer werden, sehr schwer!
+
+> ⚠️ Diese Option sollte wirklich nur mit allergrösster Vorsicht deaktiviert
+> werden! Im Gateway-Modus ist dieser Schalter zwingend erforderlich, da der
+> GW-Server SSH-Verbindungen zu den Standard-Servern 1–4 auf Port 22 aufbaut.
 
 ```bash
 touch /etc/config/cfg/swtor_allow_ssh_to_outside
@@ -252,7 +256,6 @@ ssh -X admin-user@server1.example.com xclock
 Erscheint die `xclock` auf dem lokalen Desktop, ist die Verbindung vollständig
 funktionsfähig. Eindeutig und ohne Interpretationsspielraum.
 
-
 ---
 
 ## 3. NordVPN-Modus (Standard-Server 1–4)
@@ -265,9 +268,13 @@ funktionsfähig. Eindeutig und ohne Interpretationsspielraum.
 ### Konzept
 
 Das Framework trennt bewusst den **physischen Serverstandort** von der
-**geografischen Identität** des ausgehenden Traffics. Ein günstiger VPS in
-Tschechien (2.50 EUR/Monat) kombiniert mit NordVPN erscheint nach aussen
-mit der IP-Adresse des gewählten Exit-Landes.
+**geografischen Identität** des ausgehenden Traffics. Ein günstiger VPS im
+Ausland kombiniert mit NordVPN erscheint nach aussen mit der IP-Adresse des
+gewählten Exit-Landes.
+
+> ℹ️ **Wichtig bei der Wahl des Server-Standorts:** Der Server sollte in einem
+> anderen Land als dem eigenen Wohnsitz stehen — idealerweise in einem Land mit
+> strengeren Datenschutzgesetzen und ausserhalb der eigenen Rechtsprechung.
 
 **Empfohlene Konfiguration für 4 Standard-Server:**
 
@@ -280,18 +287,18 @@ mit der IP-Adresse des gewählten Exit-Landes.
 
 **Vollständige Verschlüsselungskette:**
 ```
-Client
+Workstation (Linux / Windows / macOS / Android / iOS / ChromeOS)
     → SSH-Tunnel Port 22 oder 443      (verschlüsselt)
-        → Standard-Server
+        → Standard-Server (VPS im Ausland)
             → DNS  → Stubby (DNS-over-TLS Port 853)
-            → Data → NordVPN → Zielland
+            → Data → NordVPN (keepalive 60) → Zielland
 ```
 
-**Was das Rechenzentrum sieht — und was nicht:**
+**Was der VPS-Betreiber sieht — und was nicht:**
 
 | Sichtbarer Traffic | Tatsächlicher Inhalt |
 |---|---|
-| Verschlüsselter SSH Port 22 / 443 | SOCKS5-Tunnel zum Client |
+| Verschlüsselter SSH Port 22 / 443 | SOCKS5-Tunnel zur Workstation |
 | Verschlüsselter TOR-Traffic | Noise-Traffic via `random.sh` |
 | Verschlüsselter NordVPN-Traffic | Exit DE / UK / CH / ES |
 | DNS-over-TLS Port 853 | Stubby-Anfragen |
@@ -300,26 +307,27 @@ Kein einziges Byte ist im Klartext lesbar.
 
 ---
 
-### SOCKS5-Nutzung auf dem Client
+### SOCKS5-Nutzung auf der Workstation
 
+Eine SSH-Verbindung zum Standard-Server kann von jedem gängigen Betriebssystem
+aufgebaut werden — Linux, Windows (PowerShell/PuTTY), macOS, Android, iOS und ChromeOS.
+
+**SSH Dynamic Port Forward (`-D`) — SOCKS5-Proxy lokal:**
 ```bash
-ssh -D 1080 -N socks@server1.example.com       # Exit: Deutschland
-ssh -D 1081 -N socks@server2.example.com       # Exit: UK
-ssh -D 1082 -N socks@server3.example.com       # Exit: Schweiz
-ssh -D 1083 -N socks@server4.example.com       # Exit: Spanien
+ssh -p 22 -4C2N -D 127.0.0.1:8080 redirect01@server1.example.com  # → Deutschland
+ssh -p 22 -4C2N -D 127.0.0.1:8080 redirect01@server2.example.com  # → UK
+ssh -p 22 -4C2N -D 127.0.0.1:8080 redirect01@server3.example.com  # → Schweiz
+ssh -p 22 -4C2N -D 127.0.0.1:8080 redirect01@server4.example.com  # → Spanien
 ```
 
 Im Browser oder System:
 ```
-socks5h://localhost:1080   # Deutschland
-socks5h://localhost:1081   # UK
-socks5h://localhost:1082   # Schweiz
-socks5h://localhost:1083   # Spanien
+socks5h://127.0.0.1:8080
 ```
 
 > ⚠️ **Zwingend `socks5h` verwenden, nicht `socks5`!**  
 > Das `h` bedeutet: Hostname-Auflösung passiert auf dem **Remote-Server** — kein DNS-Leak.  
-> Mit `socks5` (ohne h) passiert die DNS-Auflösung lokal → DNS-Leak!
+> Mit `socks5` (ohne h) passiert die DNS-Auflösung lokal beim Client → DNS-Leak!
 
 Da auf dem Server Port 53 in der Firewall vollständig geblockt ist und Stubby
 alle DNS-Anfragen via DNS-over-TLS (Port 853) verschlüsselt, ist eine
@@ -358,8 +366,22 @@ nordvpn disconnect         # Verbindung trennen
 **Beschreibung:**  
 Aktiviert den NordVPN-Kompatibilitätsmodus. Die iptables-Tabellen werden beim
 Scriptstart **nicht** zurückgesetzt, da NordVPN eigene Regeln setzt die beim
-Reset verloren gehen würden. `rc.local` generiert automatisch ein temporäres
-Script `vpn.sh` mit Login, Whitelist-Einträgen und `nordvpn connect`.
+Reset verloren gehen würden.
+
+`rc.local` generiert automatisch ein temporäres Script `vpn.sh` das folgende
+Schritte in dieser Reihenfolge durchführt:
+
+```bash
+nordvpn login --token <token>
+nordvpn allowlist add subnet 172.29.255.0/24   # wenn TOR aktiv
+nordvpn set dns 127.0.0.1                      # wenn stubby aktiv
+nordvpn set keepalive 60                       # Keep-Alive VOR connect setzen
+nordvpn connect <country>                      # Verbindung aufbauen
+```
+
+> ℹ️ `nordvpn set keepalive 60` muss zwingend **vor** `nordvpn connect` ausgeführt
+> werden. Der Wert wird beim Verbindungsaufbau übernommen. Nach dem Connect hat
+> die Einstellung keinen Effekt mehr auf die bereits bestehende Verbindung.
 
 ```bash
 touch /etc/config/cfg/nvpn
@@ -407,7 +429,7 @@ chmod 600 /etc/config/cfg/nvpn_token
 
 ---
 
-## 4. TOR – Traffic-Obfuskation
+## 4. TOR + Noise-Traffic (Traffic Analysis Resistance)
 
 ---
 
@@ -421,16 +443,39 @@ chmod 600 /etc/config/cfg/nvpn_token
 
 **Beschreibung:**  
 Aktiviert den TOR-Dienst auf Port 9050. Bei aktivem Schalter startet `rc.local`
-automatisch das Script `tornode3ip.sh` → `random.sh` welches kontinuierlich
-**künstlichen Hintergrund-Traffic** via TOR erzeugt:
+automatisch `tornode3ip.sh` → `random.sh`.
 
+**Das Script `random.sh` erzeugt massiven Noise-Traffic in einer Endlosschleife:**
+
+**Phase 1 — Link-Generierung (20 Durchläufe):**
 ```bash
 curl --proxy socks5h://172.29.255.1:9050 https://www.boredbutton.com/random
 ```
+20 zufällige URLs werden gesammelt und in `/tmp/links` gespeichert.
 
-**Zweck:** Ein Server der ausschliesslich SSH-Tunnel-Traffic erzeugt, fällt
-auf. Mit Noise-Traffic sieht das Netzwerkprofil wie gewöhnliches Browsing aus —
-**Traffic Analysis Resistance**.
+**Phase 2 — Traffic-Generierung (pro URL):**
+Für jede gesammelte URL wird zufällig (rvalue 0–10) entschieden:
+- Die URL wird via TOR abgerufen (`curl --proxy socks5h://...`)
+- Im GW-Modus zusätzlich: 64MB Testdatei-Download via `proxychains` über TOR
+  auf dem jeweiligen Standard-Server
+
+Das ergibt pro Durchlauf:
+- 20× `boredbutton.com` via TOR
+- Bis zu 20× zufällige Webseiten via TOR
+- Im GW-Modus: bis zu 20× 64MB Downloads via proxychains auf den Standard-Servern
+
+**Gesamtbild der Noise-Traffic Quellen:**
+
+| Quelle | Beschreibung |
+|--------|-------------|
+| `random.sh` | Endlosschleife: 20x URLs sammeln + besuchen + 64MB Downloads |
+| TOR | Onion-Routing Traffic, Relay für andere Nutzer |
+| Snowflake | TOR-Bridge-Proxy, Relay für zensierte Nutzer (Port 32768–60999) |
+| NordVPN | Verschlüsselter Tunnel, keepalive 60 Sekunden |
+
+Für den VPS-Betreiber ist das ein absolut undurchdringliches, kontinuierliches
+Rauschen aus verschlüsseltem Traffic — rund um die Uhr, in beide Richtungen,
+ohne erkennbares Muster. **Traffic-Analyse ist unmöglich.**
 
 ```bash
 touch /etc/config/cfg/swtor_tor
@@ -477,8 +522,8 @@ echo 'source' > /etc/config/cfg/swtor_tor_user
 ## 5. Gateway-Modus
 
 Der Gateway-Modus verwandelt einen Server in einen **transparenten Proxy-Gateway**.
-Clients müssen lediglich WireGuard einrichten — der gesamte Traffic wird
-automatisch und unsichtbar umgeleitet.
+Clients werden vollautomatisch und ohne jede eigene Konfiguration in das gewünschte
+Exit-Land geleitet.
 
 ---
 
@@ -486,11 +531,11 @@ automatisch und unsichtbar umgeleitet.
 
 **Vergleich der Betriebsmodi:**
 
-| SOCKS5-Modus (Standard-Server) | Gateway-Modus |
+| Standard-Server (SSH) | Gateway-Modus |
 |---|---|
-| Client muss `socks5h://` konfigurieren | Client konfiguriert **nichts** |
+| Client konfiguriert `socks5h://` im Browser | Client konfiguriert **nichts** |
 | Nur kompatible Apps profitieren | **Gesamter** Traffic umgeleitet |
-| Technisches Wissen erforderlich | WireGuard einrichten → fertig |
+| Technisches Wissen erforderlich | WireGuard importieren → fertig |
 
 **Vollständige Verschlüsselungskette:**
 ```
@@ -508,6 +553,51 @@ Kein Knoten in dieser Kette kennt das vollständige Bild.
 
 ---
 
+### Drei Nutzungsmöglichkeiten des Gateway-Servers
+
+Der GW-Server bietet **drei völlig unabhängige Nutzungsmöglichkeiten** gleichzeitig.
+Da die vier SSH-SOCKS5-Verbindungen zu den Standard-Servern bereits etabliert sind
+und aktiv überwacht werden, können sie direkt genutzt werden:
+
+**Option 1 — SSH Local Port Forward (`-L`):**  
+Leitet einen lokalen Port direkt auf einen der SOCKS5-Ports des GW-Servers um.
+Die Verbindung läuft über den GW-Server zu den bereits bestehenden SOCKS5-Tunneln.
+
+```bash
+ssh -p 22 -4C2N -L 127.0.0.1:8080:172.29.255.1:1080 redirect01@gw-server  # → Deutschland
+ssh -p 22 -4C2N -L 127.0.0.1:8080:172.29.255.1:1081 redirect01@gw-server  # → UK
+ssh -p 22 -4C2N -L 127.0.0.1:8080:172.29.255.1:1082 redirect01@gw-server  # → Schweiz
+ssh -p 22 -4C2N -L 127.0.0.1:8080:172.29.255.1:1083 redirect01@gw-server  # → Spanien
+```
+
+Im Browser: `socks5h://127.0.0.1:8080`
+
+**Option 2 — SSH Dynamic Port Forward (`-D`):**  
+Öffnet einen SOCKS5-Proxy direkt zum GW-Server. Das Exit-Land ist der
+physische Standort des GW-Servers selbst.
+
+```bash
+ssh -p 22 -4C2N -D 127.0.0.1:8080 redirect01@gw-server
+```
+
+Im Browser: `socks5h://127.0.0.1:8080`
+
+**Option 3 — WireGuard (transparent, kein Browser-Setup):**  
+Gesamter Traffic wird ohne jede Client-Konfiguration via redsocks auf den
+entsprechenden SOCKS5-Port umgeleitet:
+
+```
+wg2 → 172.29.255.1:1080 → Deutschland
+wg3 → 172.29.255.1:1081 → UK
+wg4 → 172.29.255.1:1082 → Schweiz
+wg5 → 172.29.255.1:1083 → Spanien
+```
+
+Alle Nutzungsmöglichkeiten sind von allen gängigen Betriebssystemen erreichbar:
+Linux · Windows · macOS · Android · iOS · ChromeOS
+
+---
+
 ### `gateway` – Gateway-Konfigurationsdatei
 
 | Eigenschaft | Wert |
@@ -519,7 +609,8 @@ Kein Knoten in dieser Kette kennt das vollständige Bild.
 **Beschreibung:**  
 Die Datei `/etc/config/cfg/gateway` steuert den gesamten Gateway-Modus.
 Pro Zeile wird ein Client-Netzwerk mit eigenem Exit-Land konfiguriert.
-Pro Zeile wird automatisch ein eigenes WireGuard-Interface gestartet.
+Pro Zeile wird automatisch ein eigenes WireGuard-Interface gestartet
+(beginnend bei `wg2`).
 
 **Format:**
 ```
@@ -536,8 +627,7 @@ redirect01 spain       172.28.255.2-172.28.255.22  172.29.255.1:1083  172.29.255
 
 > ⚠️ **Achtung Datenvolumen:** Im Gateway-Modus wurden bis zu 200 GB
 > Datenvolumen pro Tag beobachtet wenn Noise-Downloads nicht korrekt
-> dimensioniert sind (Changelog 15/01/26). Testdateigrösse wurde
-> von 512 MB auf 64 MB reduziert.
+> dimensioniert sind. Testdateigrösse wurde von 512 MB auf 64 MB reduziert.
 
 ---
 
@@ -569,7 +659,6 @@ TOR ausgeführt wird. Der Befehl wird via SSH auf dem jeweiligen
 Standard-Server ausgeführt und lädt eine Testdatei via TOR herunter
 um Noise-Traffic zu erzeugen.
 
-**Beispiel:**
 ```bash
 echo 'ssh redirect01@<SERVER1-IP> curl --proxy socks5h://172.29.255.1:9050 https://speedtest.bitel.io/Testdateien/64MB --output /dev/null 2>&1' \
   > /etc/config/cfg/gw-host1
@@ -604,26 +693,6 @@ Jeder nicht explizit erlaubte Port wird geloggt und geblockt.
 ```bash
 apt install redsocks proxychains
 ```
-
-Das Framework prüft beim Start ob `redsocks` installiert und konfiguriert ist.
-
----
-
-### Direkte SOCKS5-Nutzung für versierte Benutzer
-
-Da der GW-Server die vier SSH-SOCKS5-Verbindungen zu den Standard-Servern
-bereits etabliert hat und aktiv überwacht, können versierte Benutzer diese
-direkt nutzen — ohne eigene SSH-Verbindung aufzubauen:
-
-```
-socks5h://localhost:1080  → Deutschland
-socks5h://localhost:1081  → UK
-socks5h://localhost:1082  → Schweiz
-socks5h://localhost:1083  → Spanien
-```
-
-Die Verbindungen laufen bereits, werden überwacht und bei Ausfall automatisch neu gestartet.
-
 
 ---
 
@@ -660,8 +729,8 @@ Die IP-Adresse des virtuellen Interfaces `eth0:1`. Dieses Interface stellt
 alle Proxy-Dienste bereit:
 
 - SSH-Zugang (Port 22 / 443)
-- SOCKS5-Server (Ports 1080–1082)
-- redsocks-Redirector (Ports 8080–8082)
+- SOCKS5-Server (Ports 1080–1083)
+- redsocks-Redirector (Ports 8080–8083)
 - TOR-Proxy (Port 9050, wenn `swtor_tor` aktiv)
 
 **Nmap-Scan auf diesem Interface (Beispiel mit allen Diensten aktiv):**
@@ -671,9 +740,11 @@ alle Proxy-Dienste bereit:
 1080/tcp open  socks
 1081/tcp open  socks
 1082/tcp open  socks
+1083/tcp open  socks
 8080/tcp open  http-proxy
 8081/tcp open  http-proxy
 8082/tcp open  http-proxy
+8083/tcp open  http-proxy
 9050/tcp open  tor-socks
 ```
 
@@ -694,8 +765,8 @@ echo '255.255.255.0' > /etc/config/cfg/virtual_subnet2
 ## 7. WireGuard
 
 > ℹ️ Es können bis zu 2 WireGuard-Interfaces (`wg0` / `wg1`) manuell konfiguriert werden.
-> Im Gateway-Modus werden zusätzlich `wg2`, `wg3`, `wg4` automatisch gestartet
-> (je nach Anzahl Zeilen in der `gateway`-Konfigurationsdatei).
+> Im Gateway-Modus werden zusätzlich `wg2`, `wg3`, `wg4`, `wg5` automatisch gestartet
+> (je nach Anzahl Zeilen in der `gateway`-Konfigurationsdatei, beginnend bei `wg2`).
 
 > ⚠️ **Bekanntes Problem Debian 13 (Changelog 08/12/25):** Die Pakete `wireguard`
 > und `wireguard-tools` haben fälschlicherweise den RT-Kernel als Abhängigkeit
@@ -719,8 +790,8 @@ echo 'wg0'             > /etc/config/cfg/wireguard_interface1
 echo '172.255.31.0/24' > /etc/config/cfg/wireguard_subnet1
 ```
 
-> ℹ️ Port 80 (UDP) wird empfohlen — in restriktiven Netzwerken erlaubt und
-> nicht mit HTTPS-Traffic zu verwechseln (TCP/UDP-Trennung).
+> ℹ️ Port 80 UDP wird empfohlen — in restriktiven Netzwerken erlaubt.
+> Da WireGuard nur UDP und HTTP nur TCP verwendet, können beide Port 80 gleichzeitig nutzen.
 
 ---
 
@@ -800,7 +871,8 @@ touch /etc/config/cfg/pihole
 
 **Beschreibung:**  
 Aktiviert den `snowflake-proxy`. Snowflake ermöglicht Menschen in zensierten
-Ländern den Zugang zum TOR-Netzwerk. Öffnet den UDP-Portbereich 32768–60999.
+Ländern den Zugang zum TOR-Netzwerk. Öffnet den UDP-Portbereich 32768–60999
+und erzeugt zusätzlichen Relay-Traffic.
 
 > ⚠️ `nvpn` und `swtor_snowflake` schliessen sich gegenseitig aus!
 
@@ -934,7 +1006,7 @@ chmod +x /etc/config/cfg/custom_rules
 | `swtor_allow_local_ssh` | Schalter | Empfohlen | SSH eingehend aktivieren |
 | `swtor_ssh_port1` | Wert | Bedingt | Primärer SSH-Port (22) |
 | `swtor_ssh_port2` | Wert | Nein | Sekundärer SSH-Port (443) |
-| `swtor_allow_ssh_to_outside` | Schalter | Nein | Ausgehende SSH erlauben |
+| `swtor_allow_ssh_to_outside` | Schalter | Nein | Ausgehende SSH auf TCP Port 22 erlauben |
 | `virtual_iface` | Schalter | Nein | Virtuelle Interfaces aktivieren |
 | `virtual_iface2` | Wert | Nein | IP von eth0:1 (Dienste-Hub) |
 | `virtual_subnet2` | Wert | Bedingt | Subnetz von eth0:1 |
@@ -951,9 +1023,9 @@ chmod +x /etc/config/cfg/custom_rules
 | `ipsec_connection` | Wert | Bedingt | Name der IPSec-Verbindung |
 | `ipsec_keep_alive` | Wert | Bedingt | Keep-Alive Intervall (Sek.) |
 | `stubby` | Schalter | Empfohlen | DNS-over-TLS aktivieren |
-| `swtor_tor` | Schalter | Nein | TOR-Dienst + Noise-Traffic aktivieren |
+| `swtor_tor` | Schalter | Nein | TOR + Noise-Traffic aktivieren |
 | `swtor_tor_user` | Wert | Bedingt | Linux-User für TOR |
-| `swtor_snowflake` | Schalter | Nein | Snowflake-Proxy aktivieren |
+| `swtor_snowflake` | Schalter | Nein | Snowflake-Proxy + Noise-Traffic aktivieren |
 | `pihole` | Schalter | Nein | PiHole DNS-Blocker aktivieren |
 | `optimize_memory` | Schalter | Nein | RAM-Sparmode (kein Logging) |
 | `disable_ipv6` | Schalter | Empfohlen | IPv6 komplett deaktivieren |
@@ -1005,8 +1077,8 @@ touch /etc/config/cfg/swtor_allow_ssh_to_outside
 
 # NordVPN
 touch /etc/config/cfg/nvpn
-echo 'Switzerland'     > /etc/config/cfg/nvpn_country
-echo '<NVPN-TOKEN>'    > /etc/config/cfg/nvpn_token
+echo 'Switzerland'  > /etc/config/cfg/nvpn_country
+echo '<NVPN-TOKEN>' > /etc/config/cfg/nvpn_token
 chmod 600 /etc/config/cfg/nvpn_token
 
 # Dienste-Hub Interface
@@ -1030,7 +1102,7 @@ touch /etc/config/cfg/disable_ipv6
 ## 15. Minimalbeispiel – Gateway-Server Setup
 
 ```bash
-# Pflichtfelder (wie Standard-Server)
+# Pflichtfelder (wie Standard-Server, ohne nvpn)
 echo '<WAN-IP>' > /etc/config/cfg/eth0.ip
 echo 'enx3'     > /etc/config/cfg/eth0.name
 touch /etc/config/cfg/swtor_allow_local_ssh
