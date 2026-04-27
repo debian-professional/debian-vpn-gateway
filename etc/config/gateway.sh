@@ -156,8 +156,9 @@ if [ -f /etc/config/cfg/gateway ]; then
 
    echo [gateway       :  we are done here ]
 
-   cd /home/redirect01
-   su redirect01 ./ssh_connections.sh > /dev/null 2>&1 &
+   gw_user=$(cat /etc/config/cfg/gateway_user)
+   cd /home/$gw_user
+   su $gw_user ./ssh_connections.sh > /dev/null 2>&1 &
 
    echo [gateway       :  external ssh-connections started ]
 
