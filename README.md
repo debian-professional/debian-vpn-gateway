@@ -42,7 +42,7 @@ Jeder Standard-Server leitet den gesamten Traffic über NordVPN in ein definiert
 Exit-Land. Der Client verbindet sich via SSH Dynamic Port Forwarding und erhält
 einen lokalen SOCKS5-Proxy-Port.
 
-![Standard-Server Architektur](docs/images/standard-server.svg)
+![Standard-Server Architektur](docs/images/standard-server.png)
 
 Die vollständige Verschlüsselungskette macht jeden Traffic für den Rechenzentrum-Betreiber
 unlesbar: SSH-Tunnel auf Port 22 oder 443, DNS verschlüsselt via Stubby (DNS-over-TLS Port 853),
@@ -52,16 +52,25 @@ TOR und Snowflake erzeugen kontinuierlichen Noise-Traffic zur Obfuskation.
 
 Der Gateway-Modus macht komplexe Proxy-Konfigurationen für den Endnutzer unsichtbar.
 Ein WireGuard-Profil importieren — und der gesamte Traffic läuft automatisch durch
-die Infrastruktur, inklusive DNS-Schutz und Exit-Land-Auswahl.
+die Infrastruktur, inklusive DNS-Schutz und Exit-Land-Auswahl. Drei unabhängige
+Nutzungsmöglichkeiten stehen zur Verfügung: SSH Local Forward (`-L`), SSH Dynamic
+Forward (`-D`) und WireGuard transparent.
 
-![Gateway-Modus Architektur](docs/images/gateway-modus.svg)
+![Gateway-Modus Architektur](docs/images/gateway-modus.png)
 
 ### Drei unabhängige Verschlüsselungsebenen
 
 Die Architektur schichtet drei voneinander unabhängige Verschlüsselungsprotokolle
 übereinander. Kein einzelner Knoten in der Kette kennt das vollständige Bild.
 
-![Drei Verschlüsselungsebenen](docs/images/verschluesselung.svg)
+![Drei Verschlüsselungsebenen](docs/images/verschluesselung.png)
+
+### Noise-Traffic — Traffic Analysis Resistance
+
+Vier unabhängige Quellen erzeugen kontinuierlichen Hintergrund-Traffic der eine
+Traffic-Analyse durch Dritte unmöglich macht.
+
+![Noise-Traffic Quellen](docs/images/noise-traffic.png)
 
 ---
 
@@ -302,3 +311,6 @@ was als Privatperson technisch möglich ist.
 ---
 
 *github.com/debian-professional/debian-vpn-gateway*
+
+
+
