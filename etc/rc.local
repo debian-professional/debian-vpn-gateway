@@ -252,8 +252,6 @@ if [ -f /etc/config/cfg/nvpn ]; then
                echo /usr/bin/nordvpn set dns 127.0.0.1  >> /etc/config/vpn.sh
             fi
 
-
-            echo /usr/bin/nordvpn set keepalive 60   >> /etc/config/vpn.sh
             echo /usr/bin/nordvpn connect $country   >> /etc/config/vpn.sh
 
             echo                                     >> /etc/config/vpn.sh
