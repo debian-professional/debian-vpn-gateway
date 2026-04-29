@@ -25,7 +25,7 @@ fi
 # WireGuard Pakete installieren
 
 echo "[wg-install] Installiere wireguard-tools ..."
-dpkg -i /etc/config/wireguard-tools_1.1_amd64.deb
+dpkg -i /etc/config/deb/wireguard-tools_1.1_amd64.deb
 if [ $? -ne 0 ]; then
     echo "FEHLER: Installation von wireguard-tools_1.1_amd64.deb fehlgeschlagen!"
     exit 1
