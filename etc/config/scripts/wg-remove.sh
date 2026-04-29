@@ -7,6 +7,7 @@
 # Aufruf    : sudo bash /etc/config/scripts/wg-remove.sh
 # Aufgabe   : Vollständige Deinstallation von WireGuard und qrencode
 #             Löschen aller Schlüssel und Konfigurationsdateien
+#             Unterstützt Standard-Server (wg0/wg1) und Gateway-Server (wg2-wg5)
 # =============================================================================
 
 # Root-Check
@@ -24,11 +25,19 @@ fi
 echo "[wg-remove] Starte vollständige Deinstallation von WireGuard ..."
 
 # Warnung wenn aktive Konfigurationen vorhanden sind — VOR allem anderen!
-if [ -f /etc/wireguard/wg0.conf ] || [ -f /etc/wireguard/wg1.conf ]; then
+FOUND_CONFIGS=""
+for IFACE in wg0 wg1 wg2 wg3 wg4 wg5; do
+    if [ -f /etc/wireguard/${IFACE}.conf ]; then
+        FOUND_CONFIGS="$FOUND_CONFIGS /etc/wireguard/${IFACE}.conf"
+    fi
+done
+
+if [ -n "$FOUND_CONFIGS" ]; then
     echo ""
     echo "⚠️  WARNUNG: Aktive WireGuard Konfigurationen gefunden!"
-    [ -f /etc/wireguard/wg0.conf ] && echo "    → /etc/wireguard/wg0.conf"
-    [ -f /etc/wireguard/wg1.conf ] && echo "    → /etc/wireguard/wg1.conf"
+    for CONF in $FOUND_CONFIGS; do
+        echo "    → $CONF"
+    done
     echo ""
     echo "    Diese Konfigurationen enthalten Schlüssel und Client-Daten"
     echo "    die nach dem Löschen UNWIDERRUFLICH verloren sind!"
@@ -43,14 +52,12 @@ fi
 
 # WireGuard Interfaces stoppen falls aktiv
 echo "[wg-remove] Stoppe WireGuard Interfaces ..."
-if ip link show wg0 &>/dev/null; then
-    wg-quick down wg0 > /dev/null 2>&1
-    echo "[wg-remove] Interface wg0 gestoppt."
-fi
-if ip link show wg1 &>/dev/null; then
-    wg-quick down wg1 > /dev/null 2>&1
-    echo "[wg-remove] Interface wg1 gestoppt."
-fi
+for IFACE in wg0 wg1 wg2 wg3 wg4 wg5; do
+    if ip link show $IFACE &>/dev/null; then
+        wg-quick down $IFACE > /dev/null 2>&1
+        echo "[wg-remove] Interface $IFACE gestoppt."
+    fi
+done
 
 # Pakete deinstallieren
 echo "[wg-remove] Deinstalliere wireguard ..."
