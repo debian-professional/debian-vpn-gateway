@@ -83,7 +83,7 @@ DEFAULT_PORTS=(80 443 4500 8080)
 while IFS= read -r line; do
     COUNTRY=$(echo "$line" | awk '{print $2}')
     DEFAULT_PORT=${DEFAULT_PORTS[$((WG_IFACE_NUM - 2))]}
-    read -p "  UDP-Port für wg${WG_IFACE_NUM} ($COUNTRY) [Standard: ${DEFAULT_PORT}]: " PORT
+    read -p "  UDP-Port für wg${WG_IFACE_NUM} ($COUNTRY) [Standard: ${DEFAULT_PORT}]: " PORT </dev/tty
     PORT=${PORT:-${DEFAULT_PORT}}
     WG_PORTS+=("$PORT")
     WG_IFACE_NUM=$((WG_IFACE_NUM + 1))
