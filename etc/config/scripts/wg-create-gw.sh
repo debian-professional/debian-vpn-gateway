@@ -101,7 +101,8 @@ while IFS= read -r line; do
     IP_RANGE=$(echo "$line" | awk '{print $3}')
     SERVER_IP=$(echo "$line" | awk '{print $7}')
     PORT=${WG_PORTS[$IDX]}
-    echo "  wg${WG_IFACE_NUM}: $COUNTRY | Netz: $(echo $IP_RANGE | cut -d'-' -f1 | sed 's/\.[0-9]*$/.0')/24 | Server-IP: $SERVER_IP | Port: $PORT"
+    BASE=$(echo "$IP_RANGE" | cut -d'-' -f1 | awk -F. '{print $1"."$2"."$3".0"}')
+    echo "  wg${WG_IFACE_NUM}: $COUNTRY | Netz: ${BASE}/24 | Server-IP: $SERVER_IP | Port: $PORT"
     WG_IFACE_NUM=$((WG_IFACE_NUM + 1))
     IDX=$((IDX + 1))
 done <<< "$GW_LINES"
@@ -135,7 +136,7 @@ while IFS= read -r line; do
     PORT=${WG_PORTS[$IDX]}
 
     # Basis-IP aus IP-Range ableiten (z.B. 172.25.255)
-    BASE_IP=$(echo "$IP_RANGE" | cut -d'-' -f1 | sed 's/\.[0-9]*$//')
+    BASE_IP=$(echo "$IP_RANGE" | cut -d'-' -f1 | awk -F. '{print $1"."$2"."$3}')
 
     echo ""
     echo "[wg-create-gw] === wg${WG_IFACE_NUM} ($COUNTRY) | Port $PORT | $BASE_IP.0/24 ==="
