@@ -114,6 +114,35 @@ fi
 
 if [ -f /etc/config/cfg/nvpn ]; then
    echo vpn is used
+
+   if [ !  -f /etc/config/cfg/nvpn_country ]; then
+       echo nvpn_country existiert nicht !
+       echo Fehler innerhalb der aktuellen Konfiguration !!!
+       exit 1
+   fi
+
+   if [ ! -f /etc/config/cfg/nvpn_token ]; then
+       echo nvpn_token existiert nicht !
+       echo Fehler innerhalb der aktuellen Konfiguration !!!
+       exit 1
+   fi
+
+   if [ -f /etc/config/cfg/swtor_wireguard_port1 ]; then
+      if [ ! -f /etc/config/cfg/nvpn_ip ]; then
+         echo nvpn_ip existiert nicht !
+         echo Fehler innerhalb der aktuellen Konfiguration !!!
+         exit 1
+      fi
+   fi
+
+   if [ -f /etc/config/cfg/swtor_wireguard_port2 ]; then
+      if [ ! -f /etc/config/cfg/nvpn_ip ]; then
+         echo nvpn_ip existiert nicht !
+         echo Fehler innerhalb der aktuellen Konfiguration !!!
+         exit 1
+      fi
+   fi
+
 fi
 
 

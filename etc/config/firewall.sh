@@ -645,6 +645,7 @@ if [ $using_pihole = "yes" ]; then
    used_internal="$(echo $used_internal),$(echo $pihole_ip)"
 fi
 
+
 if [ $swtor_use_ipsec = "yes" ] ; then
    /usr/sbin/iptables -A FORWARD -p icmp  -d $ipsec_remote -j ACCEPT
    /usr/sbin/iptables -A OUTPUT -p icmp -d $ipsec_remote -j ACCEPT
