@@ -21,17 +21,18 @@ if command -v wg &>/dev/null; then
     exit 1
 fi
 
-echo "[wg-install] Starte Installation von WireGuard ..."
 
+# WireGuard Pakete installieren
 
 echo "[wg-install] Installiere wireguard-tools ..."
-dpkg -i /etc/config/web/wireguard-tools_1.1_amd64.deb
+dpkg -i /etc/config/wireguard-tools_1.1_amd64.deb
 if [ $? -ne 0 ]; then
     echo "FEHLER: Installation von wireguard-tools_1.1_amd64.deb fehlgeschlagen!"
     exit 1
 fi
 
 # WireGuard Pakete installieren
+
 echo "[wg-install] Installiere wireguard ..."
 dpkg -i /etc/config/deb/wireguard_1.1_all.deb
 if [ $? -ne 0 ]; then
