@@ -151,7 +151,7 @@ for i in $(seq 1 20); do
     # Config ohne IPv6
     cat > config${NUM}-ohne-ipv6.conf << EOF
 [Interface]
-Address = ${CLIENT_IP}
+Address = ${CLIENT_IP}/32
 DNS = ${WG0_DNS}
 PrivateKey = ${CLIENT_PRIVKEY}
 [Peer]
@@ -164,7 +164,7 @@ EOF
     # Config mit IPv6
     cat > config${NUM}-mit-ipv6.conf << EOF
 [Interface]
-Address = ${CLIENT_IP}
+Address = ${CLIENT_IP}/32
 DNS = ${WG0_DNS}
 PrivateKey = ${CLIENT_PRIVKEY}
 [Peer]
@@ -197,7 +197,7 @@ for i in $(seq 1 20); do
     # Config ohne IPv6
     cat > config${NUM}-ohne-ipv6.conf << EOF
 [Interface]
-Address = ${CLIENT_IP}
+Address = ${CLIENT_IP}/32
 DNS = ${WG1_DNS}
 PrivateKey = ${CLIENT_PRIVKEY}
 [Peer]
@@ -210,7 +210,7 @@ EOF
     # Config mit IPv6
     cat > config${NUM}-mit-ipv6.conf << EOF
 [Interface]
-Address = ${CLIENT_IP}
+Address = ${CLIENT_IP}/32
 DNS = ${WG1_DNS}
 PrivateKey = ${CLIENT_PRIVKEY}
 [Peer]
