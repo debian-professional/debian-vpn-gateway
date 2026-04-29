@@ -102,6 +102,30 @@ for iface in "${CONFS[@]}"; do
     echo "[wg-transfer-gw] ${iface}.conf erfolgreich kopiert."
 done
 
+# Service-Datei anlegen wenn nicht vorhanden
+if [ ! -f /etc/wireguard/service ]; then
+    echo "[wg-transfer-gw] Lege service Referenzdatei in /etc/wireguard an ..."
+    cat > /etc/wireguard/service << 'SVCEOF'
+# Install Wireguard and Tools
+dpkg -i /etc/config/deb/wireguard_1.1_all.deb
+dpkg -i /etc/config/web/wireguard-tools_1.1_amd64.deb
+# Achtung : Werden die 2 oben genannten Packete über die
+# offiziellen Packetquellen installiert wird als eine
+# Abhängigkeit der Realtime Kernel installiert !!!!
+# Dies sollte unbedingt vermieden werden !!!!!
+# Welche zusätzliche Software muss installiert werden ?
+apt-get install qrencode
+# Welcher Befehl erzeugt ein neues Schlüsselpaar =
+wg genkey | tee privatekey | wg pubkey > publickey
+# Disable Service
+systemctl disable wg-quick@wg0
+systemctl disable wg-quick@wg1
+# Start Service
+systemctl start wg-quick@wg0
+systemctl start wg-quick@wg1
+SVCEOF
+fi
+
 echo ""
 
 # WireGuard Interfaces neu starten falls aktiv
