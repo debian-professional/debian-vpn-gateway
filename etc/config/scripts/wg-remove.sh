@@ -23,6 +23,24 @@ fi
 
 echo "[wg-remove] Starte vollständige Deinstallation von WireGuard ..."
 
+# Warnung wenn aktive Konfigurationen vorhanden sind — VOR allem anderen!
+if [ -f /etc/wireguard/wg0.conf ] || [ -f /etc/wireguard/wg1.conf ]; then
+    echo ""
+    echo "⚠️  WARNUNG: Aktive WireGuard Konfigurationen gefunden!"
+    [ -f /etc/wireguard/wg0.conf ] && echo "    → /etc/wireguard/wg0.conf"
+    [ -f /etc/wireguard/wg1.conf ] && echo "    → /etc/wireguard/wg1.conf"
+    echo ""
+    echo "    Diese Konfigurationen enthalten Schlüssel und Client-Daten"
+    echo "    die nach dem Löschen UNWIDERRUFLICH verloren sind!"
+    echo ""
+    read -p "    Trotzdem fortfahren? [ja/NEIN]: " confirm
+    if [ "$confirm" != "ja" ]; then
+        echo "[wg-remove] Abbruch — nichts wurde gelöscht."
+        exit 1
+    fi
+    echo ""
+fi
+
 # WireGuard Interfaces stoppen falls aktiv
 echo "[wg-remove] Stoppe WireGuard Interfaces ..."
 if ip link show wg0 &>/dev/null; then
@@ -54,23 +72,6 @@ apt-get remove -y qrencode > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "FEHLER: Deinstallation von qrencode fehlgeschlagen!"
     exit 1
-fi
-
-# Warnung wenn aktive Konfigurationen vorhanden sind
-if [ -f /etc/wireguard/wg0.conf ] || [ -f /etc/wireguard/wg1.conf ]; then
-    echo ""
-    echo "⚠️  WARNUNG: Aktive WireGuard Konfigurationen gefunden!"
-    [ -f /etc/wireguard/wg0.conf ] && echo "    → /etc/wireguard/wg0.conf"
-    [ -f /etc/wireguard/wg1.conf ] && echo "    → /etc/wireguard/wg1.conf"
-    echo ""
-    echo "    Diese Konfigurationen enthalten Schlüssel und Client-Daten"
-    echo "    die nach dem Löschen UNWIDERRUFLICH verloren sind!"
-    echo ""
-    read -p "    Trotzdem fortfahren? [ja/NEIN]: " confirm
-    if [ "$confirm" != "ja" ]; then
-        echo "[wg-remove] Abbruch — nichts wurde gelöscht."
-        exit 1
-    fi
 fi
 
 # /etc/wireguard/ komplett löschen
