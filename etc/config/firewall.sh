@@ -1509,7 +1509,7 @@ if [ $swtor_allow_wireguard2 = "yes" ] ; then
 
          # Erst wenn der Tunnel steht wird die Umleitung scharf
 
-         /usr/sbin/iptables -t nat -A POSTROUTING -s $wireguard_subnet1 -d 0.0.0.0/0  -j SNAT --to $(cat /etc/config/cfg/nvpn_ip) 
+         /usr/sbin/iptables -t nat -A POSTROUTING -s $wireguard_subnet2 -d 0.0.0.0/0  -j SNAT --to $(cat /etc/config/cfg/nvpn_ip) 
          echo [ip-tables : VPN is active wg1 ]
 
       fi
