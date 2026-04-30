@@ -645,6 +645,17 @@ if [ $using_pihole = "yes" ]; then
    used_internal="$(echo $used_internal),$(echo $pihole_ip)"
 fi
 
+if [ -f /etc/config/cfg/nvpn ]; then
+   used_internal="$(echo $used_internal),$(cat /etc/config/cfg/nvpn_ip)"
+fi
+
+# Achtung : Ab diesem Zeitpunkt sollte die Variable used_internal
+# vollständig bestückt sein,oder die restriktiven Firewall Regeln
+# verhindern eine Kommunikation
+
+echo [ip-tables : start of internal networks]
+echo $used_internal
+echo [ip-tables : end of internal networks]
 
 if [ $swtor_use_ipsec = "yes" ] ; then
    /usr/sbin/iptables -A FORWARD -p icmp  -d $ipsec_remote -j ACCEPT
@@ -1453,7 +1464,8 @@ if [ $swtor_allow_wireguard1 = "yes" ] ; then
 
          # Erst wenn der Tunnel steht wird die Umleitung scharf
 
-         echo [ip-tables : VPN is active ]
+         /usr/sbin/iptables -t nat -A POSTROUTING -s $wireguard_subnet1 -d 0.0.0.0/0  -j SNAT --to $(cat /etc/config/cfg/nvpn_ip)
+         echo [ip-tables : VPN is active wg0 ]
 
       fi
    fi
@@ -1497,7 +1509,8 @@ if [ $swtor_allow_wireguard2 = "yes" ] ; then
 
          # Erst wenn der Tunnel steht wird die Umleitung scharf
 
-         echo [ip-tables : VPN is active ]
+         /usr/sbin/iptables -t nat -A POSTROUTING -s $wireguard_subnet1 -d 0.0.0.0/0  -j SNAT --to $(cat /etc/config/cfg/nvpn_ip) 
+         echo [ip-tables : VPN is active wg1 ]
 
       fi
    fi

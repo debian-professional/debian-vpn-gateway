@@ -297,7 +297,8 @@ if [ -f /etc/config/cfg/nvpn ]; then
                # echo "chown source:source /home/source/tornode3ip.log" >> /etc/config/vpn.sh
             fi
 
-            echo                                                      >> /etc/config/vpn.sh
+            echo                                      >> /etc/config/vpn.sh
+
             chmod +x /etc/config/vpn.sh > /dev/null 2>&1
 
          else
