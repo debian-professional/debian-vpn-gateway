@@ -281,6 +281,10 @@ if [ -f /etc/config/cfg/nvpn ]; then
                echo /usr/bin/nordvpn set dns 127.0.0.1  >> /etc/config/vpn.sh
             fi
 
+            # nordvpn set technology openvpn
+            # Supported values for <technology>: OPENVPN, NORDLYNX or NORDWHISPER.
+
+            echo /usr/bin/nordvpn set technology nordlynx
             echo /usr/bin/nordvpn connect $country   >> /etc/config/vpn.sh
 
             echo                                     >> /etc/config/vpn.sh

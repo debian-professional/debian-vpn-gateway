@@ -1,4 +1,11 @@
-bashfor table in filter nat mangle raw security; do
+route
+echo
+ifconfig
+echo
+wg
+echo
+echo
+for table in filter nat mangle raw security; do
     echo "========================================"
     echo "TABLE: $table"
     echo "========================================"
