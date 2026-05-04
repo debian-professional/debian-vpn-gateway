@@ -284,24 +284,23 @@ if [ -f /etc/config/cfg/nvpn ]; then
             # nordvpn set technology openvpn
             # Supported values for <technology>: OPENVPN, NORDLYNX or NORDWHISPER.
 
-            echo /usr/bin/nordvpn set technology nordlynx
-            echo /usr/bin/nordvpn connect $country   >> /etc/config/vpn.sh
+            echo /usr/bin/nordvpn set technology nordlynx >> /etc/config/vpn.sh
+            echo /usr/bin/nordvpn connect $country        >> /etc/config/vpn.sh
 
-            echo                                     >> /etc/config/vpn.sh
-            echo /usr/sbin/iptables -D OUTPUT 6      >> /etc/config/vpn.sh
-            echo /usr/sbin/iptables -D OUTPUT 5      >> /etc/config/vpn.sh
-            echo                                     >> /etc/config/vpn.sh
-            cat /etc/config/c-part                   >> /etc/config/vpn.sh
-            echo                                     >> /etc/config/vpn.sh
+            echo                                          >> /etc/config/vpn.sh
+            echo /usr/sbin/iptables -D OUTPUT 6           >> /etc/config/vpn.sh
+            echo /usr/sbin/iptables -D OUTPUT 5           >> /etc/config/vpn.sh
+            echo                                          >> /etc/config/vpn.sh
+            cat /etc/config/c-part                        >> /etc/config/vpn.sh
+            echo                                          >> /etc/config/vpn.sh
 
             if [ $using_tor = "yes" ] ; then
-               echo "cd /etc/config/scripts"                          >> /etc/config/vpn.sh
-               echo "killall tornode3ip.sh > /dev/null 2>&1"          >> /etc/config/vpn.sh
+               echo "cd /etc/config/scripts"                 >> /etc/config/vpn.sh
+               echo "killall tornode3ip.sh > /dev/null 2>&1" >> /etc/config/vpn.sh
                echo "su" $tor_user "./tornode3ip.sh" $tor_user " > /dev/null 2>&1 &"  >> /etc/config/vpn.sh
-               # echo "chown source:source /home/source/tornode3ip.log" >> /etc/config/vpn.sh
             fi
 
-            echo                                      >> /etc/config/vpn.sh
+            echo                                             >> /etc/config/vpn.sh
 
             chmod +x /etc/config/vpn.sh > /dev/null 2>&1
 
