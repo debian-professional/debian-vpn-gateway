@@ -263,6 +263,10 @@ if [ -f /etc/config/cfg/nvpn ]; then
                 echo /usr/bin/nordvpn whitelist add port $wg2  >> /etc/config/vpn.sh
             fi
 
+            if [ -f /etc/config/cfg/stubby ]; then
+               echo /usr/bin/nordvpn whitelist add port 853  >> /etc/config/vpn.sh  
+            fi
+
             if [ -f /etc/config/cfg/wireguard_subnet1 ]; then
                wg1_subnet=$(cat /etc/config/cfg/wireguard_subnet1)
                echo /usr/bin/nordvpn allowlist add subnet $wg1_subnet >> /etc/config/vpn.sh
