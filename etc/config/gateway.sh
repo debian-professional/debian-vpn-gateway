@@ -48,6 +48,11 @@ if [ -f /etc/config/cfg/gateway ]; then
          service_06_port="5938"
          service_07_port="3389"
 
+
+         # Socks5 direkt weiterleiten (für den internen Sunrise TV Test)
+
+          /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp --dport 1082 -j RETURN
+
          # Port 22 SSH weiterleiten
 
          /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp --dport $ssh_port -j RETURN
