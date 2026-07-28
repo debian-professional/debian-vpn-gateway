@@ -49,6 +49,10 @@ if [ -f /etc/config/cfg/gateway ]; then
          service_07_port="3389"
 
 
+         if [ -f /etc/apache2  ]; then
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -d 172.29.255.1 -p tcp --dport 443 -j RETURN
+         fi
+
          # Socks5 direkt weiterleiten (für den internen Sunrise TV Test)
 
           /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp --dport 1082 -j RETURN
