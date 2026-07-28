@@ -113,7 +113,7 @@ fi
 
 # Nice to have files inside of the backup
 
-tar cvzf tmp/nice_to_have.tar.gz /etc/apt /etc/resolv.conf /etc/hosts /etc/hostname /etc/motd /etc/sudoers \
+tar cvzf tmp/nice_to_have.tar.gz /home/admin /home/source /etc/apt /etc/resolv.conf /etc/hosts /etc/hostname /etc/motd /etc/sudoers \
 /home/source/debian-vpn-configuration/.git/config /home/source/debian-vpn-gateway/.git/config > /dev/null 2>&1
 dpkg -l > tmp/installed-software
 echo Backup created on $(date '+%Y-%m-%d-%H-%M')  > /etc/config/backup/tmp/backup-was-made.log

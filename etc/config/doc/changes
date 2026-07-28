@@ -381,6 +381,8 @@
                 wurde auf 64 MB reduziert. In einem ersten Schritt wurden auch Performance-Schwachstellen
                 des Debian Standard Kernels erkannt und systematisch mittels sysctl ausgemerzt.
 
-03/04/25        Viele kleine Schreibfehler ausgemerzt und auch das Firewallskript nocht etwas optimiert in
+03/04/26        Viele kleine Schreibfehler ausgemerzt und auch das Firewallskript nocht etwas optimiert in
                 Sachen Geschwindigkeit. 
    
+28/07/26        Optimierungen für den Gateway Modus und Anpassungen am Backup-Skript.
+  
