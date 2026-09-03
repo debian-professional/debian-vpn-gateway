@@ -51,12 +51,8 @@ if [ -f /etc/config/cfg/gateway ]; then
          service_06_port="5938"
          service_07_port="3389"
 
-
          if [ -d /etc/apache2  ]; then
-            echo apache-configuration found
             echo llm-server active  : $internal_network
-            echo destination : 172.29.255.1
-            echo dport : 443
             /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -d 172.29.255.1 -p tcp --dport 443 -j RETURN
          else
              echo no apache2 configuration found !
