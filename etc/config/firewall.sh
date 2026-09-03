@@ -1667,5 +1667,10 @@ if [ -f /etc/config/cfg/gateway ]; then
    ./gateway.sh
 fi
 
+
+iptables-save > /etc/config/firewall.settings
+echo [ip-tables : save the active rules to /etc/config/firewall.settings ]
 echo [ip-tables : end of script firewall.sh reached ]
+
+
 
