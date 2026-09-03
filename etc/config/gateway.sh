@@ -25,6 +25,9 @@ if [ -f /etc/config/cfg/gateway ]; then
          ssh_user=$(printf '%s\n' "$LINE"| awk '{print $6}')
          dns_server=$(printf '%s\n' "$LINE"| awk '{print $7}')
          searching=$(printf '%s\n' "$LINE"| awk '{print $8}')
+
+         echo line : redsocks [$redsocks_port] searching [$searching]
+
          ssh_port="22"
          dns_port="53"
          tor_port="9050"
@@ -72,75 +75,97 @@ if [ -f /etc/config/cfg/gateway ]; then
          /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
          --dport $dns_port  -d $dns_server -j RETURN
 
-         # Port 80 und 443 umleiten
+         if [[ -n $redsocks_port ]]; then
 
-         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $http_port -j DNAT --to-destination $redsocks_port
-         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p udp \
-         --dport $http_port -j DNAT --to-destination $redsocks_port
+            # Port 80 und 443 umleiten
 
-         /usr/sbin/iptables  -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $https_port -j DNAT --to-destination $redsocks_port
-         /usr/sbin/iptables  -t nat -A PREROUTING -m iprange --src-range $internal_network -p udp \
-         --dport $https_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $http_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p udp \
+            --dport $http_port -j DNAT --to-destination $redsocks_port
 
-         # Port 25 und 110 umleiten (alte Clients)
+            /usr/sbin/iptables  -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $https_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables  -t nat -A PREROUTING -m iprange --src-range $internal_network -p udp \
+            --dport $https_port -j DNAT --to-destination $redsocks_port
+         fi
 
-         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $smtp_port -j DNAT --to-destination $redsocks_port
-         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network  -p tcp \
-         --dport $pop3_port -j DNAT --to-destination $redsocks_port
+         if [[ -n $redsocks_port ]]; then
 
-         # smtp für neuere Clients umleiten
+            # Port 25 und 110 umleiten (alte Clients)
 
-         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $smtp_new_01_port -j DNAT --to-destination $redsocks_port
-         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network  -p tcp \
-         --dport $smtp_new_02_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $smtp_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network  -p tcp \
+            --dport $pop3_port -j DNAT --to-destination $redsocks_port
 
-         # IMAP umleiten
+            # smtp für neuere Clients umleiten
 
-         /usr/sbin/iptables    -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $imap_01_port -j DNAT --to-destination $redsocks_port
-         /usr/sbin/iptables    -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $imap_02_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $smtp_new_01_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network  -p tcp \
+            --dport $smtp_new_02_port -j DNAT --to-destination $redsocks_port
+         fi
 
-         # POP3S umleiten
+         if [[ -n $redsocks_port ]]; then
 
-         /usr/sbin/iptables  -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $pop3s_port -j DNAT --to-destination $redsocks_port
+            # IMAP umleiten
 
-         # DNS over TLS umleiten
+            /usr/sbin/iptables    -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $imap_01_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables    -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $imap_02_port -j DNAT --to-destination $redsocks_port
+         fi
 
-         /usr/sbin/iptables    -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $dns_tls_port -j DNAT --to-destination $redsocks_port
+         if [[ -n $redsocks_port ]]; then
 
-         # FTPS umleiten
+            # POP3S umleiten
 
-         /usr/sbin/iptables    -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $sftp_01_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables  -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $pop3s_port -j DNAT --to-destination $redsocks_port
+         fi
 
-         /usr/sbin/iptables    -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $sftp_02_port -j DNAT --to-destination $redsocks_port
+         if [[ -n $redsocks_port ]]; then
 
-         # Spezielle Ports für Google Play,Google Chrome und WhatsApp
+            # DNS over TLS umleiten
 
-         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $service_01_port -j DNAT --to-destination $redsocks_port
-         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $service_02_port -j DNAT --to-destination $redsocks_port
-         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $service_03_port -j DNAT --to-destination $redsocks_port
-         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $service_04_port -j DNAT --to-destination $redsocks_port
-         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $service_05_port -j DNAT --to-destination $redsocks_port
-         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $service_06_port -j DNAT --to-destination $redsocks_port
-         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $service_07_port -j DNAT --to-destination $redsocks_port
-         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p udp \
-         --dport $service_07_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables    -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $dns_tls_port -j DNAT --to-destination $redsocks_port
+         fi
+
+
+        if [[ -n $redsocks_port ]]; then
+
+            # FTPS umleiten
+
+            /usr/sbin/iptables    -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $sftp_01_port -j DNAT --to-destination $redsocks_port
+
+           /usr/sbin/iptables    -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+           --dport $sftp_02_port -j DNAT --to-destination $redsocks_port
+         fi
+
+         if [[ -n $redsocks_port ]]; then
+
+            # Spezielle Ports für Google Play,Google Chrome und WhatsApp
+
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $service_01_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $service_02_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $service_03_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $service_04_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $service_05_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $service_06_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $service_07_port -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p udp \
+            --dport $service_07_port -j DNAT --to-destination $redsocks_port
+         fi
 
          # Und ab hier wollen wie einfach mal schauen, was schlussendlich noch probiert durch
          # unsere sehr eng definierte Firewall zu schlüpfen. Dienste können nun einfach weiter
