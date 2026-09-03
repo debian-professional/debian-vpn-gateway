@@ -159,7 +159,7 @@
                 Also bitte mit Vorsicht IPv6 aktiviert lassen !!!
 
 28/09/24        Die Verbindungs-Daten werden per Symbolischem Link verlinkt. Dies macht den Wechsel 
-                einer Konfiguration enorm einfacher.
+                einer Konfiguration viel einfacher.
                              
 01/10/24        Optimierung der Kommunikation zwischen redsocks und Fehlererkennung.
                 Das Timeout der curl Anfrage wurde leicht erhöht um den Fehler rc=28 
@@ -386,3 +386,7 @@
    
 28/07/26        Optimierungen für den Gateway Modus und Anpassungen am Backup-Skript.
   
+
+03/09/25        Diverse Optimierungen im Gateway Modus. Nun ist es ebenfalls möglich einen 
+                installierrten LLM-Chat zu benutzen. 
+
