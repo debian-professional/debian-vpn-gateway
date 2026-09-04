@@ -107,13 +107,9 @@ if [ -f /etc/apache2  ]; then
    tar cvzf tmp/apache.tar.gz /etc/apache2 /var/www > /dev/null 2>&1
 fi
 
-
-
-
-
 # Nice to have files inside of the backup
 
-tar cvzf tmp/nice_to_have.tar.gz /home/source/ /etc/apt /etc/resolv.conf /etc/hosts /etc/hostname /etc/motd /etc/sudoers \
+tar cvzf tmp/nice_to_have.tar.gz /etc/apt /etc/resolv.conf /etc/hosts /etc/hostname /etc/motd /etc/sudoers \
 /home/source/debian-vpn-configuration/.git/config /home/source/debian-vpn-gateway/.git/config > /dev/null 2>&1
 dpkg -l > tmp/installed-software
 echo Backup created on $(date '+%Y-%m-%d-%H-%M')  > /etc/config/backup/tmp/backup-was-made.log
@@ -121,7 +117,7 @@ echo Backup created on $(date '+%Y-%m-%d-%H-%M')  > /etc/config/backup/tmp/backu
 # Clean-Up
 
 if [ -f /etc/config/backup/backup-files ]; then
-   rm /etc/config/backup/backup-files > /dev/null 2>&1
+  rm /etc/config/backup/backup-files > /dev/null 2>&1
 fi
 
 # And at the end we backup the tmp folder
@@ -134,7 +130,7 @@ tar cvzf $backupfile /etc/config/backup/tmp > /dev/null 2>&1
 mv $backup /home/source/backup > /dev/null 2>&1
 
 cd /etc/config/backup/tmp
-rm * > /dev/null 2>&1
+# rm * > /dev/null 2>&1
 cd ..
 
 gpg --batch --passphrase-file passwd -c $(echo $backupfile)
