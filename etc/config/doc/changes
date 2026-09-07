@@ -387,6 +387,16 @@
 28/07/26        Optimierungen für den Gateway Modus und Anpassungen am Backup-Skript.
   
 
-03/09/25        Diverse Optimierungen im Gateway Modus. Nun ist es ebenfalls möglich einen 
+03/09/26        Diverse Optimierungen im Gateway Modus. Nun ist es ebenfalls möglich einen 
                 installierrten LLM-Chat zu benutzen. 
+
+05/09/26        Wenn ein Client probiert einen TOR-Browser zu starten, sollte dies auch funktionieren.
+                ReachableAddresses *:80, *:443, *:9001
+
+07/09/26        Die Reihenfolge der meist benutzten WAN-Ports für TOR:
+                
+                tor_wan1"9001"
+                tor_wan2"9002"
+                tor_wan3"8443"
+                tor_wan4"8080"
 

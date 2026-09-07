@@ -31,6 +31,10 @@ if [ -f /etc/config/cfg/gateway ]; then
          ssh_port="22"
          dns_port="53"
          tor_port="9050"
+         tor_wan1"9001"
+         tor_wan2"9002"
+         tor_wan3"8443"
+         tor_wan4"8080"
          http_port="80"
          https_port="443"
          smtp_port="25"
@@ -66,9 +70,12 @@ if [ -f /etc/config/cfg/gateway ]; then
 
          /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp --dport $ssh_port -j RETURN
 
-         # tor weiterleiten
+         # TOR weiterleiten sofern ein lokaler Service installiert ist
 
-         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp --dport $tor_port -j RETURN
+         if [ -d /etc/tor  ]; then
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp --dport $tor_port -j RETURN
+         fi
+
 
          # DNS weiterleiten
 
@@ -90,6 +97,7 @@ if [ -f /etc/config/cfg/gateway ]; then
             --dport $https_port -j DNAT --to-destination $redsocks_port
             /usr/sbin/iptables  -t nat -A PREROUTING -m iprange --src-range $internal_network -p udp \
             --dport $https_port -j DNAT --to-destination $redsocks_port
+
          fi
 
          if [[ -n $redsocks_port ]]; then
@@ -168,6 +176,21 @@ if [ -f /etc/config/cfg/gateway ]; then
             /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p udp \
             --dport $service_07_port -j DNAT --to-destination $redsocks_port
          fi
+
+
+         if [[ -n $redsocks_port ]]; then
+
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $tor_wan1 -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $tor_wan2 -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $tor_wan3 -j DNAT --to-destination $redsocks_port
+            /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
+            --dport $tor_wan4 -j DNAT --to-destination $redsocks_port
+         fi
+
+
 
          # Und ab hier wollen wie einfach mal schauen, was schlussendlich noch probiert durch
          # unsere sehr eng definierte Firewall zu schlüpfen. Dienste können nun einfach weiter
