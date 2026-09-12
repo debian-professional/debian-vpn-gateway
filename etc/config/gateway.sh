@@ -28,7 +28,7 @@ if [ -f /etc/config/cfg/gateway ]; then
 
          echo line : redsocks [$redsocks_port] searching [$searching]
 
-         ssh_port="22"
+         ssh_port0="22"
          dns_port="53"
          tor_port="9050"
          tor_wan1"9001"
@@ -69,12 +69,38 @@ if [ -f /etc/config/cfg/gateway ]; then
          # Port 22 SSH weiterleiten
          # /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp --dport $ssh_port -j RETURN
 
+         if [ -f ./cfg/swtor_ssh_port1 ]; then
+            swtor_ssh_port1=$(cat ./cfg/swtor_ssh_port1)
+         fi
+
+         if [ -f ./cfg/swtor_ssh_port2 ]; then
+            swtor_ssh_port2=$(cat ./cfg/swtor_ssh_port2)
+         fi
+
+         if [ -f /etc/config/cfg/eth0.ip ]; then
+            external_ip=$(cat ./cfg/eth0.ip)
+         fi
+
+         # Diese beiden lokalen Ports SSH werden nicht umgeleitet .... sondern direkt ausgelifert !
+
+         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network  -d $external_ip -p tcp \
+         --dport $swtor_ssh_port1 -j RETURN
+         /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network  -d $external_ip -p tcp \
+         --dport $swtor_ssh_port2 -j RETURN
+
+         # Alle anderen SSH Verbindungen werden umgeleitet
+
          /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         --dport $ssh_port -j DNAT --to-destination $redsocks_port
+         --dport $ssh_port0  -j DNAT --to-destination $redsocks_port
 
          # TOR weiterleiten sofern ein lokaler Service installiert ist
 
          if [ -d /etc/tor  ]; then
+
+         # Achtung : Dieser lokale TOR-Port liegt normalerweise auf der lokalen IP : 172.29.255.1 auf dem Port 9050
+         # Wird auf dem Client die  lokale Schnittstelle von 127.0.0.1:9050 auf die IP  172.29.255.1:9050 geändert,
+         # muss der Client auch keinerlei Connect zum TOR-Netzwerk machen, da dier Dienst auf dem Server immer läuft !
+
             /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp --dport $tor_port -j RETURN
          fi
 
@@ -85,6 +111,7 @@ if [ -f /etc/config/cfg/gateway ]; then
          --dport $dns_port  -d $dns_server -j RETURN
          /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
          --dport $dns_port  -d $dns_server -j RETURN
+
 
          if [[ -n $redsocks_port ]]; then
 
