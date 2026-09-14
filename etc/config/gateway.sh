@@ -102,8 +102,8 @@ if [ -f /etc/config/cfg/gateway ]; then
          # muss der Client auch keinerlei Connect zum TOR-Netzwerk machen, da dier Dienst auf dem Server immer läuft !
 
             /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp --dport $tor_port -j RETURN
-         fi
 
+         fi
 
          # DNS weiterleiten
 

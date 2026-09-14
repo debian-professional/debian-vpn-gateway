@@ -645,6 +645,13 @@ if [ $using_pihole = "yes" ]; then
    used_internal="$(echo $used_internal),$(echo $pihole_ip)"
 fi
 
+if [ -f /etc/config/cfg/gateway ]; then
+   used_internal="$(echo $used_internal),172.25.255.1 - 172.25.255.255"
+   used_internal="$(echo $used_internal),172.26.255.1 - 172.26.255.255"
+   used_internal="$(echo $used_internal),172.27.255.1 - 172.27.255.255"
+   used_internal="$(echo $used_internal),172.28.255.1 - 172.28.255.255"
+fi
+
 if [ -f /etc/config/cfg/nvpn ]; then
    used_internal="$(echo $used_internal),$(cat /etc/config/cfg/nvpn_ip)"
 fi
@@ -655,6 +662,7 @@ fi
 
 echo [ip-tables : start of internal networks]
 echo $used_internal
+
 echo [ip-tables : end of internal networks]
 
 if [ $swtor_use_ipsec = "yes" ] ; then

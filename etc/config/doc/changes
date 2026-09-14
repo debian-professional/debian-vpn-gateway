@@ -400,10 +400,12 @@
                 tor_wan3"8443"
                 tor_wan4"8080"
 
-10/09/25        Kompletter Funktionstest eine WireGuard Clients unter Debian 13 mit einer Verbindung zum 
+10/09/26        Kompletter Funktionstest eine WireGuard Clients unter Debian 13 mit einer Verbindung zum 
                 Server10 mit der Umleitung mittels redsock.
 
                 Test erfolgreich : Webseite öffnen 
-                TOR-Browser starten : Auch der TOR Browser lässt sich starten 
+                TOR-Browser starten : Auch der TOR Browser lässt sich nun über den Client starten 
 
+
+12/09/26        Der SSH Port 2 wurde 3389 geändert, weil er sonst mit dem vebreiten SMTP POrt 587 kollidiert.
 
