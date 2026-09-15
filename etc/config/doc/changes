@@ -407,5 +407,20 @@
                 TOR-Browser starten : Auch der TOR Browser lässt sich nun über den Client starten 
 
 
-12/09/26        Der SSH Port 2 wurde 3389 geändert, weil er sonst mit dem vebreiten SMTP POrt 587 kollidiert.
+12/09/26        Der SSH Port 2 wurde auf Port 3389 (RemoteDesktop) geändert, weil er sonst mit dem vebreiten SMTP POrt 587 kollidiert.
 
+15/09/26        DNS-over-TLS (Port 853) wurde bisher transparent ueber redsocks durchgereicht, statt wie 
+                normales DNS (Port 53) behandelt zu werden. Das ermoeglichte Chromium-basierten Browsern 
+                (Opera bestaetigt betroffen), bei automatischen DoT-Sondierungsversuchen
+                DNS an Cloudflare/Google/etc. Vorbei an der eigenen Stubby-Instanz aufzuloesen - ein "DNS-Leck" 
+                im eigentlichen klassischen Sinn, auch wenn die eigentliche Identitaet ueber NordVPN verborgen blieb.
+
+                Fix für dieses Problem : Port 853 wird jetzt wie Port 53 behandelt - nur Verkehr, der
+                bereits an den $dns_server (Stubby) adressiert ist, wird durchgelassen
+                (unveraendert, keine NAT-Umschreibung noetig, da Stubby selbst
+                gar keinen DoT-Server-Dienst anbietet). Jeder Versuch, Port 853
+                bei einem ANDEREN Ziel anzufragen, faellt durch bis zur
+                bestehenden Auffangregel am Skriptende und wird dort geloggt +
+                von der Firewall-Filtertabelle blockiert (siehe die bereits
+                existierende explizite Port-53-REJECT-Regel als Vorbild - eine
+                analoge Regel fuer Port 853 wird genau gleich implementiert).

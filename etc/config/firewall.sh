@@ -1320,9 +1320,12 @@ if [ $swtor_allow_wireguard2 = "yes" ] ; then
 
 fi
 
-echo [ip-tables : block all external communication to port 53 udp and tcp ]
+echo [ip-tables : block all external communication to port 53 udp and tcp and port 853 tcp]
 iptables -A FORWARD -o $external_if -p tcp --dport 53 -j REJECT
 iptables -A FORWARD -o $external_if -p udp --dport 53 -j REJECT
+iptables -A FORWARD -o $external_if -p tcp --dport 853 -j REJECT
+
+
 
 
 echo [ip-tables : allow udp-block reject to traceroute]

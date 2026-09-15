@@ -166,15 +166,6 @@ if [ -f /etc/config/cfg/gateway ]; then
 
          if [[ -n $redsocks_port ]]; then
 
-            # DNS over TLS umleiten
-
-            /usr/sbin/iptables    -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-            --dport $dns_tls_port -j DNAT --to-destination $redsocks_port
-         fi
-
-
-        if [[ -n $redsocks_port ]]; then
-
             # FTPS umleiten
 
             /usr/sbin/iptables    -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
