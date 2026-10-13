@@ -245,26 +245,26 @@ if [ -f /etc/config/cfg/nvpn ]; then
 
             if [ -f /etc/config/cfg/swtor_ssh_port1 ]; then
                ssh_port1=$(cat /etc/config/cfg/swtor_ssh_port1)
-               echo /usr/bin/nordvpn whitelist add port $ssh_port1 >> /etc/config/vpn.sh
+               echo /usr/bin/nordvpn allowlist add port $ssh_port1 >> /etc/config/vpn.sh
             fi
 
             if [ -f /etc/config/cfg/swtor_ssh_port2 ]; then
                ssh_port2=$(cat /etc/config/cfg/swtor_ssh_port2)
-               echo /usr/bin/nordvpn whitelist add port $ssh_port2 >> /etc/config/vpn.sh
+               echo /usr/bin/nordvpn allowlist add port $ssh_port2 >> /etc/config/vpn.sh
             fi
 
             if [ -f /etc/config/cfg/swtor_wireguard_port1 ]; then
                 wg1=$(cat /etc/config/cfg/swtor_wireguard_port1)
-                echo /usr/bin/nordvpn whitelist add port $wg1  >> /etc/config/vpn.sh
+                echo /usr/bin/nordvpn allowlist add port $wg1  >> /etc/config/vpn.sh
             fi
 
             if [ -f /etc/config/cfg/swtor_wireguard_port2 ]; then
                 wg2=$(cat /etc/config/cfg/swtor_wireguard_port2)
-                echo /usr/bin/nordvpn whitelist add port $wg2  >> /etc/config/vpn.sh
+                echo /usr/bin/nordvpn allowlist add port $wg2  >> /etc/config/vpn.sh
             fi
 
             if [ -f /etc/config/cfg/stubby ]; then
-               echo /usr/bin/nordvpn whitelist add port 853  >> /etc/config/vpn.sh  
+               echo /usr/bin/nordvpn allowlist add port 853  >> /etc/config/vpn.sh  
             fi
 
             if [ -f /etc/config/cfg/wireguard_subnet1 ]; then
@@ -285,10 +285,7 @@ if [ -f /etc/config/cfg/nvpn ]; then
                echo /usr/bin/nordvpn set dns 127.0.0.1  >> /etc/config/vpn.sh
             fi
 
-            # nordvpn set technology openvpn
-            # Supported values for <technology>: OPENVPN, NORDLYNX or NORDWHISPER.
-
-            echo /usr/bin/nordvpn set technology nordlynx >> /etc/config/vpn.sh
+            echo /usr/bin/nordvpn set protocol nordlynx >> /etc/config/vpn.sh
             echo /usr/bin/nordvpn connect $country        >> /etc/config/vpn.sh
 
             echo                                          >> /etc/config/vpn.sh

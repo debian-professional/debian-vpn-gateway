@@ -424,3 +424,17 @@
                 von der Firewall-Filtertabelle blockiert (siehe die bereits
                 existierende explizite Port-53-REJECT-Regel als Vorbild - eine
                 analoge Regel fuer Port 853 wird genau gleich implementiert).
+
+13/10/26        Vorbereitung für den kommenden Wechsel auf NordVPN CLI Version 6.0 
+                Dieser Wechsel erfolgt am 14.10.2026 : 
+
+                https://nordvpn.com/de/blog/nordvpn-linux-6-0/?
+
+                Anpassungen an rc.local
+
+
+  
+                  
+   
+
+

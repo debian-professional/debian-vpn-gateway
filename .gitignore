@@ -2,6 +2,7 @@
 etc/config/backup/swto*
 etc/config/backup/config
 etc/config/backup/passwd
+etc/config/backup/tmp/backup-was-made.log
 etc/config/scripts/ssh-v-to-start.log
 etc/config/scripts/ssh.log
 etc/config/scripts/tornode3ip.l
@@ -17,3 +18,4 @@ etc/config/backup/tmp/tor.tar.gz
 etc/config/backup/tmp/user-files.tar.gz
 etc/config/backup/tmp/wg.tar.gz
 etc/config/sample-gw/ssh_connections.sh
+etc/config/scripts/tornode3ip.log
