@@ -217,11 +217,11 @@ if [ -f /etc/config/cfg/gateway ]; then
          # hinzugefügt werden, sollte dies in Zukunft nötig werden.
 
          /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p udp \
-         -j LOG --log-level warning --log-prefix "Client UDP redirect blocked"
+         -j LOG --log-level warning --log-prefix "Client UDP redirect blocked - $(echo $line_number)"
          /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p udp \
          -j RETURN
          /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
-         -j LOG --log-level warning --log-prefix "Client TCP redirect blocked"
+         -j LOG --log-level warning --log-prefix "Client TCP redirect blocked - $(echo $line_number)"
          /usr/sbin/iptables -t nat -A PREROUTING -m iprange --src-range $internal_network -p tcp \
          -j RETURN
 
